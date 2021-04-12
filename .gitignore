@@ -1,0 +1,5 @@
+build
+builddir
+.vscode
+build.sh
+.idea
