@@ -21,7 +21,7 @@ using namespace mltk;
 int verbose = 1;
 bool sair = false, inva = false;
 double max_time = 110.0f;
-string data_folder = "../datasets/";
+std::string data_folder = "../datasets/";
 Data<double> samples;
 Data<double> test_sample;
 Data<double> train_sample;
@@ -30,8 +30,8 @@ mltk::visualize::Visualization<double> plot(samples);
 
 //Menus utilities
 void clear();
-vector<string> list_datasets(bool list);
-bool valid_file(string file);
+vector<std::string> list_datasets(bool list);
+bool valid_file(std::string file);
 void waitUserAction();
 void exitProgram();
 
@@ -72,7 +72,7 @@ validation::ValidationReport runValidation(const Data<double>& data, Learner lea
 
 int main(int argc, char* argv[]){
     if(argc > 1){
-        samples.load(string(argv[1]));
+        samples.load(std::string(argv[1]));
     }
 
     while (true) {
@@ -84,45 +84,45 @@ int main(int argc, char* argv[]){
     return 0;
 }
 
-bool valid_file(string file){
+bool valid_file(std::string file){
     size_t i;
     bool flag = false;
-    string ext;
+    std::string ext;
 
     if(file.empty() || file.size() < 4)
         return false;
 
     for(i = file.size()-1; i >= 0; i--){
         if(file[i] == '.') break;
-        string f(1, file[i]);
+        std::string f(1, file[i]);
         ext = f + ext;
     }
 
-    for(string type : types){
+    for(std::string type : types){
         if(type == ext) flag = true;
     }
 
     return flag;
 }
 
-vector<string> list_datasets(bool list){
-    vector<string> files;
+vector<std::string> list_datasets(bool list){
+    vector<std::string> files;
 
 #ifdef __unix__
     DIR *dpdf;
     struct dirent *epdf;
 
-    string temp = data_folder;
+    std::string temp = data_folder;
     temp.erase(temp.begin() + temp.size()-1);
-    string path = "./" + data_folder;
+    std::string path = "./" + data_folder;
 
     dpdf = opendir(path.c_str());
     if(dpdf != nullptr){
         while((epdf = readdir(dpdf))){
-            string file = string(epdf->d_name);
+            std::string file = std::string(epdf->d_name);
             if(valid_file(file) && !file.empty()){
 
-                if(list) cout << "[" << files.size() << "] " << file << endl;
+                if(list) std::cout << "[" << files.size() << "] " << file << std::endl;
                 files.push_back(file);
             }
         }
@@ -132,21 +132,21 @@ vector<string> list_datasets(bool list){
 #elif _WIN32
     HANDLE hFind;
     WIN32_FIND_DATA data1;
-    string path = "..\\DB\\*.*";
+    std::string path = "..\\DB\\*.*";
 
     hFind = FindFirstFile(path.c_str(), &data1);
     if (hFind != INVALID_HANDLE_VALUE) {
         do {
-            string file_name(data1.cFileName);
+            std::string file_name(data1.cFileName);
             if(valid_file(file_name) && !file_name.empty()){
-                if(list) cout << "[" << files.size() << "] " << file_name << endl;
+                if(list) std::cout << "[" << files.size() << "] " << file_name << std::endl;
                 files.push_back(file_name);
             }
         } while (FindNextFile(hFind, &data1));
         FindClose(hFind);
     }
 #else
-    cout << "This system is not supported for this function..." << endl;
+    std::cout << "This system is not supported for this function..." << std::endl;
 #endif
 
     return files;
@@ -169,33 +169,33 @@ void exitProgram(){
 }
 
 void waitUserAction(){
-    cout << "\nPress ENTER to continue..." << endl;
-    cin.ignore(numeric_limits<streamsize>::max(),'\n');
-    cin.get();
+    std::cout << "\nPress ENTER to continue..." << std::endl;
+    std::cin.ignore(std::numeric_limits<streamsize>::max(),'\n');
+    std::cin.get();
 }
 
 void header(){
-    cout << "         *----------------------------------------------------------* " << endl;
-    cout << "         *                 Machine Learning Toolkit                 * " << endl;
-    cout << "         *----------------------------------------------------------* " << endl;
-    cout << endl;
-    cout << "Select an option:\n" << endl;
+    std::cout << "         *----------------------------------------------------------* " << std::endl;
+    std::cout << "         *                 Machine Learning Toolkit                 * " << std::endl;
+    std::cout << "         *----------------------------------------------------------* " << std::endl;
+    std::cout << std::endl;
+    std::cout << "Select an option:\n" << std::endl;
 }
 
 int selector(){
     int o;
-    string opt;
+    std::string opt;
 
     if(inva){
-        cout << endl;
-        cout << "Invalid option." << endl;
+        std::cout << std::endl;
+        std::cout << "Invalid option." << std::endl;
         inva = false;
-        cout << endl;
+        std::cout << std::endl;
     }
-    cout << " > ";
-    cin >> opt;
+    std::cout << " > ";
+    std::cin >> opt;
     if(opt != "m") {
-        istringstream iss(opt);
+        std::istringstream iss(opt);
         iss >> o;
     }else{
         o = 109;
@@ -210,20 +210,20 @@ void mainMenu(){
     clear();
     header();
 
-    cout << "1 - Dataset" << endl;
-    cout << "2 - Data" << endl;
-    cout << "3 - Data Visualization" << endl;
-    cout << "4 - Classifiers" << endl;
-    cout << "5 - Feature Selection" << endl;
-    cout << "6 - Regressors" << endl;
-    cout << "7 - Clusteres" << endl;
-    cout << "8 - Validation" << endl;
-    cout << endl;
-    cout << "9 - Set Verbose" << endl;
-    cout << "10 - Set Max Time" << endl;
-    cout << endl;
-    cout << "--------------------------" <<endl;
-    cout << "0 - Exit" << endl;
+    std::cout << "1 - Dataset" << std::endl;
+    std::cout << "2 - Data" << std::endl;
+    std::cout << "3 - Data Visualization" << std::endl;
+    std::cout << "4 - Classifiers" << std::endl;
+    std::cout << "5 - Feature Selection" << std::endl;
+    std::cout << "6 - Regressors" << std::endl;
+    std::cout << "7 - Clusteres" << std::endl;
+    std::cout << "8 - Validation" << std::endl;
+    std::cout << std::endl;
+    std::cout << "9 - Set Verbose" << std::endl;
+    std::cout << "10 - Set Max Time" << std::endl;
+    std::cout << std::endl;
+    std::cout << "--------------------------" <<std::endl;
+    std::cout << "0 - Exit" << std::endl;
 
     option = selector();
     mainOption(option);
@@ -235,13 +235,13 @@ void datasetMenu(){
     clear();
     header();
 
-    cout << "1 - Load a dataset" << endl;
-    cout << "2 - Dataset information " << endl;
-    cout << "3 - Features names" << endl;
-    cout << "4 - Divide dataset in Train/Test" << endl;
-    cout << "5 - Save Train/Test dataset" << endl;
-    cout << endl;
-    cout << "0 - Back to the main menu" << endl;
+    std::cout << "1 - Load a dataset" << std::endl;
+    std::cout << "2 - Dataset information " << std::endl;
+    std::cout << "3 - Features names" << std::endl;
+    std::cout << "4 - Divide dataset in Train/Test" << std::endl;
+    std::cout << "5 - Save Train/Test dataset" << std::endl;
+    std::cout << std::endl;
+    std::cout << "0 - Back to the main menu" << std::endl;
 
     option = selector();
     datasetOption(option);
@@ -253,16 +253,16 @@ void dataMenu(){
     clear();
     header();
 
-    cout << "1 - Insert features" << endl;
-    cout << "2 - Remove features" << endl;
-    cout << "3 - Remove point" << endl;
-    cout << "4 - Data variance" << endl;
-    cout << "5 - Data radius" << endl;
-    cout << "6 - Distance from the center of the classes" << endl;
-    cout << "7 - Normalize dataset" << endl;
-    cout << "8 - Print dataset" << endl;
-    cout << endl;
-    cout << "0 - Back to the main menu" << endl;
+    std::cout << "1 - Insert features" << std::endl;
+    std::cout << "2 - Remove features" << std::endl;
+    std::cout << "3 - Remove point" << std::endl;
+    std::cout << "4 - Data variance" << std::endl;
+    std::cout << "5 - Data radius" << std::endl;
+    std::cout << "6 - Distance from the center of the classes" << std::endl;
+    std::cout << "7 - Normalize dataset" << std::endl;
+    std::cout << "8 - Print dataset" << std::endl;
+    std::cout << std::endl;
+    std::cout << "0 - Back to the main menu" << std::endl;
 
     option = selector();
     dataOption(option);
@@ -274,12 +274,12 @@ void VisualizationMenu(){
     clear();
     header();
 
-    cout << "1 - Plot features in 2D" << endl;
-    cout << "2 - Plot features in 3D" << endl;
-    cout << "3 - Plot features in 2D with hyperplane" << endl;
-    cout << "4 - Plot features in 3D with hyperplane" << endl;
-    cout << endl;
-    cout << "0 - Back to the main menu" << endl;
+    std::cout << "1 - Plot features in 2D" << std::endl;
+    std::cout << "2 - Plot features in 3D" << std::endl;
+    std::cout << "3 - Plot features in 2D with hyperplane" << std::endl;
+    std::cout << "4 - Plot features in 3D with hyperplane" << std::endl;
+    std::cout << std::endl;
+    std::cout << "0 - Back to the main menu" << std::endl;
 
     option = selector();
     VisualizationOption(option);
@@ -291,10 +291,10 @@ void classifiersMenu(){
     clear();
     header();
 
-    cout << "1 - Primal Classifiers" << endl;
-    cout << "2 - Dual Classifiers" << endl;
-    cout << endl;
-    cout << "0 - Back to the main menu" << endl;
+    std::cout << "1 - Primal Classifiers" << std::endl;
+    std::cout << "2 - Dual Classifiers" << std::endl;
+    std::cout << std::endl;
+    std::cout << "0 - Back to the main menu" << std::endl;
 
     option = selector();
     classifiersOption(option);
@@ -306,12 +306,12 @@ void featureSelectionMenu(){
     clear();
     header();
 
-    cout << "1 - Recursive Feature Elimination (RFE)" << endl;
-    cout << "2 - Golub" << endl;
-    cout << "3 - Fisher" << endl;
-    cout << "4 - Admissible Ordered Search (AOS)" << endl;
-    cout << endl;
-    cout << "0 - Back to the main menu" << endl;
+    std::cout << "1 - Recursive Feature Elimination (RFE)" << std::endl;
+    std::cout << "2 - Golub" << std::endl;
+    std::cout << "3 - Fisher" << std::endl;
+    std::cout << "4 - Admissible Ordered Search (AOS)" << std::endl;
+    std::cout << std::endl;
+    std::cout << "0 - Back to the main menu" << std::endl;
 
     option = selector();
     featureSelectionOption(option);
@@ -323,10 +323,10 @@ void regressorsMenu() {
     clear();
     header();
 
-    cout << "1 - Primal Regressors" << endl;
-    cout << "2 - Dual Regressors" << endl;
-    cout << endl;
-    cout << "0 - Back to the main menu" << endl;
+    std::cout << "1 - Primal Regressors" << std::endl;
+    std::cout << "2 - Dual Regressors" << std::endl;
+    std::cout << std::endl;
+    std::cout << "0 - Back to the main menu" << std::endl;
 
     option = selector();
     regressorsOption(option);
@@ -338,9 +338,9 @@ void clusterersMenu(){
     clear();
     header();
 
-    cout << "1 - K-means" << endl;
-    cout << endl;
-    cout << "0 - Back to the main menu" << endl;
+    std::cout << "1 - K-means" << std::endl;
+    std::cout << std::endl;
+    std::cout << "0 - Back to the main menu" << std::endl;
 
     option = selector();
     clusterersOption(option);
@@ -352,11 +352,11 @@ void validationMenu(){
     clear();
     header();
 
-    cout << "1 - IMAp" << endl;
-    cout << "2 - IMA Dual" << endl;
-    cout << "3 - SMO" << endl;
-    cout << endl;
-    cout << "0 - Back to main menu." << endl;
+    std::cout << "1 - IMAp" << std::endl;
+    std::cout << "2 - IMA Dual" << std::endl;
+    std::cout << "3 - SMO" << std::endl;
+    std::cout << std::endl;
+    std::cout << "0 - Back to main menu." << std::endl;
 
     opt = selector();
     validationOption(opt);
@@ -391,15 +391,15 @@ void mainOption(int option){
             waitUserAction();
             break;
         case 9:
-            cout << "Actual Verbose = " << verbose << endl;
-            cout << "Set verbose: ";
-            cin >> verbose;
+            std::cout << "Actual Verbose = " << verbose << std::endl;
+            std::cout << "Set verbose: ";
+            std::cin >> verbose;
             waitUserAction();
             break;
         case 10:
-            cout << "Actual MAX_TIME = " << max_time << endl;
-            cout << "Enter the max time: ";
-            cin >> max_time;
+            std::cout << "Actual MAX_TIME = " << max_time << std::endl;
+            std::cout << "Enter the max time: ";
+            std::cin >> max_time;
 
             waitUserAction();
             break;
@@ -416,33 +416,33 @@ void mainOption(int option){
 void datasetOption(int option){
     size_t i = 0;
     bool list = false;
-    vector<string> files;
+    std::vector<std::string> files;
 
     switch(option){
         case 1:
             if(samples.isEmpty()){
-                string isReg;
-                string sid, path;
+                std::string isReg;
+                std::string sid, path;
 
                 files = list_datasets(true);
-                cout << endl;
-                cout << "Enter the number of the DB (must be in the DB folder): ";
-                cin >> sid;
+                std::cout << std::endl;
+                std::cout << "Enter the number of the DB (must be in the DB folder): ";
+                std::cin >> sid;
 
                 path = data_folder + files[utils::stoin(sid)];
-                clock_t begin = clock();
-                cout << "\n" << path << endl;
+                std::clock_t begin = std::clock();
+                std::cout << "\n" << path << std::endl;
                 samples.load(path);
-                clock_t end = clock();
+                std::clock_t end = std::clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                cout << endl;
-                cout << elapsed_secs << " seconds to load.\n";
+                std::cout << std::endl;
+                std::cout << elapsed_secs << " seconds to load.\n";
             }else{
                 char y;
-                cout << "Wish to load a new dataset?[y|n]" << endl;
-                cout << " > ";
-                cin >> y;
+                std::cout << "Wish to load a new dataset?[y|n]" << std::endl;
+                std::cout << " > ";
+                std::cin >> y;
 
                 if(y == 'y'){
                     samples.clear();
@@ -450,7 +450,7 @@ void datasetOption(int option){
                         test_sample.clear();
                         train_sample.clear();
                     }
-                    cout << "\nOld dataset erased, select this option again."<< endl;
+                    std::cout << "\nOld dataset erased, select this option again."<< std::endl;
                 }
             }
 
@@ -458,85 +458,85 @@ void datasetOption(int option){
             break;
         case 2:
             if(!samples.isEmpty()){
-                cout << "Dataset type: " << samples.getType() << endl;
-                cout << "Number of features: " << samples.dim() << endl;
-                cout << "Number of samples: " << samples.size() << endl;
+                std::cout << "Dataset type: " << samples.getType() << std::endl;
+                std::cout << "Number of features: " << samples.dim() << std::endl;
+                std::cout << "Number of samples: " << samples.size() << std::endl;
                 if(samples.getType() == "Classification") {
-                    vector<string> class_names = samples.classesNames();
-                    vector<size_t> class_frequency = samples.classesDistribution();
+                    std::vector<std::string> class_names = samples.classesNames();
+                    std::vector<size_t> class_frequency = samples.classesDistribution();
                     if(class_names.size() == 2) {
                         auto classes = samples.classes();
                         auto neg_id = std::find(classes.begin(), classes.end(), -1) - classes.begin();
                         auto pos_id = std::find(classes.begin(), classes.end(), 1) - classes.begin();
-                        cout << "Negative points: " << class_frequency[neg_id] << endl;
-                        cout << "Positive points: " << class_frequency[pos_id] << endl;
+                        std::cout << "Negative points: " << class_frequency[neg_id] << std::endl;
+                        std::cout << "Positive points: " << class_frequency[pos_id] << std::endl;
                     }else {
-                        cout << "Class names and frequency [name - freq]: \n[";
+                        std::cout << "Class names and frequency [name - freq]: \n[";
                         for (i = 0; i < class_names.size() - 1; i++) {
-                            cout << class_names[i] << " - "<< class_frequency[i] << ", ";
+                            std::cout << class_names[i] << " - "<< class_frequency[i] << ", ";
                         }
-                        cout << class_names[i] << " - "<< class_frequency[i] << "]\n";
+                        std::cout << class_names[i] << " - "<< class_frequency[i] << "]\n";
                     }
                 }
                 if(!test_sample.isEmpty()){
-                    cout << "\n\nTest sample information\n\n";
-                    cout << "Number of features: " << test_sample.dim() << endl;
-                    cout << "Number of samples: " << test_sample.size() << endl;
+                    std::cout << "\n\nTest sample information\n\n";
+                    std::cout << "Number of features: " << test_sample.dim() << std::endl;
+                    std::cout << "Number of samples: " << test_sample.size() << std::endl;
                     if(samples.getType() == "Classification") {
-                        vector<string> class_names = samples.classesNames();
-                        vector<size_t> class_frequency = samples.classesDistribution();
+                        std::vector<std::string> class_names = samples.classesNames();
+                        std::vector<size_t> class_frequency = samples.classesDistribution();
                         if(class_names.size() == 2) {
                             auto classes = samples.classes();
                             auto neg_id = std::find(classes.begin(), classes.end(), -1) - classes.begin();
                             auto pos_id = std::find(classes.begin(), classes.end(), 1) - classes.begin();
-                            cout << "Negative points: " << class_frequency[neg_id] << endl;
-                            cout << "Positive points: " << class_frequency[pos_id] << endl;
+                            std::cout << "Negative points: " << class_frequency[neg_id] << std::endl;
+                            std::cout << "Positive points: " << class_frequency[pos_id] << std::endl;
                         }else {
-                            cout << "Class names and frequency [name - freq]: \n[";
+                            std::cout << "Class names and frequency [name - freq]: \n[";
                             for (i = 0; i < class_names.size() - 1; i++) {
-                                cout << class_names[i] << " - "<< class_frequency[i] << ", ";
+                                std::cout << class_names[i] << " - "<< class_frequency[i] << ", ";
                             }
-                            cout << class_names[i] << " - "<< class_frequency[i] << "]\n";
+                            std::cout << class_names[i] << " - "<< class_frequency[i] << "]\n";
                         }
                     }
                 }
 
                 if(!train_sample.isEmpty()){
-                    cout << "\n\nTrain sample information\n\n";
-                    cout << "Number of features: " << train_sample.dim() << endl;
-                    cout << "Number of samples: " << train_sample.size() << endl;
+                    std::cout << "\n\nTrain sample information\n\n";
+                    std::cout << "Number of features: " << train_sample.dim() << std::endl;
+                    std::cout << "Number of samples: " << train_sample.size() << std::endl;
                     if(samples.getType() == "Classification") {
-                        vector<string> class_names = samples.classesNames();
-                        vector<size_t> class_frequency = samples.classesDistribution();
+                        std::vector<std::string> class_names = samples.classesNames();
+                        std::vector<size_t> class_frequency = samples.classesDistribution();
                         if(class_names.size() == 2) {
                             auto classes = samples.classes();
                             auto neg_id = std::find(classes.begin(), classes.end(), -1) - classes.begin();
                             auto pos_id = std::find(classes.begin(), classes.end(), 1) - classes.begin();
-                            cout << "Negative points: " << class_frequency[neg_id] << endl;
-                            cout << "Positive points: " << class_frequency[pos_id] << endl;
+                            std::cout << "Negative points: " << class_frequency[neg_id] << std::endl;
+                            std::cout << "Positive points: " << class_frequency[pos_id] << std::endl;
                         }else {
-                            cout << "Class names and frequency [name - freq]: \n[";
+                            std::cout << "Class names and frequency [name - freq]: \n[";
                             for (i = 0; i < class_names.size() - 1; i++) {
-                                cout << class_names[i] << " - "<< class_frequency[i] << ", ";
+                                std::cout << class_names[i] << " - "<< class_frequency[i] << ", ";
                             }
-                            cout << class_names[i] << " - "<< class_frequency[i] << "]\n";
+                            std::cout << class_names[i] << " - "<< class_frequency[i] << "]\n";
                         }
                     }
                 }
-            }else cout << "Load a dataset first...\n\n";
+            }else std::cout << "Load a dataset first...\n\n";
 
             waitUserAction();
             break;
 
         case 3:
             if(!samples.isEmpty()){
-                vector<int> fnames = samples.getFeaturesNames();
+                std::vector<int> fnames = samples.getFeaturesNames();
 
                 for(int f : fnames){
-                    cout << f << " : ";
+                    std::cout << f << " : ";
                 }
-                cout << endl;
-            }else cout << "Load a dataset first...\n\n";
+                std::cout << std::endl;
+            }else std::cout << "Load a dataset first...\n\n";
 
             waitUserAction();
             break;
@@ -546,34 +546,34 @@ void datasetOption(int option){
                 unsigned int seed;
 
                 if(test_sample.isEmpty()){
-                    cout << "K-Fold: ";
-                    cin >> fold;
-                    cout << "Seed for timestamps: ";
-                    cin >> seed;
+                    std::cout << "K-Fold: ";
+                    std::cin >> fold;
+                    std::cout << "Seed for timestamps: ";
+                    std::cin >> seed;
 
-                    clock_t begin = clock();
+                    std::clock_t begin = std::clock();
                     auto valid_data = validation::partTrainTest(samples, 10, 42);
                     test_sample = valid_data.test;
                     train_sample = valid_data.train;
-                    clock_t end = clock();
+                    std::clock_t end = std::clock();
 
-                    cout << "\nDone!" << endl;
+                    std::cout << "\nDone!" << std::endl;
                     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                    cout << "Size of the test sample: " << test_sample.size() << endl;
-                    cout << endl;
-                    cout << elapsed_secs << " seconds to compute.\n";
+                    std::cout << "Size of the test sample: " << test_sample.size() << std::endl;
+                    std::cout << std::endl;
+                    std::cout << elapsed_secs << " seconds to compute.\n";
 
-                }else cout << "Test sample already divided...\n";
-            }else cout << "Load a dataset first...\n\n";
+                }else std::cout << "Test sample already divided...\n";
+            }else std::cout << "Load a dataset first...\n\n";
 
             waitUserAction();
             break;
         case 5:
             /*if(_data != NULL && !_data->empty()){
                 if(!test_sample){
-                    cerr << "Divide the train/test datasets first...\n" << endl;
+                    cerr << "Divide the train/test datasets first...\n" << std::endl;
                 }else{
-                    string outfile = _data->get_dataset_name();
+                    std::string outfile = _data->get_dataset_name();
                     Sample *sample = Sample::copy(_data->get_samples());
 
                     outfile = outfile + "_train";
@@ -584,7 +584,7 @@ void datasetOption(int option){
 
                     delete sample;
                 }
-            }else cout << "Load a dataset first...\n\n";
+            }else std::cout << "Load a dataset first...\n\n";
             */
             waitUserAction();
             break;
@@ -605,17 +605,17 @@ void dataOption(int option){
         case 1:
             if(!samples.isEmpty()){
                 int totalFeat, flag_feat, f, fnamesize;
-                vector<int> feats;
-                vector<int> fnames = samples.getFeaturesNames();
+                std::vector<int> feats;
+                std::vector<int> fnames = samples.getFeaturesNames();
 
                 fnamesize = fnames.size();
-                cout << "Insert how many features: ";
-                cin >> totalFeat;
+                std::cout << "Insert how many features: ";
+                std::cin >> totalFeat;
                 feats.resize(totalFeat);
 
                 for(i = 0; i < totalFeat; i++){
-                    cout << "Feature " << i + 1 << ": ";
-                    cin >> f;
+                    std::cout << "Feature " << i + 1 << ": ";
+                    std::cin >> f;
                     feats[i] = f;
 
                     for(flag_feat = 0, j = 0; j < fnamesize; j++){
@@ -625,9 +625,9 @@ void dataOption(int option){
                     }
 
                     if(!flag_feat){
-                        cout << "Feature " << feats[i] << " does not belongs to the set.\n";
+                        std::cout << "Feature " << feats[i] << " does not belongs to the set.\n";
                         i--;
-                        cin.clear();
+                        std::cin.clear();
                     }
                 }
                 Data<double> temp = samples.insertFeatures(feats);
@@ -636,35 +636,35 @@ void dataOption(int option){
                     samples.clear();
                     samples = temp.copy();
                 }else{
-                    cerr << "Something went wrong." << endl;
+                    cerr << "Something went wrong." << std::endl;
                 }
-            }else cout << "Load a dataset first...\n\n";
+            }else std::cout << "Load a dataset first...\n\n";
 
             waitUserAction();
             break;
         case 2:
             if(!samples.isEmpty()){
                 int totalFeat, flag_feat, f, fnamesize;
-                vector<int> feats;
-                vector<int> fnames = samples.getFeaturesNames();
+                std::vector<int> feats;
+                std::vector<int> fnames = samples.getFeaturesNames();
 
                 fnamesize = fnames.size();
 
-                cout << endl;
+                std::cout << std::endl;
                 while(true){
-                    cout << "Remove how many features (-1 to cancel): ";
-                    cin >> totalFeat;
+                    std::cout << "Remove how many features (-1 to cancel): ";
+                    std::cin >> totalFeat;
                     if(totalFeat > fnamesize - 1){
                         clear();
-                        cout << "Can't remove more features than exist." << endl;
+                        std::cout << "Can't remove more features than exist." << std::endl;
                     }else if(totalFeat >= 0){
                         break;
                     }
                 }
 
                 for(i = 0; i < totalFeat; i++){
-                    cout << "Feature " << i + 1 << ": ";
-                    cin >> f;
+                    std::cout << "Feature " << i + 1 << ": ";
+                    std::cin >> f;
                     feats.push_back(f);
                     for(flag_feat = 0, j = 0; j < fnamesize; j++){
                         if(feats[i] == fnames[j]){
@@ -673,30 +673,30 @@ void dataOption(int option){
                     }
 
                     if(!flag_feat){
-                        cout << "Feature " << feats[i] << " does not belongs to the set.\n";
+                        std::cout << "Feature " << feats[i] << " does not belongs to the set.\n";
                         i--;
                     }
                 }
-                cout << endl;
+                std::cout << std::endl;
                 samples.removeFeatures(feats);
 
                 fnames = samples.getFeaturesNames();
 
-            }else cout << "Load a dataset first...\n\n";
+            }else std::cout << "Load a dataset first...\n\n";
 
             waitUserAction();
             break;
         case 3:
             if(!samples.isEmpty()){
-                cout << "Point to remove index (-1 to cancel): ";
-                cin >> i;
+                std::cout << "Point to remove index (-1 to cancel): ";
+                std::cin >> i;
 
                 if(i < 0){
                     break;
                 }
 
                 samples.removePoint(i);
-            }else cout << "Load a dataset first...\n\n";
+            }else std::cout << "Load a dataset first...\n\n";
 
             waitUserAction();
             break;
@@ -704,17 +704,17 @@ void dataOption(int option){
             if(!samples.isEmpty()){
                 int index;
 
-                cout << "Feature to be ignored (-1 doesnt ignore any feature): ";
-                cin >> index;
-                clock_t begin = clock();
-                cout << endl;
-                cout << "The variance values is: " << stats::var(samples, index) << endl;
-                clock_t end = clock();
+                std::cout << "Feature to be ignored (-1 doesnt ignore any feature): ";
+                std::cin >> index;
+                std::clock_t begin = std::clock();
+                std::cout << std::endl;
+                std::cout << "The variance values is: " << stats::var(samples, index) << std::endl;
+                std::clock_t end = std::clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                cout << endl;
-                cout << elapsed_secs << " seconds to compute.\n";
-            }else cout << "Load a dataset first...\n\n";
+                std::cout << std::endl;
+                std::cout << elapsed_secs << " seconds to compute.\n";
+            }else std::cout << "Load a dataset first...\n\n";
 
             waitUserAction();
             break;
@@ -722,20 +722,20 @@ void dataOption(int option){
             if(!samples.isEmpty()){
                 int index, q;
 
-                cout << "Feature to be ignored: ";
-                cin >> index;
-                cout << "Value of q [q = 1 | q = 2]: ";
-                cin >> q;
-                cout << endl;
+                std::cout << "Feature to be ignored: ";
+                std::cin >> index;
+                std::cout << "Value of q [q = 1 | q = 2]: ";
+                std::cin >> q;
+                std::cout << std::endl;
 
-                clock_t begin = clock();
-                cout << "The value of the radius is: " << stats::radius(samples, index, q) << endl;
-                clock_t end = clock();
+                std::clock_t begin = std::clock();
+                std::cout << "The value of the radius is: " << stats::radius(samples, index, q) << std::endl;
+                std::clock_t end = std::clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                cout << endl;
-                cout << elapsed_secs << " seconds to compute.\n";
-            }else cout << "Load a dataset first...\n\n";
+                std::cout << std::endl;
+                std::cout << elapsed_secs << " seconds to compute.\n";
+            }else std::cout << "Load a dataset first...\n\n";
 
             waitUserAction();
             break;
@@ -743,19 +743,19 @@ void dataOption(int option){
             if(!samples.isEmpty()){
                 int index;
 
-                cout << "Feature to be ignored: ";
-                cin >> index;
-                cout << endl;
+                std::cout << "Feature to be ignored: ";
+                std::cin >> index;
+                std::cout << std::endl;
 
-                clock_t begin = clock();
-                cout << "The value of the center of the classes are: " << stats::distCenters(samples, index) << endl;
-                cout << endl;
-                clock_t end = clock();
+                std::clock_t begin = std::clock();
+                std::cout << "The value of the center of the classes are: " << stats::distCenters(samples, index) << std::endl;
+                std::cout << std::endl;
+                std::clock_t end = std::clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 
-                cout << elapsed_secs << " seconds to compute.\n";
-            }else cout << "Load a dataset first...\n\n";
+                std::cout << elapsed_secs << " seconds to compute.\n";
+            }else std::cout << "Load a dataset first...\n\n";
 
             waitUserAction();
             break;
@@ -763,9 +763,9 @@ void dataOption(int option){
             if(!samples.isEmpty()){
                 int q, p;
 
-                cout << "Value of q: ";
-                cin >> q;
-                cout << endl;
+                std::cout << "Value of q: ";
+                std::cin >> q;
+                std::cout << std::endl;
 
                 if(q == -1.0){
                     p = 1.0;
@@ -775,22 +775,22 @@ void dataOption(int option){
                     p = q/(q-1.0);
                 }
 
-                clock_t begin = clock();
+                std::clock_t begin = std::clock();
                 samples.normalize(p);
-                cout << "The dataset was normalized." << endl;
-                clock_t end = clock();
+                std::cout << "The dataset was normalized." << std::endl;
+                std::clock_t end = std::clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                cout << endl;
-                cout << elapsed_secs << " seconds to compute.\n";
-            }else cout << "Load a dataset first...\n\n";
+                std::cout << std::endl;
+                std::cout << elapsed_secs << " seconds to compute.\n";
+            }else std::cout << "Load a dataset first...\n\n";
 
             waitUserAction();
             break;
         case 8:
             if(!samples.isEmpty()){
-                cout << samples << endl;
-            }else cout << "Load a dataset first...\n\n";
+                std::cout << samples << std::endl;
+            }else std::cout << "Load a dataset first...\n\n";
 
             waitUserAction();
             break;
@@ -810,47 +810,47 @@ void VisualizationOption(int opt){
     plot.setSample(samples);
     switch (opt) {
         case 1:
-            cout << "Enter the feature to plot in the x-axis: ";
-            cin >> x;
-            cout << "Enter the feature to plot in the y-axis: ";
-            cin >> y;
+            std::cout << "Enter the feature to plot in the x-axis: ";
+            std::cin >> x;
+            std::cout << "Enter the feature to plot in the y-axis: ";
+            std::cin >> y;
 
             plot.plot2D(x, y);
             break;
         case 2:
-            cout << "Enter the feature to plot in the x-axis: ";
-            cin >> x;
-            cout << "Enter the feature to plot in the y-axis: ";
-            cin >> y;
-            cout << "Enter the feature to plot in the z-axis: ";
-            cin >> z;
+            std::cout << "Enter the feature to plot in the x-axis: ";
+            std::cin >> x;
+            std::cout << "Enter the feature to plot in the y-axis: ";
+            std::cin >> y;
+            std::cout << "Enter the feature to plot in the z-axis: ";
+            std::cin >> z;
             plot.plot3D(x, y, z);
             break;
         case 3:
             if(sol.w.empty()){
-                cout << "Run a classifier in the data first." << endl;
+                std::cout << "Run a classifier in the data first." << std::endl;
                 waitUserAction();
                 break;
             }
-            cout << "Enter the feature to plot in the x-axis: ";
-            cin >> x;
-            cout << "Enter the feature to plot in the y-axis: ";
-            cin >> y;
+            std::cout << "Enter the feature to plot in the x-axis: ";
+            std::cin >> x;
+            std::cout << "Enter the feature to plot in the y-axis: ";
+            std::cin >> y;
 
             plot.plot2DwithHyperplane(x, y, sol);
             break;
         case 4:
             if(sol.w.empty()){
-                cout << "Run a classifier in the data first." << endl;
+                std::cout << "Run a classifier in the data first." << std::endl;
                 waitUserAction();
                 break;
             }
-            cout << "Enter the feature to plot in the x-axis: ";
-            cin >> x;
-            cout << "Enter the feature to plot in the y-axis: ";
-            cin >> y;
-            cout << "Enter the feature to plot in the z-axis: ";
-            cin >> z;
+            std::cout << "Enter the feature to plot in the x-axis: ";
+            std::cin >> x;
+            std::cout << "Enter the feature to plot in the y-axis: ";
+            std::cin >> y;
+            std::cout << "Enter the feature to plot in the z-axis: ";
+            std::cin >> z;
 
             plot.plot3DwithHyperplane(x, y, z, sol);
             break;
@@ -872,13 +872,13 @@ void classifiersOption(int option){
             clear();
             header();
 
-            cout << "1 - Perceptron Primal" << endl;
-            cout << "2 - Perceptron Primal with fixed margin" << endl;
-            cout << "3 - Incremental Margin Algorithm Primal (IMAp)" << endl;
-            cout << "4 - K-Nearest Neighbors (KNN)" << endl;
-            cout << endl;
-            cout << "0 - Back to classifiers menu" << endl;
-            cout << "m - Back to main menu." << endl;
+            std::cout << "1 - Perceptron Primal" << std::endl;
+            std::cout << "2 - Perceptron Primal with fixed margin" << std::endl;
+            std::cout << "3 - Incremental Margin Algorithm Primal (IMAp)" << std::endl;
+            std::cout << "4 - K-Nearest Neighbors (KNN)" << std::endl;
+            std::cout << std::endl;
+            std::cout << "0 - Back to classifiers menu" << std::endl;
+            std::cout << "m - Back to main menu." << std::endl;
 
             opt = selector();
             primalClassifiersOption(opt);
@@ -887,13 +887,13 @@ void classifiersOption(int option){
             clear();
             header();
 
-            cout << "1 - Perceptron Dual" << endl;
-            cout << "2 - Perceptron Dual with fixed margin" << endl;
-            cout << "3 - Incremental Margin Algorithm Dual (IMA Dual)" << endl;
-            cout << "4 - Sequential Minimal Optimization (SMO)" << endl;
-            cout << endl;
-            cout << "0 - Back to classifiers menu" << endl;
-            cout << "m - Back to main menu." << endl;
+            std::cout << "1 - Perceptron Dual" << std::endl;
+            std::cout << "2 - Perceptron Dual with fixed margin" << std::endl;
+            std::cout << "3 - Incremental Margin Algorithm Dual (IMA Dual)" << std::endl;
+            std::cout << "4 - Sequential Minimal Optimization (SMO)" << std::endl;
+            std::cout << std::endl;
+            std::cout << "0 - Back to classifiers menu" << std::endl;
+            std::cout << "m - Back to main menu." << std::endl;
 
             opt = selector();
             dualClassifiersOption(opt);
@@ -929,22 +929,22 @@ void featureSelectionOption(int option){
     switch (option){
         case 1:
             if(!samples.isEmpty()) {
-                cout << "Recursive Feature Elimination (RFE)" << endl;
-                cout << "1 - IMAp" << endl;
-                cout << "2 - IMA Dual" << endl;
-                cout << "3 - SMO" << endl;
-                cout << endl;
-                cout << "0 - Back to Feature Selection menu" << endl;
-                cout << "m - Back to Main menu" << endl;
+                std::cout << "Recursive Feature Elimination (RFE)" << std::endl;
+                std::cout << "1 - IMAp" << std::endl;
+                std::cout << "2 - IMA Dual" << std::endl;
+                std::cout << "3 - SMO" << std::endl;
+                std::cout << std::endl;
+                std::cout << "0 - Back to Feature Selection menu" << std::endl;
+                std::cout << "m - Back to Main menu" << std::endl;
                 opt = selector();
                 switch (opt) {
                     case 1:
-                        cout << "q-norm value: ";
-                        cin >> q;
-                        cout << "Flexibilization value (0 - no flexibilization): ";
-                        cin >> flex;
-                        cout << "Alpha aproximation: ";
-                        cin >> alpha_aprox;
+                        std::cout << "q-norm value: ";
+                        std::cin >> q;
+                        std::cout << "Flexibilization value (0 - no flexibilization): ";
+                        std::cin >> flex;
+                        std::cout << "Alpha aproximation: ";
+                        std::cin >> alpha_aprox;
 
                         if(q == -1.0){
                             p = 1.0;
@@ -961,17 +961,17 @@ void featureSelectionOption(int option){
                         rfe.setClassifier(&imap);
                         break;
                     case 2:
-                        cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
-                        cin >> kernel_type;
+                        std::cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
+                        std::cin >> kernel_type;
 
                         if (kernel_type == 1) {
-                            cout << "Polynomial degree: ";
+                            std::cout << "Polynomial degree: ";
                         } else if (kernel_type == 2) {
-                            cout << "Gaussian gamma: ";
+                            std::cout << "Gaussian gamma: ";
                         }
 
                         if (kernel_type != 0) {
-                            cin >> kernel_param;
+                            std::cin >> kernel_param;
                         }
                         type = getKernelType(kernel_type);
                         imadual.setKernelParam(kernel_param);
@@ -980,17 +980,17 @@ void featureSelectionOption(int option){
                         rfe.setClassifier(&imadual);
                         break;
                     case 3:
-                        cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
-                        cin >> kernel_type;
+                        std::cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
+                        std::cin >> kernel_type;
 
                         if (kernel_type == 1) {
-                            cout << "Polynomial degree: ";
+                            std::cout << "Polynomial degree: ";
                         } else if (kernel_type == 2) {
-                            cout << "Gaussian gamma: ";
+                            std::cout << "Gaussian gamma: ";
                         }
 
                         if (kernel_type != 0) {
-                            cin >> kernel_param;
+                            std::cin >> kernel_param;
                         }
                         type = getKernelType(kernel_type);
                         smo.setKernelParam(kernel_param);
@@ -1008,28 +1008,28 @@ void featureSelectionOption(int option){
                         break;
                 }
                 clear();
-                cout << endl;
-                cout << "Desired dimension (max. " << samples.dim() << "): ";
-                cin >> ddim;
-                cout << "Features eliminated at a time: ";
-                cin >> jump;
-                cout << endl;
+                std::cout << std::endl;
+                std::cout << "Desired dimension (max. " << samples.dim() << "): ";
+                std::cin >> ddim;
+                std::cout << "Features eliminated at a time: ";
+                std::cin >> jump;
+                std::cout << std::endl;
 
                 rfe.setJump(jump);
                 rfe.setDepth(samples.dim() - ddim);
 
                 clear();
-                cout << "\n--------- Cross-Validation ---------\n" << endl;
-                cout << "Number of Cross-Validation: ";
-                cin >> cv.qtde;
+                std::cout << "\n--------- Cross-Validation ---------\n" << std::endl;
+                std::cout << "Number of Cross-Validation: ";
+                std::cin >> cv.qtde;
 
                 if (cv.qtde > 0) {
-                    cout << "K-Fold: ";
-                    cin >> cv.fold;
-                    cout << "From how many in how many dimensions: ";
-                    cin >> cv.jump;
-                    cout << "Error margin: ";
-                    cin >> cv.limit_error;
+                    std::cout << "K-Fold: ";
+                    std::cin >> cv.fold;
+                    std::cout << "From how many in how many dimensions: ";
+                    std::cin >> cv.jump;
+                    std::cout << "Error margin: ";
+                    std::cin >> cv.limit_error;
                 }
                 rfe.setCrossValidation(&cv);
                 rfe.setVerbose(verbose);
@@ -1040,31 +1040,31 @@ void featureSelectionOption(int option){
                 samples.clear();
                 samples = res;
 
-                cout << time.elapsed()/1000 << " seconds to compute.\n";
+                std::cout << time.elapsed()/1000 << " seconds to compute.\n";
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             waitUserAction();
             featureSelectionOption(1);
             break;
         case 2:
             if(!samples.isEmpty()) {
-                cout << "Golub" << endl;
-                cout << "1 - IMAp" << endl;
-                cout << "2 - IMA Dual" << endl;
-                cout << "3 - SMO" << endl;
-                cout << endl;
-                cout << "0 - Back to Feature Selection menu" << endl;
-                cout << "m - Back to Main menu" << endl;
+                std::cout << "Golub" << std::endl;
+                std::cout << "1 - IMAp" << std::endl;
+                std::cout << "2 - IMA Dual" << std::endl;
+                std::cout << "3 - SMO" << std::endl;
+                std::cout << std::endl;
+                std::cout << "0 - Back to Feature Selection menu" << std::endl;
+                std::cout << "m - Back to Main menu" << std::endl;
                 opt = selector();
                 switch (opt) {
                     case 1:
-                        cout << "q-norm value: ";
-                        cin >> q;
-                        cout << "Flexibilization value (0 - no flexibilization): ";
-                        cin >> flex;
-                        cout << "Alpha aproximation: ";
-                        cin >> alpha_aprox;
+                        std::cout << "q-norm value: ";
+                        std::cin >> q;
+                        std::cout << "Flexibilization value (0 - no flexibilization): ";
+                        std::cin >> flex;
+                        std::cout << "Alpha aproximation: ";
+                        std::cin >> alpha_aprox;
 
                         if(q == -1.0){
                             p = 1.0;
@@ -1081,17 +1081,17 @@ void featureSelectionOption(int option){
                         golub.setClassifier(&imap);
                         break;
                     case 2:
-                        cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
-                        cin >> kernel_type;
+                        std::cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
+                        std::cin >> kernel_type;
 
                         if (kernel_type == 1) {
-                            cout << "Polynomial degree: ";
+                            std::cout << "Polynomial degree: ";
                         } else if (kernel_type == 2) {
-                            cout << "Gaussian gamma: ";
+                            std::cout << "Gaussian gamma: ";
                         }
 
                         if (kernel_type != 0) {
-                            cin >> kernel_param;
+                            std::cin >> kernel_param;
                         }
                         type = getKernelType(kernel_type);
                         imadual.setKernelParam(kernel_param);
@@ -1100,17 +1100,17 @@ void featureSelectionOption(int option){
                         golub.setClassifier(&imadual);
                         break;
                     case 3:
-                        cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
-                        cin >> kernel_type;
+                        std::cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
+                        std::cin >> kernel_type;
 
                         if (kernel_type == 1) {
-                            cout << "Polynomial degree: ";
+                            std::cout << "Polynomial degree: ";
                         } else if (kernel_type == 2) {
-                            cout << "Gaussian gamma: ";
+                            std::cout << "Gaussian gamma: ";
                         }
 
                         if (kernel_type != 0) {
-                            cin >> kernel_param;
+                            std::cin >> kernel_param;
                         }
                         type = getKernelType(kernel_type);
                         smo.setKernelParam(kernel_param);
@@ -1128,9 +1128,9 @@ void featureSelectionOption(int option){
                         break;
                 }
                 clear();
-                cout << endl;
-                cout << "Desired dimension (max. " << samples.dim() << "): ";
-                cin >> ddim;
+                std::cout << std::endl;
+                std::cout << "Desired dimension (max. " << samples.dim() << "): ";
+                std::cin >> ddim;
                 golub.setVerbose(verbose);
                 golub.setFinalDimension(ddim);
                 golub.setSamples(mltk::make_data<double>(samples));
@@ -1140,31 +1140,31 @@ void featureSelectionOption(int option){
                 samples.clear();
                 samples = res;
 
-                cout << time.elapsed()/1000 << " seconds to compute.\n";
+                std::cout << time.elapsed()/1000 << " seconds to compute.\n";
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             waitUserAction();
             featureSelectionMenu();
             break;
         case 3:
             if(!samples.isEmpty()) {
-                cout << "Fisher" << endl;
-                cout << "1 - IMAp" << endl;
-                cout << "2 - IMA Dual" << endl;
-                cout << "3 - SMO" << endl;
-                cout << endl;
-                cout << "0 - Back to Feature Selection menu" << endl;
-                cout << "m - Back to Main menu" << endl;
+                std::cout << "Fisher" << std::endl;
+                std::cout << "1 - IMAp" << std::endl;
+                std::cout << "2 - IMA Dual" << std::endl;
+                std::cout << "3 - SMO" << std::endl;
+                std::cout << std::endl;
+                std::cout << "0 - Back to Feature Selection menu" << std::endl;
+                std::cout << "m - Back to Main menu" << std::endl;
                 opt = selector();
                 switch (opt) {
                     case 1:
-                        cout << "q-norm value: ";
-                        cin >> q;
-                        cout << "Flexibilization value (0 - no flexibilization): ";
-                        cin >> flex;
-                        cout << "Alpha aproximation: ";
-                        cin >> alpha_aprox;
+                        std::cout << "q-norm value: ";
+                        std::cin >> q;
+                        std::cout << "Flexibilization value (0 - no flexibilization): ";
+                        std::cin >> flex;
+                        std::cout << "Alpha aproximation: ";
+                        std::cin >> alpha_aprox;
 
                         if(q == -1.0){
                             p = 1.0;
@@ -1181,17 +1181,17 @@ void featureSelectionOption(int option){
                         fisher.setClassifier(&imap);
                         break;
                     case 2:
-                        cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
-                        cin >> kernel_type;
+                        std::cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
+                        std::cin >> kernel_type;
 
                         if (kernel_type == 1) {
-                            cout << "Polynomial degree: ";
+                            std::cout << "Polynomial degree: ";
                         } else if (kernel_type == 2) {
-                            cout << "Gaussian gamma: ";
+                            std::cout << "Gaussian gamma: ";
                         }
 
                         if (kernel_type != 0) {
-                            cin >> kernel_param;
+                            std::cin >> kernel_param;
                         }
                         type = getKernelType(kernel_type);
                         imadual.setKernelParam(kernel_param);
@@ -1200,17 +1200,17 @@ void featureSelectionOption(int option){
                         fisher.setClassifier(&imadual);
                         break;
                     case 3:
-                        cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
-                        cin >> kernel_type;
+                        std::cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
+                        std::cin >> kernel_type;
 
                         if (kernel_type == 1) {
-                            cout << "Polynomial degree: ";
+                            std::cout << "Polynomial degree: ";
                         } else if (kernel_type == 2) {
-                            cout << "Gaussian gamma: ";
+                            std::cout << "Gaussian gamma: ";
                         }
 
                         if (kernel_type != 0) {
-                            cin >> kernel_param;
+                            std::cin >> kernel_param;
                         }
                         type = getKernelType(kernel_type);
                         smo.setKernelParam(kernel_param);
@@ -1228,9 +1228,9 @@ void featureSelectionOption(int option){
                         break;
                 }
                 clear();
-                cout << endl;
-                cout << "Desired dimension (max. " << samples.dim() << "): ";
-                cin >> ddim;
+                std::cout << std::endl;
+                std::cout << "Desired dimension (max. " << samples.dim() << "): ";
+                std::cin >> ddim;
                 fisher.setVerbose(verbose);
                 fisher.setFinalDimension(ddim);
                 fisher.setSamples(mltk::make_data<double>(samples));
@@ -1240,9 +1240,9 @@ void featureSelectionOption(int option){
                 samples.clear();
                 samples = res;
 
-                cout << time.elapsed()/1000 << " seconds to compute.\n";
+                std::cout << time.elapsed()/1000 << " seconds to compute.\n";
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             waitUserAction();
             featureSelectionMenu();
@@ -1250,22 +1250,22 @@ void featureSelectionOption(int option){
         case 4:
 
             if(!samples.isEmpty()) {
-                cout << "Admissible Ordered Search (AOS)" << endl;
-                cout << "1 - IMAp" << endl;
-                cout << "2 - IMA Dual" << endl;
-                cout << "3 - SMO" << endl;
-                cout << endl;
-                cout << "0 - Back to Feature Selection menu" << endl;
-                cout << "m - Back to Main menu" << endl;
+                std::cout << "Admissible Ordered Search (AOS)" << std::endl;
+                std::cout << "1 - IMAp" << std::endl;
+                std::cout << "2 - IMA Dual" << std::endl;
+                std::cout << "3 - SMO" << std::endl;
+                std::cout << std::endl;
+                std::cout << "0 - Back to Feature Selection menu" << std::endl;
+                std::cout << "m - Back to Main menu" << std::endl;
                 opt = selector();
                 switch (opt) {
                     case 1:
-                        cout << "q-norm value: ";
-                        cin >> q;
-                        cout << "Flexibilization value (0 - no flexibilization): ";
-                        cin >> flex;
-                        cout << "Alpha aproximation: ";
-                        cin >> alpha_aprox;
+                        std::cout << "q-norm value: ";
+                        std::cin >> q;
+                        std::cout << "Flexibilization value (0 - no flexibilization): ";
+                        std::cin >> flex;
+                        std::cout << "Alpha aproximation: ";
+                        std::cin >> alpha_aprox;
 
                         if(q == -1.0){
                             p = 1.0;
@@ -1282,17 +1282,17 @@ void featureSelectionOption(int option){
                         aos.setClassifier(&imap);
                         break;
                     case 2:
-                        cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
-                        cin >> kernel_type;
+                        std::cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
+                        std::cin >> kernel_type;
 
                         if (kernel_type == 1) {
-                            cout << "Polynomial degree: ";
+                            std::cout << "Polynomial degree: ";
                         } else if (kernel_type == 2) {
-                            cout << "Gaussian gamma: ";
+                            std::cout << "Gaussian gamma: ";
                         }
 
                         if (kernel_type != 0) {
-                            cin >> kernel_param;
+                            std::cin >> kernel_param;
                         }
                         type = getKernelType(kernel_type);
                         imadual.setKernelParam(kernel_param);
@@ -1301,17 +1301,17 @@ void featureSelectionOption(int option){
                         aos.setClassifier(&imadual);
                         break;
                     case 3:
-                        cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
-                        cin >> kernel_type;
+                        std::cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
+                        std::cin >> kernel_type;
 
                         if (kernel_type == 1) {
-                            cout << "Polynomial degree: ";
+                            std::cout << "Polynomial degree: ";
                         } else if (kernel_type == 2) {
-                            cout << "Gaussian gamma: ";
+                            std::cout << "Gaussian gamma: ";
                         }
 
                         if (kernel_type != 0) {
-                            cin >> kernel_param;
+                            std::cin >> kernel_param;
                         }
                         type = getKernelType(kernel_type);
                         smo.setKernelParam(kernel_param);
@@ -1329,20 +1329,20 @@ void featureSelectionOption(int option){
                         break;
                 }
 
-                cout << endl;
-                cout << "Desired dimension (max. " << samples.dim() << "): ";
-                cin >> ddim;
-                cout << "Branching factor (max. " << samples.dim() << "): ";
-                cin >> branching;
-                cout << endl;
-                cout << "Branching sorting: (1)W (2)W/center (3)W*radius/center (4)W*radius (5)W*Golub (6)W*Fisher: ";
-                cin >> branch_form;
-                cout << "Choice: (1)Margin (2)Margin*Dist.Centers: ";
-                cin >> choice_form;
-                cout << "Look-Ahead depth: ";
-                cin >> prof_look_ahead;
-                cout << "Cut depth: ";
-                cin >> cut;
+                std::cout << std::endl;
+                std::cout << "Desired dimension (max. " << samples.dim() << "): ";
+                std::cin >> ddim;
+                std::cout << "Branching factor (max. " << samples.dim() << "): ";
+                std::cin >> branching;
+                std::cout << std::endl;
+                std::cout << "Branching sorting: (1)W (2)W/center (3)W*radius/center (4)W*radius (5)W*Golub (6)W*Fisher: ";
+                std::cin >> branch_form;
+                std::cout << "Choice: (1)Margin (2)Margin*Dist.Centers: ";
+                std::cin >> choice_form;
+                std::cout << "Look-Ahead depth: ";
+                std::cin >> prof_look_ahead;
+                std::cout << "Cut depth: ";
+                std::cin >> cut;
 
                 aos.setVerbose(verbose);
                 aos.setFinalDimension(ddim);
@@ -1361,10 +1361,10 @@ void featureSelectionOption(int option){
                 samples.clear();
                 samples = res;
 
-                cout << time.elapsed()/1000 << " seconds to compute.\n";
+                std::cout << time.elapsed()/1000 << " seconds to compute.\n";
 
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
 
             waitUserAction();
@@ -1386,11 +1386,11 @@ void regressorsOption(int option) {
             clear();
             header();
 
-            cout << "1 - Least Mean Squares Primal (LMS Primal)" << endl;
-            cout << "2 - K-nearest neighbors (KNN)" << endl;
-            cout << endl;
-            cout << "0 - Back to regressors menu" << endl;
-            cout << "m - Back to main menu." << endl;
+            std::cout << "1 - Least Mean Squares Primal (LMS Primal)" << std::endl;
+            std::cout << "2 - K-nearest neighbors (KNN)" << std::endl;
+            std::cout << std::endl;
+            std::cout << "0 - Back to regressors menu" << std::endl;
+            std::cout << "m - Back to main menu." << std::endl;
 
             opt = selector();
             primalRegressorsOption(opt);
@@ -1399,10 +1399,10 @@ void regressorsOption(int option) {
             clear();
             header();
 
-            cout << "1 - Least Mean Squares Dual (LMS Dual)" << endl;
-            cout << endl;
-            cout << "0 - Back to regressors menu" << endl;
-            cout << "m - Back to main menu." << endl;
+            std::cout << "1 - Least Mean Squares Dual (LMS Dual)" << std::endl;
+            std::cout << std::endl;
+            std::cout << "0 - Back to regressors menu" << std::endl;
+            std::cout << "m - Back to main menu." << std::endl;
 
             opt = selector();
             dualRegressorsOption(opt);
@@ -1423,11 +1423,11 @@ void clusterersOption(int option){
             if(!samples.isEmpty()) {
                 size_t k;
                 size_t initialization;
-                cout << "k value: ";
-                cin >> k;
-                cout << endl;
-                cout << "Initialization [0 - random; 1 - kmeanspp]: ";
-                cin >> initialization;
+                std::cout << "k value: ";
+                std::cin >> k;
+                std::cout << std::endl;
+                std::cout << "Initialization [0 - random; 1 - kmeanspp]: ";
+                std::cin >> initialization;
                 clusterer::KMeans<double> kmeans(samples, k, (initialization == 0) ? "random" : "kmeanspp");
                 kmeans.setMaxTime(max_time);
                 kmeans.train();
@@ -1440,10 +1440,10 @@ void clusterersOption(int option){
                     point->Y() = kmeans.evaluate(*point);
                 }
                 mltk::visualize::Visualization<double> vis(_data);
-                vector<int> classes(_data.classes().size());
+                std::vector<int> classes(_data.classes().size());
                 iota(classes.begin(), classes.end(), 1);
                 _data.setClasses(classes);
-                cout << endl;
+                std::cout << std::endl;
                 utils::printConfusionMatrix(classes, samples.classesNames(), conf_m);
                 if(_data.dim() >= 3 )
                     vis.plot3D(1,2,3);
@@ -1451,7 +1451,7 @@ void clusterersOption(int option){
                     vis.plot2D(1, 2);
                 waitUserAction();
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             break;
         case 0:
@@ -1484,29 +1484,29 @@ void primalRegressorsOption(int option) {
 
                 waitUserAction();
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             break;
         case 2:
             if(!samples.isEmpty()) {
                 size_t k;
-                cout << "k value: ";
-                cin >> k;
-                cout << "Enter a point to evaluate:" << endl;
-                vector<double> feats(samples.dim());
+                std::cout << "k value: ";
+                std::cin >> k;
+                std::cout << "Enter a point to evaluate:" << std::endl;
+                std::vector<double> feats(samples.dim());
                 for(size_t i = 0; i < samples.dim(); i++){
-                    cout << "Dim " << i << ": ";
-                    cin >> feats[i];
+                    std::cout << "Dim " << i << ": ";
+                    std::cin >> feats[i];
                 }
-                cout << endl;
+                std::cout << std::endl;
 
                 regressor::KNNRegressor<double> knn(samples, k);
                 double value = knn.evaluate(Point<double>(feats));
 
-                cout << "Evaluated value: " << value << endl;
+                std::cout << "Evaluated value: " << value << std::endl;
 
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             break;
         case 0:
@@ -1528,7 +1528,7 @@ void dualRegressorsOption(int option) {
             if(!samples.isEmpty()){
                 waitUserAction();
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             break;
         case 0:
@@ -1555,26 +1555,26 @@ void validationOption(int option){
             if(!samples.isEmpty()){
                 classifier::IMAp<double> imap(samples);
 
-                cout << "Quantity of K-fold: ";
-                cin >> qtde;
-                cout << "Number of folds: ";
-                cin >> fold;
+                std::cout << "Quantity of K-fold: ";
+                std::cin >> qtde;
+                std::cout << "Number of folds: ";
+                std::cin >> fold;
 
-                cout << "[1]p or [2]q norm: ";
-                cin >> norm;
-                cout << endl;
+                std::cout << "[1]p or [2]q norm: ";
+                std::cin >> norm;
+                std::cout << std::endl;
 
                 if(norm == 1){
-                    cout << "p-norm value: ";
-                    cin >> p;
+                    std::cout << "p-norm value: ";
+                    std::cin >> p;
                     if(p == 1.0){
                         q = -1.0;
                     }else{
                         q = (int)(p/(p-1.0));
                     }
                 }else{
-                    cout << "q-norm value: ";
-                    cin >> q;
+                    std::cout << "q-norm value: ";
+                    std::cin >> q;
                     if(q == -1.0){
                         p = 1.0;
                     }else if(q == 1.0){
@@ -1583,14 +1583,14 @@ void validationOption(int option){
                         p = (int)(q/(q-1.0));
                     }
                 }
-                cout << endl;
-                cout << "Flexibilization value [0 - no flexibilization]: ";
-                cin >> flexible;
-                cout << endl;
-                cout << "Alpha aproximation value [1 - alpha]: ";
-                cin >> alpha_prox;
-                cout << endl;
-                cout << max_time << endl;
+                std::cout << std::endl;
+                std::cout << "Flexibilization value [0 - no flexibilization]: ";
+                std::cin >> flexible;
+                std::cout << std::endl;
+                std::cout << "Alpha aproximation value [1 - alpha]: ";
+                std::cin >> alpha_prox;
+                std::cout << std::endl;
+                std::cout << max_time << std::endl;
 
                 imap.setMaxTime(max_time);
                 imap.setpNorm(p);
@@ -1599,46 +1599,46 @@ void validationOption(int option){
                 imap.setFlexible(flexible);
                 imap.setAlphaAprox(alpha_prox);
 
-                clock_t begin = clock();
+                std::clock_t begin = std::clock();
 //                val_sol = validate.validation(fold, qtde);
-                clock_t end = clock();
+                std::clock_t end = std::clock();
 //
-//                cout << "\n\n   " << fold << "-Fold Cross Validation stats:" << endl;
-//                cout << "\nAccuracy: "<< val_sol.accuracy << endl;
-//                cout << "Precision: "<< val_sol.precision << endl;
-//                cout << "Recall: "<< val_sol.recall << endl;
-//                cout << endl;
+//                std::cout << "\n\n   " << fold << "-Fold Cross Validation stats:" << std::endl;
+//                std::cout << "\nAccuracy: "<< val_sol.accuracy << std::endl;
+//                std::cout << "Precision: "<< val_sol.precision << std::endl;
+//                std::cout << "Recall: "<< val_sol.recall << std::endl;
+//                std::cout << std::endl;
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                cout << endl;
-                cout << elapsed_secs << " seconds to compute.\n";
+                std::cout << std::endl;
+                std::cout << elapsed_secs << " seconds to compute.\n";
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             waitUserAction();
             break;
         case 2:
             if(!samples.isEmpty()){
-                cout << "Quantity of K-fold: ";
-                cin >> qtde;
-                cout << "Number of folds: ";
-                cin >> fold;
+                std::cout << "Quantity of K-fold: ";
+                std::cin >> qtde;
+                std::cout << "Number of folds: ";
+                std::cin >> fold;
 
-                cout << "Learning rate: ";
-                cin >> rate;
-                cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
-                cin >> kernel_type;
+                std::cout << "Learning rate: ";
+                std::cin >> rate;
+                std::cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
+                std::cin >> kernel_type;
 
                 if(kernel_type != 0){
                     if(kernel_type == 1){
-                        cout << "Polynomial degree: ";
+                        std::cout << "Polynomial degree: ";
                     }else{
-                        cout << "Gaussian gamma: ";
+                        std::cout << "Gaussian gamma: ";
                     }
-                    cin >> kernel_param;
+                    std::cin >> kernel_param;
                 }
 
-                clock_t begin = clock();
+                std::clock_t begin = std::clock();
                 mltk::KernelType type = getKernelType(kernel_type);
                 classifier::IMADual<double> ima_dual(samples, type, kernel_param);
                 ima_dual.setMaxTime(max_time);
@@ -1648,18 +1648,18 @@ void validationOption(int option){
 //                validate.setVerbose(verbose);
 //                validate.partTrainTest(fold);
 //                val_sol = validate.validation(fold, qtde);
-                clock_t end = clock();
+                std::clock_t end = std::clock();
 
-//                cout << "\nAccuracy: "<< val_sol.accuracy << endl;
-//                cout << "Precision: "<< val_sol.precision << endl;
-//                cout << "Recall: "<< val_sol.recall << endl;
-                cout << endl;
+//                std::cout << "\nAccuracy: "<< val_sol.accuracy << std::endl;
+//                std::cout << "Precision: "<< val_sol.precision << std::endl;
+//                std::cout << "Recall: "<< val_sol.recall << std::endl;
+                std::cout << std::endl;
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                cout << endl;
-                cout << elapsed_secs << " seconds to compute.\n";
+                std::cout << std::endl;
+                std::cout << elapsed_secs << " seconds to compute.\n";
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             waitUserAction();
             break;
@@ -1667,27 +1667,27 @@ void validationOption(int option){
             if(!samples.isEmpty()){
                 Kernel K;
 
-                cout << "Quantity of K-fold: ";
-                cin >> qtde;
-                cout << "Number of folds: ";
-                cin >> fold;
+                std::cout << "Quantity of K-fold: ";
+                std::cin >> qtde;
+                std::cout << "Number of folds: ";
+                std::cin >> fold;
 
-                cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
-                cin >> kernel_type;
+                std::cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
+                std::cin >> kernel_type;
 
                 if(kernel_type != 0){
                     if(kernel_type == 1){
-                        cout << "Polynomial degree: ";
+                        std::cout << "Polynomial degree: ";
                     }else{
-                        cout << "Gaussian gamma: ";
+                        std::cout << "Gaussian gamma: ";
                     }
-                    cin >> kernel_param;
+                    std::cin >> kernel_param;
                 }
 
                 K.setType(kernel_type);
                 K.setParam(kernel_param);
 
-                clock_t begin = clock();
+                std::clock_t begin = std::clock();
                 mltk::KernelType type = getKernelType(kernel_type);
                 classifier::SMO<double> smo(samples, type, kernel_param, verbose);
                 
@@ -1697,18 +1697,18 @@ void validationOption(int option){
 //                validate.setVerbose(verbose);
 //                validate.partTrainTest(fold);
 //                val_sol = validate.validation(fold, qtde);
-                clock_t end = clock();
+                std::clock_t end = std::clock();
 
-                // cout << "\nAccuracy: "<< val_sol.accuracy << endl;
-                // cout << "Precision: "<< val_sol.precision << endl;
-                // cout << "Recall: "<< val_sol.recall << endl;
-                // cout << endl;
+                // std::cout << "\nAccuracy: "<< val_sol.accuracy << std::endl;
+                // std::cout << "Precision: "<< val_sol.precision << std::endl;
+                // std::cout << "Recall: "<< val_sol.recall << std::endl;
+                // std::cout << std::endl;
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                cout << endl;
-                cout << elapsed_secs << " seconds to compute.\n";
+                std::cout << std::endl;
+                std::cout << elapsed_secs << " seconds to compute.\n";
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             waitUserAction();
             break;
@@ -1729,93 +1729,93 @@ void primalClassifiersOption(int option){
     switch (option) {
         case 1:
             if(!samples.isEmpty()){
-                cout << "Value of the learning rate: ";
-                cin >> rate;
-                cout << "Value of the q norm: ";
-                cin >> q;
-                cout << endl;
+                std::cout << "Value of the learning rate: ";
+                std::cin >> rate;
+                std::cout << "Value of the q norm: ";
+                std::cin >> q;
+                std::cout << std::endl;
 
                 classifier::PerceptronPrimal<double> perc(samples, q, rate);
 
-                clock_t begin = clock();
+                std::clock_t begin = std::clock();
                 perc.train();
                 sol = perc.getSolution();
 
-                cout << "Number of steps through data: " << perc.getSteps() << endl;
-                cout << "Number of updates: " << perc.getUpdates() << endl;
-                cout << "Weights vector:" << endl;
-                cout << "[";
+                std::cout << "Number of steps through data: " << perc.getSteps() << std::endl;
+                std::cout << "Number of updates: " << perc.getUpdates() << std::endl;
+                std::cout << "Weights vector:" << std::endl;
+                std::cout << "[";
                 for(i = 0; i < sol.w.size(); i++){
-                    cout << sol.w[i] << ", ";
+                    std::cout << sol.w[i] << ", ";
                 }
-                cout << sol.bias <<  "]" << endl;
-                cout << endl;
+                std::cout << sol.bias <<  "]" << std::endl;
+                std::cout << std::endl;
 
-                clock_t end = clock();
+                std::clock_t end = std::clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                cout << endl;
-                cout << elapsed_secs << " seconds to compute.\n";
+                std::cout << std::endl;
+                std::cout << elapsed_secs << " seconds to compute.\n";
 
                 waitUserAction();
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             break;
         case 2:
             if(!samples.isEmpty()){
-                cout << "Value of the learning rate: ";
-                cin >> rate;
-                cout << "Value of the q norm: ";
-                cin >> q;
-                cout << "Gamma value: ";
-                cin >> gamma;
-                cout << endl;
+                std::cout << "Value of the learning rate: ";
+                std::cin >> rate;
+                std::cout << "Value of the q norm: ";
+                std::cin >> q;
+                std::cout << "Gamma value: ";
+                std::cin >> gamma;
+                std::cout << std::endl;
 
                 classifier::PerceptronFixedMarginPrimal<double> perc(samples, gamma, q, rate);
 
-                clock_t begin = clock();
+                std::clock_t begin = std::clock();
                 perc.train();
                 sol = perc.getSolution();
 
-                cout << "Number of steps through data: " << perc.getSteps() << endl;
-                cout << "Number of updates: " << perc.getUpdates() << endl;
-                cout << "Weights vector:" << endl;
-                cout << "[";
+                std::cout << "Number of steps through data: " << perc.getSteps() << std::endl;
+                std::cout << "Number of updates: " << perc.getUpdates() << std::endl;
+                std::cout << "Weights vector:" << std::endl;
+                std::cout << "[";
                 for(i = 0; i < sol.w.size(); i++){
-                    cout << sol.w[i] << ", ";
+                    std::cout << sol.w[i] << ", ";
                 }
-                cout << sol.bias <<  "]" << endl;
-                cout << endl;
+                std::cout << sol.bias <<  "]" << std::endl;
+                std::cout << std::endl;
 
-                clock_t end = clock();
+                std::clock_t end = std::clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                cout << endl;
-                cout << elapsed_secs << " seconds to compute.\n";
+                std::cout << std::endl;
+                std::cout << elapsed_secs << " seconds to compute.\n";
 
                 waitUserAction();
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             break;
         case 3:
             if(!samples.isEmpty()){
-                cout << "[1]p or [2]q norm: ";
-                cin >> norm;
-                cout << endl;
+                std::cout << "[1]p or [2]q norm: ";
+                std::cin >> norm;
+                std::cout << std::endl;
 
                 if(norm == 1){
-                    cout << "p-norm value: ";
-                    cin >> p;
+                    std::cout << "p-norm value: ";
+                    std::cin >> p;
                     if(p == 1.0){
                         q = -1.0;
                     }else{
                         q = p/(p-1.0);
                     }
                 }else{
-                    cout << "q-norm value: ";
-                    cin >> q;
+                    std::cout << "q-norm value: ";
+                    std::cin >> q;
                     if(q == -1.0){
                         p = 1.0;
                     }else if(q == 1.0){
@@ -1824,14 +1824,14 @@ void primalClassifiersOption(int option){
                         p = (int)(q/(q-1.0));
                     }
                 }
-                cout << endl;
-                cout << "Flexibilization value [0 - no flexibilization]: ";
-                cin >> flexible;
-                cout << endl;
+                std::cout << std::endl;
+                std::cout << "Flexibilization value [0 - no flexibilization]: ";
+                std::cin >> flexible;
+                std::cout << std::endl;
 
-                cout << "Alpha aproximation value [1 - alpha]: ";
-                cin >> alpha_prox;
-                cout << endl;
+                std::cout << "Alpha aproximation value [1 - alpha]: ";
+                std::cin >> alpha_prox;
+                std::cout << std::endl;
 
                 classifier::IMAp<double> imap(samples);
 
@@ -1841,42 +1841,42 @@ void primalClassifiersOption(int option){
                 imap.setFlexible(flexible);
                 imap.setAlphaAprox(alpha_prox);
 
-                clock_t begin = clock();
+                std::clock_t begin = std::clock();
 
                 if(imap.train()){
                     sol = imap.getSolution();
-                    cout << "Training successful..." << endl;
-                    cout << "\nMargin = " << sol.margin << ", Support Vectors = " << sol.svs << "\n" << endl;
+                    std::cout << "Training successful..." << std::endl;
+                    std::cout << "\nMargin = " << sol.margin << ", Support Vectors = " << sol.svs << "\n" << std::endl;
                 }
 
-                clock_t end = clock();
+                std::clock_t end = std::clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                cout << endl;
-                cout << elapsed_secs << " seconds to compute.\n";
+                std::cout << std::endl;
+                std::cout << elapsed_secs << " seconds to compute.\n";
 
                 waitUserAction();
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             break;
         case 4:
             if(!samples.isEmpty()) {
                 size_t k;
-                cout << "k value: ";
-                cin >> k;
-                cout << endl;
+                std::cout << "k value: ";
+                std::cin >> k;
+                std::cout << std::endl;
 
                 classifier::KNNClassifier<double> knn(samples, k);
-                vector<string> class_names = samples.classesNames();
-                vector<int> classes = samples.classes();
+                std::vector<std::string> class_names = samples.classesNames();
+                std::vector<int> classes = samples.classes();
 
                 auto conf_matrix = validation::generateConfusionMatrix(samples, knn);
-                cout << "Confusion Matrix: " << endl;
+                std::cout << "Confusion Matrix: " << std::endl;
                 utils::printConfusionMatrix(classes, samples.classesNames(), conf_matrix);
                 waitUserAction();
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             break;
         case 0:
@@ -1900,176 +1900,176 @@ void dualClassifiersOption(int option){
     switch (option) {
         case 1:
             if(!samples.isEmpty()){
-                cout << "Learning rate: ";
-                cin >> rate;
-                cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
-                cin >> kernel_type;
+                std::cout << "Learning rate: ";
+                std::cin >> rate;
+                std::cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
+                std::cin >> kernel_type;
 
                 if(kernel_type != 0){
                     if(kernel_type == 1){
-                        cout << "Polynomial degree: ";
+                        std::cout << "Polynomial degree: ";
                     }else{
-                        cout << "Gaussian gamma: ";
+                        std::cout << "Gaussian gamma: ";
                     }
-                    cin >> kernel_param;
+                    std::cin >> kernel_param;
                 }
 
-                clock_t begin = clock();
+                std::clock_t begin = std::clock();
                 mltk::KernelType type = getKernelType(kernel_type);
                 classifier::PerceptronDual<double> perc_dual(samples, type, kernel_param,rate);
                 perc_dual.train();
 
                 sol = perc_dual.getSolution();
 
-                cout << endl;
-                cout << "Alpha vector:" << endl;
-                cout << "[";
+                std::cout << std::endl;
+                std::cout << "Alpha vector:" << std::endl;
+                std::cout << "[";
 
                 for(i = 0; i < sol.alpha.size(); i++){
-                    cout << sol.alpha[i] << ", ";
+                    std::cout << sol.alpha[i] << ", ";
                 }
 
-                cout << sol.bias <<  "]" << endl;
-                cout << endl;
-                cout << "Weights vector:" << endl;
-                cout << "[";
+                std::cout << sol.bias <<  "]" << std::endl;
+                std::cout << std::endl;
+                std::cout << "Weights vector:" << std::endl;
+                std::cout << "[";
 
                 for(i = 0; i < sol.w.size(); i++){
-                    cout << sol.w[i] << ", ";
+                    std::cout << sol.w[i] << ", ";
                 }
 
-                cout << sol.bias <<  "]" << endl;
-                cout << endl;
+                std::cout << sol.bias <<  "]" << std::endl;
+                std::cout << std::endl;
 
-                clock_t end = clock();
+                std::clock_t end = std::clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                cout << endl;
-                cout << elapsed_secs << " seconds to compute.\n";
+                std::cout << std::endl;
+                std::cout << elapsed_secs << " seconds to compute.\n";
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             waitUserAction();
             break;
         case 2:
             if(!samples.isEmpty()){
                 double gamma;
-                cout << "Learning rate: ";
-                cin >> rate;
-                cout << "Gamma value: ";
-                cin >> gamma;
-                cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
-                cin >> kernel_type;
+                std::cout << "Learning rate: ";
+                std::cin >> rate;
+                std::cout << "Gamma value: ";
+                std::cin >> gamma;
+                std::cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
+                std::cin >> kernel_type;
 
                 if(kernel_type != 0){
                     if(kernel_type == 1){
-                        cout << "Polynomial degree: ";
+                        std::cout << "Polynomial degree: ";
                     }else{
-                        cout << "Gaussian gamma: ";
+                        std::cout << "Gaussian gamma: ";
                     }
-                    cin >> kernel_param;
+                    std::cin >> kernel_param;
                 }
 
-                clock_t begin = clock();
+                std::clock_t begin = std::clock();
                 mltk::KernelType type = getKernelType(kernel_type);
                 classifier::PerceptronFixedMarginDual<double> perc_fixmargin_dual(samples, type, kernel_param, gamma, rate);
                 perc_fixmargin_dual.train();
 
                 sol = perc_fixmargin_dual.getSolution();
-                cout << endl;
-                cout << "Alpha vector:" << endl;
-                cout << "[";
+                std::cout << std::endl;
+                std::cout << "Alpha vector:" << std::endl;
+                std::cout << "[";
                 for(i = 0; i < sol.alpha.size(); i++){
-                    cout << sol.alpha[i] << ", ";
+                    std::cout << sol.alpha[i] << ", ";
                 }
-                cout << sol.bias <<  "]" << endl;
-                cout << endl;
+                std::cout << sol.bias <<  "]" << std::endl;
+                std::cout << std::endl;
 
-                cout << "Weights vector:" << endl;
-                cout << "[";
+                std::cout << "Weights vector:" << std::endl;
+                std::cout << "[";
                 for(i = 0; i < sol.w.size(); i++){
-                    cout << sol.w[i] << ", ";
+                    std::cout << sol.w[i] << ", ";
                 }
-                cout << sol.bias <<  "]" << endl;
-                cout << endl;
+                std::cout << sol.bias <<  "]" << std::endl;
+                std::cout << std::endl;
 
-                clock_t end = clock();
+                std::clock_t end = std::clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                cout << endl;
-                cout << elapsed_secs << " seconds to compute.\n";
+                std::cout << std::endl;
+                std::cout << elapsed_secs << " seconds to compute.\n";
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             waitUserAction();
             break;
         case 3:
             if(!samples.isEmpty()){
-                cout << "Learning rate: ";
-                cin >> rate;
-                cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
-                cin >> kernel_type;
+                std::cout << "Learning rate: ";
+                std::cin >> rate;
+                std::cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
+                std::cin >> kernel_type;
 
                 if(kernel_type != 0){
                     if(kernel_type == 1){
-                        cout << "Polynomial degree: ";
+                        std::cout << "Polynomial degree: ";
                     }else{
-                        cout << "Gaussian gamma: ";
+                        std::cout << "Gaussian gamma: ";
                     }
-                    cin >> kernel_param;
+                    std::cin >> kernel_param;
                 }
 
-                clock_t begin = clock();
+                std::clock_t begin = std::clock();
                 KernelType type = getKernelType(kernel_type);
                 classifier::IMADual<double> ima_dual(samples, type, kernel_param, rate);
 
                 ima_dual.setMaxTime(max_time);
                 ima_dual.setVerbose(verbose);
                 ima_dual.train();
-                clock_t end = clock();
+                std::clock_t end = std::clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                cout << endl;
-                cout << elapsed_secs << " seconds to compute.\n";
+                std::cout << std::endl;
+                std::cout << elapsed_secs << " seconds to compute.\n";
 
                 sol = ima_dual.getSolution();
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             waitUserAction();
             break;
         case 4:
             if(!samples.isEmpty()){
-                cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
-                cin >> kernel_type;
+                std::cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
+                std::cin >> kernel_type;
 
                 if(kernel_type != 0){
                     if(kernel_type == 1){
-                        cout << "Polynomial degree: ";
+                        std::cout << "Polynomial degree: ";
                     }else{
-                        cout << "Gaussian gamma: ";
+                        std::cout << "Gaussian gamma: ";
                     }
-                    cin >> kernel_param;
+                    std::cin >> kernel_param;
                 }
 
                 mltk::KernelType type = getKernelType(kernel_type);
-                clock_t begin = clock();
+                std::clock_t begin = std::clock();
                 classifier::SMO<double> smo(samples, type, kernel_param, verbose);
 
                 smo.setMaxTime(max_time);
                 smo.setVerbose(verbose);
                 smo.train();
-                clock_t end = clock();
+                std::clock_t end = std::clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                cout << endl;
-                cout << elapsed_secs << " seconds to compute.\n";
+                std::cout << std::endl;
+                std::cout << elapsed_secs << " seconds to compute.\n";
 
                 sol = smo.getSolution();
                 waitUserAction();
                 classifiersOption(2);
             }else{
-                cout << "Load a dataset first..." << endl;
+                std::cout << "Load a dataset first..." << std::endl;
             }
             waitUserAction();
             break;
@@ -2109,4 +2109,5 @@ validation::ValidationReport runValidation(const Data<double>& data, Learner lea
     }
     std::cout << fold << "-fold accuracy: " << report.accuracy << std::endl;
     std::cout << fold << "-fold error: " << report.error << std::endl;
+    return report;
 }
