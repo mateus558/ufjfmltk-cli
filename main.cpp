@@ -15,22 +15,20 @@
 
 #define SEED 42
 
-using namespace std;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-using namespace mltk;
 
 int verbose = 1;
 bool sair = false, inva = false;
 double max_time = 110.0f;
 std::string data_folder = "../datasets/";
-Data<double> samples;
-Data<double> test_sample;
-Data<double> train_sample;
-Solution sol;
+mltk::Data<double> samples;
+mltk::Data<double> test_sample;
+mltk::Data<double> train_sample;
+mltk::Solution sol;
 mltk::visualize::Visualization<double> plot(samples);
 
 //Menus utilities
 void clear();
-vector<std::string> list_datasets(bool list);
+std::vector<std::string> list_datasets(bool list);
 bool valid_file(std::string file);
 void waitUserAction();
 void exitProgram();
@@ -68,7 +66,7 @@ void validationOption(int);
 //Utils
 mltk::KernelType getKernelType(int kernel_type);
 template < typename Learner>
-validation::ValidationReport runValidation(const Data<double>& data, Learner learner, int fold, int qtde=1, int verbose=1, size_t seed=SEED);
+mltk::validation::ValidationReport runValidation(const mltk::Data<double>& data, Learner learner, int fold, int qtde=1, int verbose=1, size_t seed=SEED);
 
 int main(int argc, char* argv[]){
     if(argc > 1){
@@ -98,15 +96,15 @@ bool valid_file(std::string file){
         ext = f + ext;
     }
 
-    for(std::string type : types){
+    for(std::string type : mltk::types){
         if(type == ext) flag = true;
     }
 
     return flag;
 }
 
-vector<std::string> list_datasets(bool list){
-    vector<std::string> files;
+std::vector<std::string> list_datasets(bool list){
+    std::vector<std::string> files;
 
 #ifdef __unix__
     DIR *dpdf;
@@ -170,7 +168,7 @@ void exitProgram(){
 
 void waitUserAction(){
     std::cout << "\nPress ENTER to continue..." << std::endl;
-    std::cin.ignore(std::numeric_limits<streamsize>::max(),'\n');
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
     std::cin.get();
 }
 
@@ -429,7 +427,7 @@ void datasetOption(int option){
                 std::cout << "Enter the number of the DB (must be in the DB folder): ";
                 std::cin >> sid;
 
-                path = data_folder + files[utils::stoin(sid)];
+                path = data_folder + files[mltk::utils::stoin(sid)];
                 std::clock_t begin = std::clock();
                 std::cout << "\n" << path << std::endl;
                 samples.load(path);
@@ -552,7 +550,7 @@ void datasetOption(int option){
                     std::cin >> seed;
 
                     std::clock_t begin = std::clock();
-                    auto valid_data = validation::partTrainTest(samples, 10, 42);
+                    auto valid_data = mltk::validation::partTrainTest(samples, 10, 42);
                     test_sample = valid_data.test;
                     train_sample = valid_data.train;
                     std::clock_t end = std::clock();
@@ -571,7 +569,7 @@ void datasetOption(int option){
         case 5:
             /*if(_data != NULL && !_data->empty()){
                 if(!test_sample){
-                    cerr << "Divide the train/test datasets first...\n" << std::endl;
+                    std::cerr << "Divide the train/test datasets first...\n" << std::endl;
                 }else{
                     std::string outfile = _data->get_dataset_name();
                     Sample *sample = Sample::copy(_data->get_samples());
@@ -630,13 +628,13 @@ void dataOption(int option){
                         std::cin.clear();
                     }
                 }
-                Data<double> temp = samples.insertFeatures(feats);
+                mltk::Data<double> temp = samples.insertFeatures(feats);
 
                 if(!temp.isEmpty()){
                     samples.clear();
                     samples = temp.copy();
                 }else{
-                    cerr << "Something went wrong." << std::endl;
+                    std::cerr << "Something went wrong." << std::endl;
                 }
             }else std::cout << "Load a dataset first...\n\n";
 
@@ -708,7 +706,7 @@ void dataOption(int option){
                 std::cin >> index;
                 std::clock_t begin = std::clock();
                 std::cout << std::endl;
-                std::cout << "The variance values is: " << stats::var(samples, index) << std::endl;
+                std::cout << "The variance values is: " << mltk::stats::var(samples, index) << std::endl;
                 std::clock_t end = std::clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
@@ -729,7 +727,7 @@ void dataOption(int option){
                 std::cout << std::endl;
 
                 std::clock_t begin = std::clock();
-                std::cout << "The value of the radius is: " << stats::radius(samples, index, q) << std::endl;
+                std::cout << "The value of the radius is: " << mltk::stats::radius(samples, index, q) << std::endl;
                 std::clock_t end = std::clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
@@ -748,7 +746,7 @@ void dataOption(int option){
                 std::cout << std::endl;
 
                 std::clock_t begin = std::clock();
-                std::cout << "The value of the center of the classes are: " << stats::distCenters(samples, index) << std::endl;
+                std::cout << "The value of the center of the classes are: " << mltk::stats::distCenters(samples, index) << std::endl;
                 std::cout << std::endl;
                 std::clock_t end = std::clock();
 
@@ -911,17 +909,17 @@ void classifiersOption(int option){
 void featureSelectionOption(int option){
     double p, q, alpha_aprox, kernel_param = 0;
     int opt, flex, kernel_type, ddim, jump, branching, branch_form, choice_form, prof_look_ahead, cut;
-    Timer time;
-    classifier::IMAp<double> imap(samples);
-    classifier::IMADual<double> imadual(samples);
-    classifier::SMO<double> smo;
-    validation::CrossValidation cv;
+    mltk::Timer time;
+    mltk::classifier::IMAp<double> imap(samples);
+    mltk::classifier::IMADual<double> imadual(samples);
+    mltk::classifier::SMO<double> smo;
+    mltk::validation::CrossValidation cv;
     mltk::featselect::RFE<double> rfe;
     mltk::featselect::Golub<double> golub;
     mltk::featselect::Fisher<double> fisher;
     mltk::featselect::AOS<double> aos;
-    Data<double> res;
-    KernelType type;
+    mltk::Data<double> res;
+    mltk::KernelType type;
 
     clear();
     header();
@@ -1428,12 +1426,12 @@ void clusterersOption(int option){
                 std::cout << std::endl;
                 std::cout << "Initialization [0 - random; 1 - kmeanspp]: ";
                 std::cin >> initialization;
-                clusterer::KMeans<double> kmeans(samples, k, (initialization == 0) ? "random" : "kmeanspp");
+                mltk::clusterer::KMeans<double> kmeans(samples, k, (initialization == 0) ? "random" : "kmeanspp");
                 kmeans.setMaxTime(max_time);
                 kmeans.train();
-                auto conf_m = validation::generateConfusionMatrix(samples, kmeans);
+                auto conf_m = mltk::validation::generateConfusionMatrix(samples, kmeans);
 
-                Data<double> _data;
+                mltk::Data<double> _data;
                 _data.copy(samples);
                 for(size_t i = 0; i < _data.size(); i++){
                     auto point = _data[i];
@@ -1444,7 +1442,7 @@ void clusterersOption(int option){
                 iota(classes.begin(), classes.end(), 1);
                 _data.setClasses(classes);
                 std::cout << std::endl;
-                utils::printConfusionMatrix(classes, samples.classesNames(), conf_m);
+                mltk::utils::printConfusionMatrix(classes, samples.classesNames(), conf_m);
                 if(_data.dim() >= 3 )
                     vis.plot3D(1,2,3);
                 if(_data.dim() == 2)
@@ -1475,7 +1473,7 @@ void primalRegressorsOption(int option) {
                 std::cout << "Value of the learning rate: ";
                 std::cin >> eta;
 
-                regressor::LMSPrimal<double> lms(samples, eta, 2);
+                mltk::regressor::LMSPrimal<double> lms(samples, eta, 2);
 
                 lms.setMaxIterations(20);
                 lms.setMaxTime(max_time);
@@ -1500,8 +1498,8 @@ void primalRegressorsOption(int option) {
                 }
                 std::cout << std::endl;
 
-                regressor::KNNRegressor<double> knn(samples, k);
-                double value = knn.evaluate(Point<double>(feats));
+                mltk::regressor::KNNRegressor<double> knn(samples, k);
+                double value = knn.evaluate(mltk::Point<double>(feats));
 
                 std::cout << "Evaluated value: " << value << std::endl;
 
@@ -1548,12 +1546,12 @@ void validationOption(int option){
     int fold, qtde, kernel_type;
     int p, q, i, norm, flexible, svs;
     double rate, gamma, alpha_prox, kernel_param = 0;
-    validation::ValidationReport val_sol;
+    mltk::validation::ValidationReport val_sol;
 
     switch(option){
         case 1:
             if(!samples.isEmpty()){
-                classifier::IMAp<double> imap(samples);
+                mltk::classifier::IMAp<double> imap(samples);
 
                 std::cout << "Quantity of K-fold: ";
                 std::cin >> qtde;
@@ -1640,7 +1638,7 @@ void validationOption(int option){
 
                 std::clock_t begin = std::clock();
                 mltk::KernelType type = getKernelType(kernel_type);
-                classifier::IMADual<double> ima_dual(samples, type, kernel_param);
+                mltk::classifier::IMADual<double> ima_dual(samples, type, kernel_param);
                 ima_dual.setMaxTime(max_time);
 
 //                Validation<double> validate(*samples, &ima_dual, 10);
@@ -1665,8 +1663,6 @@ void validationOption(int option){
             break;
         case 3:
             if(!samples.isEmpty()){
-                Kernel K;
-
                 std::cout << "Quantity of K-fold: ";
                 std::cin >> qtde;
                 std::cout << "Number of folds: ";
@@ -1684,12 +1680,9 @@ void validationOption(int option){
                     std::cin >> kernel_param;
                 }
 
-                K.setType(kernel_type);
-                K.setParam(kernel_param);
-
                 std::clock_t begin = std::clock();
                 mltk::KernelType type = getKernelType(kernel_type);
-                classifier::SMO<double> smo(samples, type, kernel_param, verbose);
+                mltk::classifier::SMO<double> smo(samples, type, kernel_param, verbose);
                 
                 smo.setMaxTime(max_time);
 //                Validation<double> validate(*samples, &smo, 10);
@@ -1735,7 +1728,7 @@ void primalClassifiersOption(int option){
                 std::cin >> q;
                 std::cout << std::endl;
 
-                classifier::PerceptronPrimal<double> perc(samples, q, rate);
+                mltk::classifier::PerceptronPrimal<double> perc(samples, q, rate);
 
                 std::clock_t begin = std::clock();
                 perc.train();
@@ -1772,7 +1765,7 @@ void primalClassifiersOption(int option){
                 std::cin >> gamma;
                 std::cout << std::endl;
 
-                classifier::PerceptronFixedMarginPrimal<double> perc(samples, gamma, q, rate);
+                mltk::classifier::PerceptronFixedMarginPrimal<double> perc(samples, gamma, q, rate);
 
                 std::clock_t begin = std::clock();
                 perc.train();
@@ -1833,7 +1826,7 @@ void primalClassifiersOption(int option){
                 std::cin >> alpha_prox;
                 std::cout << std::endl;
 
-                classifier::IMAp<double> imap(samples);
+                mltk::classifier::IMAp<double> imap(samples);
 
                 imap.setMaxTime(max_time);
                 imap.setpNorm(p);
@@ -1867,13 +1860,13 @@ void primalClassifiersOption(int option){
                 std::cin >> k;
                 std::cout << std::endl;
 
-                classifier::KNNClassifier<double> knn(samples, k);
+                mltk::classifier::KNNClassifier<double> knn(samples, k);
                 std::vector<std::string> class_names = samples.classesNames();
                 std::vector<int> classes = samples.classes();
 
-                auto conf_matrix = validation::generateConfusionMatrix(samples, knn);
+                auto conf_matrix = mltk::validation::generateConfusionMatrix(samples, knn);
                 std::cout << "Confusion Matrix: " << std::endl;
-                utils::printConfusionMatrix(classes, samples.classesNames(), conf_matrix);
+                mltk::utils::printConfusionMatrix(classes, samples.classesNames(), conf_matrix);
                 waitUserAction();
             }else{
                 std::cout << "Load a dataset first..." << std::endl;
@@ -1895,7 +1888,6 @@ void primalClassifiersOption(int option){
 void dualClassifiersOption(int option){
     int i, kernel_type = 0, kernel_param = 0;
     double rate;
-    Kernel K;
 
     switch (option) {
         case 1:
@@ -1916,7 +1908,7 @@ void dualClassifiersOption(int option){
 
                 std::clock_t begin = std::clock();
                 mltk::KernelType type = getKernelType(kernel_type);
-                classifier::PerceptronDual<double> perc_dual(samples, type, kernel_param,rate);
+                mltk::classifier::PerceptronDual<double> perc_dual(samples, type, kernel_param,rate);
                 perc_dual.train();
 
                 sol = perc_dual.getSolution();
@@ -1972,7 +1964,7 @@ void dualClassifiersOption(int option){
 
                 std::clock_t begin = std::clock();
                 mltk::KernelType type = getKernelType(kernel_type);
-                classifier::PerceptronFixedMarginDual<double> perc_fixmargin_dual(samples, type, kernel_param, gamma, rate);
+                mltk::classifier::PerceptronFixedMarginDual<double> perc_fixmargin_dual(samples, type, kernel_param, gamma, rate);
                 perc_fixmargin_dual.train();
 
                 sol = perc_fixmargin_dual.getSolution();
@@ -2020,8 +2012,8 @@ void dualClassifiersOption(int option){
                 }
 
                 std::clock_t begin = std::clock();
-                KernelType type = getKernelType(kernel_type);
-                classifier::IMADual<double> ima_dual(samples, type, kernel_param, rate);
+                mltk::KernelType type = getKernelType(kernel_type);
+                mltk::classifier::IMADual<double> ima_dual(samples, type, kernel_param, rate);
 
                 ima_dual.setMaxTime(max_time);
                 ima_dual.setVerbose(verbose);
@@ -2054,7 +2046,7 @@ void dualClassifiersOption(int option){
 
                 mltk::KernelType type = getKernelType(kernel_type);
                 std::clock_t begin = std::clock();
-                classifier::SMO<double> smo(samples, type, kernel_param, verbose);
+                mltk::classifier::SMO<double> smo(samples, type, kernel_param, verbose);
 
                 smo.setMaxTime(max_time);
                 smo.setVerbose(verbose);
@@ -2088,24 +2080,24 @@ void dualClassifiersOption(int option){
 mltk::KernelType getKernelType(int kernel_type){
     switch(kernel_type){
         case 0:
-            return KernelType::INNER_PRODUCT;
+            return mltk::KernelType::INNER_PRODUCT;
         case 1:
-            return KernelType::POLYNOMIAL;
+            return mltk::KernelType::POLYNOMIAL;
         case 2:
-            return KernelType::GAUSSIAN;
+            return mltk::KernelType::GAUSSIAN;
         default:
-            return KernelType::INVALID_TYPE;
+            return mltk::KernelType::INVALID_TYPE;
     }
 }
 
 template < typename Learner>
-validation::ValidationReport runValidation(const Data<double>& data, Learner learner, int fold, int qtde, int verbose, size_t seed){
-    validation::ValidationReport report;
+mltk::validation::ValidationReport runValidation(const mltk::Data<double>& data, Learner learner, int fold, int qtde, int verbose, size_t seed){
+    mltk::validation::ValidationReport report;
 
     if(qtde > 1){
-        report = validation::kkfold(data, learner, qtde, fold, true, seed, verbose);
+        report = mltk::validation::kkfold(data, learner, qtde, fold, true, seed, verbose);
     }else{
-        report = validation::kfold(data, learner, fold, true, seed, verbose);
+        report = mltk::validation::kfold(data, learner, fold, true, seed, verbose);
     }
     std::cout << fold << "-fold accuracy: " << report.accuracy << std::endl;
     std::cout << fold << "-fold error: " << report.error << std::endl;
