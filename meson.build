@@ -3,7 +3,7 @@ project('ufjfmltk_cli', 'cpp',
   default_options : ['warning_level=0', 'cpp_std=c++17'])
 
 cpp_compiler = meson.get_compiler('cpp')
-ufjfmltk = cpp_compiler.find_library('ufjfmltk', required:false)
+ufjfmltk = cpp_compiler.find_library('ufjfmltk', required : true)
 
 if not ufjfmltk.found() # Method from object called
    ufjfmltk = dependency('ufjfmltk')
