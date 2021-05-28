@@ -2,7 +2,7 @@
 [![Meson](https://github.com/mateus558/ufjfmltk-cli/actions/workflows/meson.yml/badge.svg?=windows-build)](https://github.com/mateus558/ufjfmltk-cli/actions/workflows/meson.yml)
 [![CMake](https://github.com/mateus558/ufjfmltk-cli/actions/workflows/cmake.yml/badge.svg)](https://github.com/mateus558/ufjfmltk-cli/actions/workflows/cmake.yml)
 
-## Building and Running
+## Building and running
 
 with meson
 ```
