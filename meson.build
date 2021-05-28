@@ -6,8 +6,7 @@ cpp_compiler = meson.get_compiler('cpp')
 ufjfmltk = cpp_compiler.find_library('ufjfmltk', required:false)
 
 if not ufjfmltk.found() # Method from object called
-   ufjfmltk = subproject('ufjfmltk')
-   ufjfmltk = ufjfmltk.get_variable('ufjfmltk_dep')
+   ufjfmltk = dependency('ufjfmltk')
 endif
 
 executable('ufjfmltk_cli', 'main.cpp',

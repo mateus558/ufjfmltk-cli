@@ -11,12 +11,7 @@
 #include <memory>
 #include <iomanip>
 
-#include <ufjfmltk/Core.hpp>
-#include <ufjfmltk/Classifier.hpp>
-#include <ufjfmltk/Clusterer.hpp>
-#include <ufjfmltk/Regressor.hpp>
-#include <ufjfmltk/FeatureSelection.hpp>
-#include <ufjfmltk/visual/Visualization.hpp>
+#include <ufjfmltk/ufjfmltk.hpp>
 
 using namespace std;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 using namespace mltk;
@@ -25,11 +20,11 @@ int verbose = 1;
 bool sair = false, inva = false;
 double max_time = 110.0f;
 string data_folder = "../datasets/";
-std::shared_ptr<Data<double> > samples(std::make_shared<Data<double> >());
+Data<double> samples;
 Data<double> test_sample;
 Data<double> train_sample;
 Solution sol;
-mltk::visualize::Visualization<double> plot(*samples);
+mltk::visualize::Visualization<double> plot(samples);
 
 //Menus utilities
 void clear();
@@ -68,10 +63,12 @@ void primalClassifiersOption(int);
 void dualClassifiersOption(int);
 void validationOption(int);
 
+mltk::KernelType getKernelType(int kernel_type);
+
 
 int main(int argc, char* argv[]){
     if(argc > 1){
-        samples->load(string(argv[1]));
+        samples.load(string(argv[1]));
     }
 
     while (true) {
@@ -419,7 +416,7 @@ void datasetOption(int option){
 
     switch(option){
         case 1:
-            if(samples->isEmpty()){
+            if(samples.isEmpty()){
                 string isReg;
                 string sid, path;
 
@@ -431,7 +428,7 @@ void datasetOption(int option){
                 path = data_folder + files[utils::stoin(sid)];
                 clock_t begin = clock();
                 cout << "\n" << path << endl;
-                samples->load(path);
+                samples.load(path);
                 clock_t end = clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
@@ -444,7 +441,7 @@ void datasetOption(int option){
                 cin >> y;
 
                 if(y == 'y'){
-                    samples->clear();
+                    samples.clear();
                     if(!test_sample.isEmpty()){
                         test_sample.clear();
                         train_sample.clear();
@@ -456,16 +453,19 @@ void datasetOption(int option){
             waitUserAction();
             break;
         case 2:
-            if(!samples->isEmpty()){
-                cout << "Dataset type: " << samples->getType() << endl;
-                cout << "Number of features: " << samples->dim() << endl;
-                cout << "Number of samples: " << samples->size() << endl;
-                if(samples->getType() == "Classification") {
-                    vector<string> class_names = samples->getClassNames();
-                    vector<size_t> class_frequency = samples->getClassesDistribution();
+            if(!samples.isEmpty()){
+                cout << "Dataset type: " << samples.getType() << endl;
+                cout << "Number of features: " << samples.dim() << endl;
+                cout << "Number of samples: " << samples.size() << endl;
+                if(samples.getType() == "Classification") {
+                    vector<string> class_names = samples.classesNames();
+                    vector<size_t> class_frequency = samples.classesDistribution();
                     if(class_names.size() == 2) {
-                        cout << "Negative points: " << samples->getNumberNegativePoints() << endl;
-                        cout << "Positive points: " << samples->getNumberPositivePoints() << endl;
+                        auto classes = samples.classes();
+                        auto neg_id = std::find(classes.begin(), classes.end(), -1) - classes.begin();
+                        auto pos_id = std::find(classes.begin(), classes.end(), 1) - classes.begin();
+                        cout << "Negative points: " << class_frequency[neg_id] << endl;
+                        cout << "Positive points: " << class_frequency[pos_id] << endl;
                     }else {
                         cout << "Class names and frequency [name - freq]: \n[";
                         for (i = 0; i < class_names.size() - 1; i++) {
@@ -478,12 +478,15 @@ void datasetOption(int option){
                     cout << "\n\nTest sample information\n\n";
                     cout << "Number of features: " << test_sample.dim() << endl;
                     cout << "Number of samples: " << test_sample.size() << endl;
-                    if(samples->getType() == "Classification") {
-                        vector<string> class_names = samples->getClassNames();
-                        vector<size_t> class_frequency = samples->getClassesDistribution();
+                    if(samples.getType() == "Classification") {
+                        vector<string> class_names = samples.classesNames();
+                        vector<size_t> class_frequency = samples.classesDistribution();
                         if(class_names.size() == 2) {
-                            cout << "Negative points: " << samples->getNumberNegativePoints() << endl;
-                            cout << "Positive points: " << samples->getNumberPositivePoints() << endl;
+                            auto classes = samples.classes();
+                            auto neg_id = std::find(classes.begin(), classes.end(), -1) - classes.begin();
+                            auto pos_id = std::find(classes.begin(), classes.end(), 1) - classes.begin();
+                            cout << "Negative points: " << class_frequency[neg_id] << endl;
+                            cout << "Positive points: " << class_frequency[pos_id] << endl;
                         }else {
                             cout << "Class names and frequency [name - freq]: \n[";
                             for (i = 0; i < class_names.size() - 1; i++) {
@@ -498,12 +501,15 @@ void datasetOption(int option){
                     cout << "\n\nTrain sample information\n\n";
                     cout << "Number of features: " << train_sample.dim() << endl;
                     cout << "Number of samples: " << train_sample.size() << endl;
-                    if(samples->getType() == "Classification") {
-                        vector<string> class_names = samples->getClassNames();
-                        vector<size_t> class_frequency = samples->getClassesDistribution();
+                    if(samples.getType() == "Classification") {
+                        vector<string> class_names = samples.classesNames();
+                        vector<size_t> class_frequency = samples.classesDistribution();
                         if(class_names.size() == 2) {
-                            cout << "Negative points: " << samples->getNumberNegativePoints() << endl;
-                            cout << "Positive points: " << samples->getNumberPositivePoints() << endl;
+                            auto classes = samples.classes();
+                            auto neg_id = std::find(classes.begin(), classes.end(), -1) - classes.begin();
+                            auto pos_id = std::find(classes.begin(), classes.end(), 1) - classes.begin();
+                            cout << "Negative points: " << class_frequency[neg_id] << endl;
+                            cout << "Positive points: " << class_frequency[pos_id] << endl;
                         }else {
                             cout << "Class names and frequency [name - freq]: \n[";
                             for (i = 0; i < class_names.size() - 1; i++) {
@@ -519,8 +525,8 @@ void datasetOption(int option){
             break;
 
         case 3:
-            if(!samples->isEmpty()){
-                vector<int> fnames = samples->getFeaturesNames();
+            if(!samples.isEmpty()){
+                vector<int> fnames = samples.getFeaturesNames();
 
                 for(int f : fnames){
                     cout << f << " : ";
@@ -531,7 +537,7 @@ void datasetOption(int option){
             waitUserAction();
             break;
         case 4:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 int fold;
                 unsigned int seed;
 
@@ -542,7 +548,7 @@ void datasetOption(int option){
                     cin >> seed;
 
                     clock_t begin = clock();
-                    auto valid_data = validation::partTrainTest(*samples, 10, 42);
+                    auto valid_data = validation::partTrainTest(samples, 10, 42);
                     test_sample = valid_data.test;
                     train_sample = valid_data.train;
                     clock_t end = clock();
@@ -593,10 +599,10 @@ void dataOption(int option){
 
     switch(option){
         case 1:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 int totalFeat, flag_feat, f, fnamesize;
                 vector<int> feats;
-                vector<int> fnames = samples->getFeaturesNames();
+                vector<int> fnames = samples.getFeaturesNames();
 
                 fnamesize = fnames.size();
                 cout << "Insert how many features: ";
@@ -620,11 +626,11 @@ void dataOption(int option){
                         cin.clear();
                     }
                 }
-                Data<double> *temp = samples->insertFeatures(feats);
+                Data<double> temp = samples.insertFeatures(feats);
 
-                if(!temp->isEmpty()){
-                    samples.reset();
-                    samples = make_shared<Data<double> >(*temp);
+                if(!temp.isEmpty()){
+                    samples.clear();
+                    samples = temp.copy();
                 }else{
                     cerr << "Something went wrong." << endl;
                 }
@@ -633,10 +639,10 @@ void dataOption(int option){
             waitUserAction();
             break;
         case 2:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 int totalFeat, flag_feat, f, fnamesize;
                 vector<int> feats;
-                vector<int> fnames = samples->getFeaturesNames();
+                vector<int> fnames = samples.getFeaturesNames();
 
                 fnamesize = fnames.size();
 
@@ -668,16 +674,16 @@ void dataOption(int option){
                     }
                 }
                 cout << endl;
-                samples->removeFeatures(feats);
+                samples.removeFeatures(feats);
 
-                fnames = samples->getFeaturesNames();
+                fnames = samples.getFeaturesNames();
 
             }else cout << "Load a dataset first...\n\n";
 
             waitUserAction();
             break;
         case 3:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 cout << "Point to remove index (-1 to cancel): ";
                 cin >> i;
 
@@ -685,20 +691,20 @@ void dataOption(int option){
                     break;
                 }
 
-                samples->removePoint(i);
+                samples.removePoint(i);
             }else cout << "Load a dataset first...\n\n";
 
             waitUserAction();
             break;
         case 4:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 int index;
 
                 cout << "Feature to be ignored (-1 doesnt ignore any feature): ";
                 cin >> index;
                 clock_t begin = clock();
                 cout << endl;
-                cout << "The variance values is: " << Statistics<double>::variance(samples, index) << endl;
+                cout << "The variance values is: " << stats::var(samples, index) << endl;
                 clock_t end = clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
@@ -709,7 +715,7 @@ void dataOption(int option){
             waitUserAction();
             break;
         case 5:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 int index, q;
 
                 cout << "Feature to be ignored: ";
@@ -719,7 +725,7 @@ void dataOption(int option){
                 cout << endl;
 
                 clock_t begin = clock();
-                cout << "The value of the radius is: " << Statistics<double>::getRadius(samples, index, q) << endl;
+                cout << "The value of the radius is: " << stats::radius(samples, index, q) << endl;
                 clock_t end = clock();
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
@@ -730,7 +736,7 @@ void dataOption(int option){
             waitUserAction();
             break;
         case 6:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 int index;
 
                 cout << "Feature to be ignored: ";
@@ -738,7 +744,7 @@ void dataOption(int option){
                 cout << endl;
 
                 clock_t begin = clock();
-                cout << "The value of the center of the classes are: " << Statistics<double>::getDistCenters(samples, index) << endl;
+                cout << "The value of the center of the classes are: " << stats::distCenters(samples, index) << endl;
                 cout << endl;
                 clock_t end = clock();
 
@@ -750,7 +756,7 @@ void dataOption(int option){
             waitUserAction();
             break;
         case 7:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 int q, p;
 
                 cout << "Value of q: ";
@@ -766,7 +772,7 @@ void dataOption(int option){
                 }
 
                 clock_t begin = clock();
-                samples->normalize(p);
+                samples.normalize(p);
                 cout << "The dataset was normalized." << endl;
                 clock_t end = clock();
 
@@ -778,8 +784,8 @@ void dataOption(int option){
             waitUserAction();
             break;
         case 8:
-            if(!samples->isEmpty()){
-                cout << *samples << endl;
+            if(!samples.isEmpty()){
+                cout << samples << endl;
             }else cout << "Load a dataset first...\n\n";
 
             waitUserAction();
@@ -797,7 +803,7 @@ void dataOption(int option){
 void VisualizationOption(int opt){
     int x, y, z;
 
-    plot.setSample(&(*samples));
+    plot.setSample(samples);
     switch (opt) {
         case 1:
             cout << "Enter the feature to plot in the x-axis: ";
@@ -910,7 +916,7 @@ void featureSelectionOption(int option){
     mltk::featselect::Golub<double> golub;
     mltk::featselect::Fisher<double> fisher;
     mltk::featselect::AOS<double> aos;
-    shared_ptr<Data<double> > res;
+    Data<double> res;
     KernelType type;
 
     clear();
@@ -918,7 +924,7 @@ void featureSelectionOption(int option){
 
     switch (option){
         case 1:
-            if(!samples->isEmpty()) {
+            if(!samples.isEmpty()) {
                 cout << "Recursive Feature Elimination (RFE)" << endl;
                 cout << "1 - IMAp" << endl;
                 cout << "2 - IMA Dual" << endl;
@@ -963,20 +969,7 @@ void featureSelectionOption(int option){
                         if (kernel_type != 0) {
                             cin >> kernel_param;
                         }
-                        switch(kernel_type){
-                            case 0:
-                                type = KernelType::INNER_PRODUCT;
-                                break;
-                            case 1:
-                                type = KernelType::POLYNOMIAL;
-                                break;
-                            case 2:
-                                type = KernelType::GAUSSIAN;
-                                break;
-                            default:
-                                type = KernelType::INVALID_TYPE;
-                                break;
-                        }
+                        type = getKernelType(kernel_type);
                         imadual.setKernelParam(kernel_param);
                         imadual.setKernelType(type);
                         imadual.setMaxTime(max_time);
@@ -995,20 +988,7 @@ void featureSelectionOption(int option){
                         if (kernel_type != 0) {
                             cin >> kernel_param;
                         }
-                        switch(kernel_type){
-                            case 0:
-                                type = KernelType::INNER_PRODUCT;
-                                break;
-                            case 1:
-                                type = KernelType::POLYNOMIAL;
-                                break;
-                            case 2:
-                                type = KernelType::GAUSSIAN;
-                                break;
-                            default:
-                                type = KernelType::INVALID_TYPE;
-                                break;
-                        }
+                        type = getKernelType(kernel_type);
                         smo.setKernelParam(kernel_param);
                         smo.setKernelType(type);
                         rfe.setClassifier(&smo);
@@ -1025,14 +1005,14 @@ void featureSelectionOption(int option){
                 }
                 clear();
                 cout << endl;
-                cout << "Desired dimension (max. " << samples->dim() << "): ";
+                cout << "Desired dimension (max. " << samples.dim() << "): ";
                 cin >> ddim;
                 cout << "Features eliminated at a time: ";
                 cin >> jump;
                 cout << endl;
 
                 rfe.setJump(jump);
-                rfe.setDepth(samples->dim() - ddim);
+                rfe.setDepth(samples.dim() - ddim);
 
                 clear();
                 cout << "\n--------- Cross-Validation ---------\n" << endl;
@@ -1049,14 +1029,14 @@ void featureSelectionOption(int option){
                 }
                 rfe.setCrossValidation(&cv);
                 rfe.setVerbose(verbose);
-                rfe.setSamples(samples);
+                rfe.setSamples(mltk::make_data<double>(samples));
                 clear();
-                time.Reset();
+                time.reset();
                 res = rfe.selectFeatures();
-                samples.reset();
+                samples.clear();
                 samples = res;
 
-                cout << time.Elapsed()/1000 << " seconds to compute.\n";
+                cout << time.elapsed()/1000 << " seconds to compute.\n";
             }else{
                 cout << "Load a dataset first..." << endl;
             }
@@ -1064,7 +1044,7 @@ void featureSelectionOption(int option){
             featureSelectionOption(1);
             break;
         case 2:
-            if(!samples->isEmpty()) {
+            if(!samples.isEmpty()) {
                 cout << "Golub" << endl;
                 cout << "1 - IMAp" << endl;
                 cout << "2 - IMA Dual" << endl;
@@ -1109,20 +1089,7 @@ void featureSelectionOption(int option){
                         if (kernel_type != 0) {
                             cin >> kernel_param;
                         }
-                        switch(kernel_type){
-                            case 0:
-                                type = KernelType::INNER_PRODUCT;
-                                break;
-                            case 1:
-                                type = KernelType::POLYNOMIAL;
-                                break;
-                            case 2:
-                                type = KernelType::GAUSSIAN;
-                                break;
-                            default:
-                                type = KernelType::INVALID_TYPE;
-                                break;
-                        }
+                        type = getKernelType(kernel_type);
                         imadual.setKernelParam(kernel_param);
                         imadual.setKernelType(type);
                         imadual.setMaxTime(max_time);
@@ -1141,20 +1108,7 @@ void featureSelectionOption(int option){
                         if (kernel_type != 0) {
                             cin >> kernel_param;
                         }
-                        switch(kernel_type){
-                            case 0:
-                                type = KernelType::INNER_PRODUCT;
-                                break;
-                            case 1:
-                                type = KernelType::POLYNOMIAL;
-                                break;
-                            case 2:
-                                type = KernelType::GAUSSIAN;
-                                break;
-                            default:
-                                type = KernelType::INVALID_TYPE;
-                                break;
-                        }
+                        type = getKernelType(kernel_type);
                         smo.setKernelParam(kernel_param);
                         smo.setKernelType(type);
                         golub.setClassifier(&smo);
@@ -1171,18 +1125,18 @@ void featureSelectionOption(int option){
                 }
                 clear();
                 cout << endl;
-                cout << "Desired dimension (max. " << samples->dim() << "): ";
+                cout << "Desired dimension (max. " << samples.dim() << "): ";
                 cin >> ddim;
                 golub.setVerbose(verbose);
                 golub.setFinalDimension(ddim);
-                golub.setSamples(samples);
+                golub.setSamples(mltk::make_data<double>(samples));
                 clear();
-                time.Reset();
+                time.reset();
                 res = golub.selectFeatures();
-                samples.reset();
+                samples.clear();
                 samples = res;
 
-                cout << time.Elapsed()/1000 << " seconds to compute.\n";
+                cout << time.elapsed()/1000 << " seconds to compute.\n";
             }else{
                 cout << "Load a dataset first..." << endl;
             }
@@ -1190,7 +1144,7 @@ void featureSelectionOption(int option){
             featureSelectionMenu();
             break;
         case 3:
-            if(!samples->isEmpty()) {
+            if(!samples.isEmpty()) {
                 cout << "Fisher" << endl;
                 cout << "1 - IMAp" << endl;
                 cout << "2 - IMA Dual" << endl;
@@ -1235,20 +1189,7 @@ void featureSelectionOption(int option){
                         if (kernel_type != 0) {
                             cin >> kernel_param;
                         }
-                        switch(kernel_type){
-                            case 0:
-                                type = KernelType::INNER_PRODUCT;
-                                break;
-                            case 1:
-                                type = KernelType::POLYNOMIAL;
-                                break;
-                            case 2:
-                                type = KernelType::GAUSSIAN;
-                                break;
-                            default:
-                                type = KernelType::INVALID_TYPE;
-                                break;
-                        }
+                        type = getKernelType(kernel_type);
                         imadual.setKernelParam(kernel_param);
                         imadual.setKernelType(type);
                         imadual.setMaxTime(max_time);
@@ -1267,20 +1208,7 @@ void featureSelectionOption(int option){
                         if (kernel_type != 0) {
                             cin >> kernel_param;
                         }
-                        switch(kernel_type){
-                            case 0:
-                                type = KernelType::INNER_PRODUCT;
-                                break;
-                            case 1:
-                                type = KernelType::POLYNOMIAL;
-                                break;
-                            case 2:
-                                type = KernelType::GAUSSIAN;
-                                break;
-                            default:
-                                type = KernelType::INVALID_TYPE;
-                                break;
-                        }
+                        type = getKernelType(kernel_type);
                         smo.setKernelParam(kernel_param);
                         smo.setKernelType(type);
                         fisher.setClassifier(&smo);
@@ -1297,18 +1225,18 @@ void featureSelectionOption(int option){
                 }
                 clear();
                 cout << endl;
-                cout << "Desired dimension (max. " << samples->dim() << "): ";
+                cout << "Desired dimension (max. " << samples.dim() << "): ";
                 cin >> ddim;
                 fisher.setVerbose(verbose);
                 fisher.setFinalDimension(ddim);
-                fisher.setSamples(samples);
+                fisher.setSamples(mltk::make_data<double>(samples));
                 clear();
-                time.Reset();
+                time.reset();
                 res = fisher.selectFeatures();
-                samples.reset();
+                samples.clear();
                 samples = res;
 
-                cout << time.Elapsed()/1000 << " seconds to compute.\n";
+                cout << time.elapsed()/1000 << " seconds to compute.\n";
             }else{
                 cout << "Load a dataset first..." << endl;
             }
@@ -1317,7 +1245,7 @@ void featureSelectionOption(int option){
             break;
         case 4:
 
-            if(!samples->isEmpty()) {
+            if(!samples.isEmpty()) {
                 cout << "Admissible Ordered Search (AOS)" << endl;
                 cout << "1 - IMAp" << endl;
                 cout << "2 - IMA Dual" << endl;
@@ -1362,20 +1290,7 @@ void featureSelectionOption(int option){
                         if (kernel_type != 0) {
                             cin >> kernel_param;
                         }
-                        switch(kernel_type){
-                            case 0:
-                                type = KernelType::INNER_PRODUCT;
-                                break;
-                            case 1:
-                                type = KernelType::POLYNOMIAL;
-                                break;
-                            case 2:
-                                type = KernelType::GAUSSIAN;
-                                break;
-                            default:
-                                type = KernelType::INVALID_TYPE;
-                                break;
-                        }
+                        type = getKernelType(kernel_type);
                         imadual.setKernelParam(kernel_param);
                         imadual.setKernelType(type);
                         imadual.setMaxTime(max_time);
@@ -1394,20 +1309,7 @@ void featureSelectionOption(int option){
                         if (kernel_type != 0) {
                             cin >> kernel_param;
                         }
-                        switch(kernel_type){
-                            case 0:
-                                type = KernelType::INNER_PRODUCT;
-                                break;
-                            case 1:
-                                type = KernelType::POLYNOMIAL;
-                                break;
-                            case 2:
-                                type = KernelType::GAUSSIAN;
-                                break;
-                            default:
-                                type = KernelType::INVALID_TYPE;
-                                break;
-                        }
+                        type = getKernelType(kernel_type);
                         smo.setKernelParam(kernel_param);
                         smo.setKernelType(type);
                         aos.setClassifier(&smo);
@@ -1424,9 +1326,9 @@ void featureSelectionOption(int option){
                 }
 
                 cout << endl;
-                cout << "Desired dimension (max. " << samples->dim() << "): ";
+                cout << "Desired dimension (max. " << samples.dim() << "): ";
                 cin >> ddim;
-                cout << "Branching factor (max. " << samples->dim() << "): ";
+                cout << "Branching factor (max. " << samples.dim() << "): ";
                 cin >> branching;
                 cout << endl;
                 cout << "Branching sorting: (1)W (2)W/center (3)W*radius/center (4)W*radius (5)W*Golub (6)W*Fisher: ";
@@ -1440,7 +1342,7 @@ void featureSelectionOption(int option){
 
                 aos.setVerbose(verbose);
                 aos.setFinalDimension(ddim);
-                aos.setSamples(samples);
+                aos.setSamples(mltk::make_data<double>(samples));
                 aos.setCrossValidation(&cv);
                 aos.setBreadth(branching);
                 aos.setChoiceShape(choice_form);
@@ -1449,13 +1351,13 @@ void featureSelectionOption(int option){
                 aos.setCut(cut);
 
                 clear();
-                time.Reset();
+                time.reset();
                 res = aos.selectFeatures();
 
-                samples.reset();
+                samples.clear();
                 samples = res;
 
-                cout << time.Elapsed()/1000 << " seconds to compute.\n";
+                cout << time.elapsed()/1000 << " seconds to compute.\n";
 
             }else{
                 cout << "Load a dataset first..." << endl;
@@ -1514,7 +1416,7 @@ void regressorsOption(int option) {
 void clusterersOption(int option){
     switch (option){
         case 1:
-            if(!samples->isEmpty()) {
+            if(!samples.isEmpty()) {
                 size_t k;
                 size_t initialization;
                 cout << "k value: ";
@@ -1525,10 +1427,10 @@ void clusterersOption(int option){
                 clusterer::KMeans<double> kmeans(samples, k, (initialization == 0) ? "random" : "kmeanspp");
                 kmeans.setMaxTime(max_time);
                 kmeans.train();
-                auto conf_m = validation::generateConfusionMatrix(*samples, kmeans);
+                auto conf_m = validation::generateConfusionMatrix(samples, kmeans);
 
                 Data<double> _data;
-                _data.copy(*samples);
+                _data.copy(samples);
                 for(size_t i = 0; i < _data.size(); i++){
                     auto point = _data[i];
                     point->Y() = kmeans.evaluate(*point);
@@ -1538,7 +1440,7 @@ void clusterersOption(int option){
                 iota(classes.begin(), classes.end(), 1);
                 _data.setClasses(classes);
                 cout << endl;
-                utils::printConfusionMatrix(classes, samples->getClassNames(), conf_m);
+                utils::printConfusionMatrix(classes, samples.classesNames(), conf_m);
                 if(_data.dim() >= 3 )
                     vis.plot3D(1,2,3);
                 if(_data.dim() == 2)
@@ -1565,7 +1467,7 @@ void primalRegressorsOption(int option) {
 
     switch (option) {
         case 1:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 std::cout << "Value of the learning rate: ";
                 std::cin >> eta;
 
@@ -1582,13 +1484,13 @@ void primalRegressorsOption(int option) {
             }
             break;
         case 2:
-            if(!samples->isEmpty()) {
+            if(!samples.isEmpty()) {
                 size_t k;
                 cout << "k value: ";
                 cin >> k;
                 cout << "Enter a point to evaluate:" << endl;
-                vector<double> feats(samples->dim());
-                for(size_t i = 0; i < samples->dim(); i++){
+                vector<double> feats(samples.dim());
+                for(size_t i = 0; i < samples.dim(); i++){
                     cout << "Dim " << i << ": ";
                     cin >> feats[i];
                 }
@@ -1619,7 +1521,7 @@ void primalRegressorsOption(int option) {
 void dualRegressorsOption(int option) {
     switch (option) {
         case 1:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 waitUserAction();
             }else{
                 cout << "Load a dataset first..." << endl;
@@ -1642,11 +1544,11 @@ void validationOption(int option){
     int fold, qtde, kernel_type;
     int p, q, i, norm, flexible, svs;
     double rate, gamma, alpha_prox, kernel_param = 0;
-    validation::ValidationSolution val_sol;
+    validation::ValidationReport val_sol;
 
     switch(option){
         case 1:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 classifier::IMAp<double> imap(samples);
 
                 cout << "Quantity of K-fold: ";
@@ -1712,9 +1614,7 @@ void validationOption(int option){
             waitUserAction();
             break;
         case 2:
-            if(!samples->isEmpty()){
-                Kernel K;
-
+            if(!samples.isEmpty()){
                 cout << "Quantity of K-fold: ";
                 cin >> qtde;
                 cout << "Number of folds: ";
@@ -1734,11 +1634,9 @@ void validationOption(int option){
                     cin >> kernel_param;
                 }
 
-                K.setType(kernel_type);
-                K.setParam(kernel_param);
-
                 clock_t begin = clock();
-                classifier::IMADual<double> ima_dual(samples, &K, rate, nullptr);
+                mltk::KernelType type = getKernelType(kernel_type);
+                classifier::IMADual<double> ima_dual(samples, type, kernel_param);
                 ima_dual.setMaxTime(max_time);
 
 //                Validation<double> validate(*samples, &ima_dual, 10);
@@ -1762,7 +1660,7 @@ void validationOption(int option){
             waitUserAction();
             break;
         case 3:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 Kernel K;
 
                 cout << "Quantity of K-fold: ";
@@ -1786,9 +1684,10 @@ void validationOption(int option){
                 K.setParam(kernel_param);
 
                 clock_t begin = clock();
-                classifier::SMO<double> smo(samples, &K, verbose);
+                mltk::KernelType type = getKernelType(kernel_type);
+                classifier::SMO<double> smo(samples, type, kernel_param, verbose);
+                
                 smo.setMaxTime(max_time);
-
 //                Validation<double> validate(*samples, &smo, 10);
 //
 //                validate.setVerbose(verbose);
@@ -1796,10 +1695,10 @@ void validationOption(int option){
 //                val_sol = validate.validation(fold, qtde);
                 clock_t end = clock();
 
-                cout << "\nAccuracy: "<< val_sol.accuracy << endl;
-                cout << "Precision: "<< val_sol.precision << endl;
-                cout << "Recall: "<< val_sol.recall << endl;
-                cout << endl;
+                // cout << "\nAccuracy: "<< val_sol.accuracy << endl;
+                // cout << "Precision: "<< val_sol.precision << endl;
+                // cout << "Recall: "<< val_sol.recall << endl;
+                // cout << endl;
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
                 cout << endl;
@@ -1825,7 +1724,7 @@ void primalClassifiersOption(int option){
 
     switch (option) {
         case 1:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 cout << "Value of the learning rate: ";
                 cin >> rate;
                 cout << "Value of the q norm: ";
@@ -1860,7 +1759,7 @@ void primalClassifiersOption(int option){
             }
             break;
         case 2:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 cout << "Value of the learning rate: ";
                 cin >> rate;
                 cout << "Value of the q norm: ";
@@ -1897,7 +1796,7 @@ void primalClassifiersOption(int option){
             }
             break;
         case 3:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 cout << "[1]p or [2]q norm: ";
                 cin >> norm;
                 cout << endl;
@@ -1958,19 +1857,19 @@ void primalClassifiersOption(int option){
             }
             break;
         case 4:
-            if(!samples->isEmpty()) {
+            if(!samples.isEmpty()) {
                 size_t k;
                 cout << "k value: ";
                 cin >> k;
                 cout << endl;
 
-                classifier::KNNClassifier<double> knn(*samples, k);
-                vector<string> class_names = samples->getClassNames();
-                vector<int> classes = samples->classes();
+                classifier::KNNClassifier<double> knn(samples, k);
+                vector<string> class_names = samples.classesNames();
+                vector<int> classes = samples.classes();
 
-                auto conf_matrix = validation::generateConfusionMatrix(*samples, knn);
+                auto conf_matrix = validation::generateConfusionMatrix(samples, knn);
                 cout << "Confusion Matrix: " << endl;
-                utils::printConfusionMatrix(classes, samples->getClassNames(), conf_matrix);
+                utils::printConfusionMatrix(classes, samples.classesNames(), conf_matrix);
                 waitUserAction();
             }else{
                 cout << "Load a dataset first..." << endl;
@@ -1996,7 +1895,7 @@ void dualClassifiersOption(int option){
 
     switch (option) {
         case 1:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 cout << "Learning rate: ";
                 cin >> rate;
                 cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
@@ -2012,8 +1911,8 @@ void dualClassifiersOption(int option){
                 }
 
                 clock_t begin = clock();
-
-                classifier::PerceptronDual<double> perc_dual(samples, rate, kernel_type, kernel_param);
+                mltk::KernelType type = getKernelType(kernel_type);
+                classifier::PerceptronDual<double> perc_dual(samples, type, kernel_param,rate);
                 perc_dual.train();
 
                 sol = perc_dual.getSolution();
@@ -2049,7 +1948,7 @@ void dualClassifiersOption(int option){
             waitUserAction();
             break;
         case 2:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 double gamma;
                 cout << "Learning rate: ";
                 cin >> rate;
@@ -2068,8 +1967,8 @@ void dualClassifiersOption(int option){
                 }
 
                 clock_t begin = clock();
-
-                classifier::PerceptronFixedMarginDual<double> perc_fixmargin_dual(samples, gamma, rate, kernel_type, kernel_param);
+                mltk::KernelType type = getKernelType(kernel_type);
+                classifier::PerceptronFixedMarginDual<double> perc_fixmargin_dual(samples, type, kernel_param, gamma, rate);
                 perc_fixmargin_dual.train();
 
                 sol = perc_fixmargin_dual.getSolution();
@@ -2101,7 +2000,7 @@ void dualClassifiersOption(int option){
             waitUserAction();
             break;
         case 3:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 cout << "Learning rate: ";
                 cin >> rate;
                 cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
@@ -2116,11 +2015,9 @@ void dualClassifiersOption(int option){
                     cin >> kernel_param;
                 }
 
-                K.setType(kernel_type);
-                K.setParam(kernel_param);
-
                 clock_t begin = clock();
-                classifier::IMADual<double> ima_dual(samples, &K, rate, nullptr);
+                KernelType type = getKernelType(kernel_type);
+                classifier::IMADual<double> ima_dual(samples, type, kernel_param, rate);
 
                 ima_dual.setMaxTime(max_time);
                 ima_dual.setVerbose(verbose);
@@ -2138,7 +2035,7 @@ void dualClassifiersOption(int option){
             waitUserAction();
             break;
         case 4:
-            if(!samples->isEmpty()){
+            if(!samples.isEmpty()){
                 cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
                 cin >> kernel_type;
 
@@ -2151,11 +2048,9 @@ void dualClassifiersOption(int option){
                     cin >> kernel_param;
                 }
 
-                K.setParam(kernel_param);
-                K.setType(kernel_type);
-
+                mltk::KernelType type = getKernelType(kernel_type);
                 clock_t begin = clock();
-                classifier::SMO<double> smo(samples, &K, verbose);
+                classifier::SMO<double> smo(samples, type, kernel_param, verbose);
 
                 smo.setMaxTime(max_time);
                 smo.setVerbose(verbose);
@@ -2184,4 +2079,17 @@ void dualClassifiersOption(int option){
             break;
     }
     classifiersOption(2);
+}
+
+mltk::KernelType getKernelType(int kernel_type){
+    switch(kernel_type){
+        case 0:
+            return KernelType::INNER_PRODUCT;
+        case 1:
+            return KernelType::POLYNOMIAL;
+        case 2:
+            return KernelType::GAUSSIAN;
+        default:
+            return KernelType::INVALID_TYPE;
+    }
 }
