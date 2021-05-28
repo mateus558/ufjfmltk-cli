@@ -13,6 +13,8 @@
 
 #include <ufjfmltk/ufjfmltk.hpp>
 
+#define SEED 42
+
 using namespace std;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 using namespace mltk;
 
@@ -63,8 +65,10 @@ void primalClassifiersOption(int);
 void dualClassifiersOption(int);
 void validationOption(int);
 
+//Utils
 mltk::KernelType getKernelType(int kernel_type);
-
+template < typename Learner>
+validation::ValidationReport runValidation(const Data<double>& data, Learner learner, int fold, int qtde=1, int verbose=1, size_t seed=SEED);
 
 int main(int argc, char* argv[]){
     if(argc > 1){
@@ -2092,4 +2096,17 @@ mltk::KernelType getKernelType(int kernel_type){
         default:
             return KernelType::INVALID_TYPE;
     }
+}
+
+template < typename Learner>
+validation::ValidationReport runValidation(const Data<double>& data, Learner learner, int fold, int qtde, int verbose, size_t seed){
+    validation::ValidationReport report;
+
+    if(qtde > 1){
+        report = validation::kkfold(data, learner, qtde, fold, true, seed, verbose);
+    }else{
+        report = validation::kfold(data, learner, fold, true, seed, verbose);
+    }
+    std::cout << fold << "-fold accuracy: " << report.accuracy << std::endl;
+    std::cout << fold << "-fold error: " << report.error << std::endl;
 }
