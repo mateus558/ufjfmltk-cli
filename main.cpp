@@ -550,7 +550,7 @@ void datasetOption(int option){
                     std::cin >> seed;
 
                     std::clock_t begin = std::clock();
-                    auto valid_data = mltk::validation::partTrainTest(samples, 10, 42);
+                    auto valid_data = mltk::validation::partTrainTest(samples, 10, true, SEED);
                     test_sample = valid_data.test;
                     train_sample = valid_data.train;
                     std::clock_t end = std::clock();
