@@ -31,7 +31,7 @@ jobs:
       run: brew install gnuplot meson
       
     - name: Configure meson build
-      run: meson . build -Ddefault_library=static
+      run: meson . build
     - name: Compile project
       run: meson compile -C build
       
@@ -52,6 +52,6 @@ jobs:
       with:
         architecture: x64
     - name: Prepare Build
-      run: meson setup build
+      run: meson build -Ddefault_library=static
     - name: Run Build
       run: meson compile -v -C build
