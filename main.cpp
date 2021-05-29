@@ -65,8 +65,8 @@ void validationOption(int);
 
 //Utils
 mltk::KernelType getKernelType(int kernel_type);
-template < typename Learner>
-mltk::validation::ValidationReport runValidation(const mltk::Data<double>& data, Learner learner, int fold, int qtde=1, int verbose=1, size_t seed=SEED);
+mltk::validation::ValidationReport runValidation(mltk::Data<double>& data, mltk::classifier::Classifier<double>& learner,
+                                                 int fold, int qtde=1, int verbose=1, size_t seed=SEED);
 
 int main(int argc, char* argv[]){
     if(argc > 1){
@@ -1536,7 +1536,6 @@ void validationOption(int option){
     switch(option){
         case 1:
             if(!samples.isEmpty()){
-                mltk::classifier::IMAp<double> imap(samples);
 
                 std::cout << "Quantity of K-fold: ";
                 std::cin >> qtde;
@@ -1574,23 +1573,15 @@ void validationOption(int option){
                 std::cin >> alpha_prox;
                 std::cout << std::endl;
                 std::cout << max_time << std::endl;
-
+                mltk::classifier::IMAp<double> imap(samples, q, flexible, 0.0);
                 imap.setMaxTime(max_time);
-                imap.setpNorm(p);
-                imap.setqNorm(q);
                 imap.setVerbose(verbose);
                 imap.setFlexible(flexible);
                 imap.setAlphaAprox(alpha_prox);
 
                 std::clock_t begin = std::clock();
-//                val_sol = validate.validation(fold, qtde);
+                val_sol = runValidation(samples, imap, fold, qtde, verbose, SEED);
                 std::clock_t end = std::clock();
-//
-//                std::cout << "\n\n   " << fold << "-Fold Cross Validation stats:" << std::endl;
-//                std::cout << "\nAccuracy: "<< val_sol.accuracy << std::endl;
-//                std::cout << "Precision: "<< val_sol.precision << std::endl;
-//                std::cout << "Recall: "<< val_sol.recall << std::endl;
-//                std::cout << std::endl;
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
                 std::cout << std::endl;
@@ -1626,18 +1617,8 @@ void validationOption(int option){
                 mltk::classifier::IMADual<double> ima_dual(samples, type, kernel_param);
                 ima_dual.setMaxTime(max_time);
 
-//                Validation<double> validate(*samples, &ima_dual, 10);
-//
-//                validate.setVerbose(verbose);
-//                validate.partTrainTest(fold);
-//                val_sol = validate.validation(fold, qtde);
+                val_sol = runValidation(samples, ima_dual, fold, qtde, verbose, SEED);
                 std::clock_t end = std::clock();
-
-//                std::cout << "\nAccuracy: "<< val_sol.accuracy << std::endl;
-//                std::cout << "Precision: "<< val_sol.precision << std::endl;
-//                std::cout << "Recall: "<< val_sol.recall << std::endl;
-                std::cout << std::endl;
-
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
                 std::cout << std::endl;
                 std::cout << elapsed_secs << " seconds to compute.\n";
@@ -1670,17 +1651,8 @@ void validationOption(int option){
                 mltk::classifier::SMO<double> smo(samples, type, kernel_param, verbose);
                 
                 smo.setMaxTime(max_time);
-//                Validation<double> validate(*samples, &smo, 10);
-//
-//                validate.setVerbose(verbose);
-//                validate.partTrainTest(fold);
-//                val_sol = validate.validation(fold, qtde);
+                val_sol = runValidation(samples, smo, fold, qtde, verbose, SEED);
                 std::clock_t end = std::clock();
-
-                // std::cout << "\nAccuracy: "<< val_sol.accuracy << std::endl;
-                // std::cout << "Precision: "<< val_sol.precision << std::endl;
-                // std::cout << "Recall: "<< val_sol.recall << std::endl;
-                // std::cout << std::endl;
 
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
                 std::cout << std::endl;
@@ -2075,8 +2047,8 @@ mltk::KernelType getKernelType(int kernel_type){
     }
 }
 
-template < typename Learner>
-mltk::validation::ValidationReport runValidation(const mltk::Data<double>& data, Learner learner, int fold, int qtde, int verbose, size_t seed){
+mltk::validation::ValidationReport runValidation(mltk::Data<double>& data, mltk::classifier::Classifier<double>& learner,
+                                                 int fold, int qtde, int verbose, size_t seed){
     mltk::validation::ValidationReport report;
 
     if(qtde > 1){
@@ -2084,7 +2056,10 @@ mltk::validation::ValidationReport runValidation(const mltk::Data<double>& data,
     }else{
         report = mltk::validation::kfold(data, learner, fold, true, seed, verbose);
     }
-    std::cout << fold << "-fold accuracy: " << report.accuracy << std::endl;
-    std::cout << fold << "-fold error: " << report.error << std::endl;
+    std::cout << "\n\n   " << fold << "-Fold Cross Validation stats:" << std::endl;
+    std::cout << "\nAccuracy: "<< report.accuracy << std::endl;
+    std::cout << "Precision: "<< report.precision << std::endl;
+    std::cout << "Recall: "<< report.recall << std::endl;
+    std::cout << std::endl;
     return report;
 }
