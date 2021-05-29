@@ -214,7 +214,7 @@ void mainMenu(){
     std::cout << "4 - Classifiers" << std::endl;
     std::cout << "5 - Feature Selection" << std::endl;
     std::cout << "6 - Regressors" << std::endl;
-    std::cout << "7 - Clusteres" << std::endl;
+    std::cout << "7 - Clusterers" << std::endl;
     std::cout << "8 - Validation" << std::endl;
     std::cout << std::endl;
     std::cout << "9 - Set Verbose" << std::endl;
@@ -546,7 +546,7 @@ void datasetOption(int option){
                 if(test_sample.isEmpty()){
                     std::cout << "K-Fold: ";
                     std::cin >> fold;
-                    std::cout << "Seed for timestamps: ";
+                    std::cout << "Seed: ";
                     std::cin >> seed;
 
                     std::clock_t begin = std::clock();
@@ -567,23 +567,15 @@ void datasetOption(int option){
             waitUserAction();
             break;
         case 5:
-            /*if(_data != NULL && !_data->empty()){
-                if(!test_sample){
+            if(!samples.isEmpty()){
+                if(test_sample.isEmpty()){
                     std::cerr << "Divide the train/test datasets first...\n" << std::endl;
                 }else{
-                    std::string outfile = _data->get_dataset_name();
-                    Sample *sample = Sample::copy(_data->get_samples());
-
-                    outfile = outfile + "_train";
-                    _data->write(outfile, sample, 0);
-                    outfile = _data->get_dataset_name();
-                    outfile = outfile + "_test";
-                    _data->write(outfile, test_sample, 0);
-
-                    delete sample;
+                    std::string outfile = samples.name()+"_"+mltk::utils::timestamp();
+                    train_sample.write(outfile+"_train", "csv");
+                    test_sample.write(outfile+"_test", "csv");
                 }
             }else std::cout << "Load a dataset first...\n\n";
-            */
             waitUserAction();
             break;
         case 0:
@@ -909,6 +901,7 @@ void classifiersOption(int option){
 void featureSelectionOption(int option){
     double p, q, alpha_aprox, kernel_param = 0;
     int opt, flex, kernel_type, ddim, jump, branching, branch_form, choice_form, prof_look_ahead, cut;
+    mltk::classifier::Classifier<double> *classi = nullptr;
     mltk::Timer time;
     mltk::classifier::IMAp<double> imap(samples);
     mltk::classifier::IMADual<double> imadual(samples);
@@ -917,7 +910,6 @@ void featureSelectionOption(int option){
     mltk::featselect::RFE<double> rfe;
     mltk::featselect::Golub<double> golub;
     mltk::featselect::Fisher<double> fisher;
-    mltk::featselect::AOS<double> aos;
     mltk::Data<double> res;
     mltk::KernelType type;
 
@@ -1277,7 +1269,7 @@ void featureSelectionOption(int option){
                         imap.setFlexible(flex);
                         imap.setAlphaAprox(alpha_aprox);
                         imap.setMaxTime(max_time);
-                        aos.setClassifier(&imap);
+                        classi = &imap;
                         break;
                     case 2:
                         std::cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
@@ -1296,7 +1288,7 @@ void featureSelectionOption(int option){
                         imadual.setKernelParam(kernel_param);
                         imadual.setKernelType(type);
                         imadual.setMaxTime(max_time);
-                        aos.setClassifier(&imadual);
+                        classi = &imadual;
                         break;
                     case 3:
                         std::cout << "Kernel (0)Inner Product (1)Polynomial (2)Gaussian: ";
@@ -1314,7 +1306,7 @@ void featureSelectionOption(int option){
                         type = getKernelType(kernel_type);
                         smo.setKernelParam(kernel_param);
                         smo.setKernelType(type);
-                        aos.setClassifier(&smo);
+                        classi = &smo;
                         break;
                     case 0:
                         featureSelectionMenu();
@@ -1342,15 +1334,8 @@ void featureSelectionOption(int option){
                 std::cout << "Cut depth: ";
                 std::cin >> cut;
 
-                aos.setVerbose(verbose);
-                aos.setFinalDimension(ddim);
-                aos.setSamples(mltk::make_data<double>(samples));
-                aos.setCrossValidation(&cv);
-                aos.setBreadth(branching);
-                aos.setChoiceShape(choice_form);
-                aos.setSortingShape(branch_form);
-                aos.setLookAheadDepth(prof_look_ahead);
-                aos.setCut(cut);
+                mltk::featselect::AOS<double> aos(samples, classi, ddim, &cv, branching, branch_form, choice_form,
+                                                  prof_look_ahead, cut);
 
                 clear();
                 time.reset();
