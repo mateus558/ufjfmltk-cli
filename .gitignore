@@ -1,7 +1,0 @@
-build
-builddir
-.vscode
-build.sh
-.idea
-subprojects/ufjfmltk
-cmake-*
