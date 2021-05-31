@@ -134,7 +134,7 @@ namespace factory{
     IMAp::IMAp(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent) :
     Classifier(train, test, parent)
     {
-        setText("Incremental Margin Algorithm (IMAp)");
+        set_text("Incremental Margin Algorithm (IMAp)");
     }
 
     bool IMAp::operator()() {
@@ -175,7 +175,7 @@ namespace factory{
     IMADual::IMADual(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent) :
     Classifier(train, test, parent)
     {
-        setText("Incremental Margin Algorithm (IMA Dual)");
+        set_text("Incremental Margin Algorithm (IMA Dual)");
     }
 
     bool IMADual::build() {
@@ -223,7 +223,7 @@ namespace factory{
 
     Perceptron::Perceptron(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent) : Classifier(
             train, test, parent) {
-        setText("Perceptron primal");
+        set_text("Perceptron primal");
     }
 
     bool Perceptron::build() {
@@ -270,7 +270,7 @@ namespace factory{
 
     PerceptronDual::PerceptronDual(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent)
             : Classifier(train, test, parent) {
-        setText("Perceptron dual");
+        set_text("Perceptron dual");
     }
 
     bool PerceptronDual::build() {
@@ -335,7 +335,7 @@ namespace factory{
 
     FMP::FMP(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent) : Classifier(train, test,
                                                                                                          parent) {
-        setText("Fixed Margin Perceptron (FMP)");
+        set_text("Fixed Margin Perceptron (FMP)");
     }
 
     bool FMP::build() {
@@ -384,7 +384,7 @@ namespace factory{
     FMPDual::FMPDual(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent) : Classifier(train,
                                                                                                                  test,
                                                                                                                  parent) {
-        setText("Fixed Margin Perceptron dual (FMP Dual)");
+        set_text("Fixed Margin Perceptron dual (FMP Dual)");
     }
 
     bool FMPDual::build() {
@@ -445,7 +445,7 @@ namespace factory{
 
     KNNClassifier::KNNClassifier(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent)
             : Classifier(train, test, parent) {
-        setText("K-Nearest Neighbors (KNN)");
+        set_text("K-Nearest Neighbors (KNN)");
     }
 
     bool KNNClassifier::build() {
@@ -472,7 +472,7 @@ namespace factory{
 
     SMOClassifier::SMOClassifier(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent)
             : Classifier(train, test, parent) {
-        setText("Sequential Minimal Optimization (SMO)");
+        set_text("Sequential Minimal Optimization (SMO)");
     }
 
     bool SMOClassifier::build() {

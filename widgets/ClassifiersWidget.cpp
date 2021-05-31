@@ -21,7 +21,7 @@ bool ClassifiersWidget::build() {
                                                                           settings::test, this);
 
     for(const auto& pclassifier: primal_classifiers){
-        register_widget("primal_classifiers", pclassifier->getText(), std::to_string(opt++), pclassifier);
+        register_widget("primal_classifiers", pclassifier->get_text(), std::to_string(opt++), pclassifier);
     }
 
     register_group("dual_classifiers", "\nDual classifiers:\n");
@@ -30,7 +30,7 @@ bool ClassifiersWidget::build() {
                                                                           settings::test, this);
 
     for(const auto& dclassifier: dual_classifiers){
-        register_widget("dual_classifiers", dclassifier->getText(), std::to_string(opt++), dclassifier);
+        register_widget("dual_classifiers", dclassifier->get_text(), std::to_string(opt++), dclassifier);
     }
 
     add_exit_group();
