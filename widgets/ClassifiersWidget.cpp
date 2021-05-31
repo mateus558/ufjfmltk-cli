@@ -13,27 +13,25 @@ bool ClassifiersWidget::build() {
     use_parent_header();
     set_cmd("classifier");
 
+    int opt = 1;
+
     register_group("primal_classifiers", "Primal classifiers:\n");
 
-    register_widget("primal_classifiers", "Perceptron", "1",
-                    factory::Classifier::make_classifier(factory::ClassifierChoice::IMAP, this));
-    register_widget("primal_classifiers", "Fixed Margin Perceptron (FMP)", "2",
-                    factory::Classifier::make_classifier(factory::ClassifierChoice::IMAP, this));
-    register_widget("primal_classifiers", "Incremental Margin Algorithm (IMAp)", "3",
-                    factory::Classifier::make_classifier(factory::ClassifierChoice::IMAP, this));
-    register_widget("primal_classifiers", "K-Nearest Neighbors (KNN)", "4",
-                    factory::Classifier::make_classifier(factory::ClassifierChoice::IMAP, this));
+    auto primal_classifiers = factory::Classifier::get_primal_classifiers(settings::data, settings::train,
+                                                                          settings::test, this);
+
+    for(const auto& pclassifier: primal_classifiers){
+        register_widget("primal_classifiers", pclassifier->getText(), std::to_string(opt++), pclassifier);
+    }
 
     register_group("dual_classifiers", "\nDual classifiers:\n");
 
-    register_widget("dual_classifiers", "Perceptron", "5",
-                    factory::Classifier::make_classifier(factory::ClassifierChoice::IMAP, this));
-    register_widget("dual_classifiers", "Fixed Margin Perceptron (FMP Dual)", "6",
-                    factory::Classifier::make_classifier(factory::ClassifierChoice::IMAP, this));
-    register_widget("dual_classifiers", "Incremental Margin Algorithm (IMA Dual)", "7",
-                    factory::Classifier::make_classifier(factory::ClassifierChoice::IMADUAL, this));
-    register_widget("dual_classifiers", "Sequential Minimal Optimization (SMO)", "8",
-                    factory::Classifier::make_classifier(factory::ClassifierChoice::IMADUAL, this));
+    auto dual_classifiers = factory::Classifier::get_dual_classifiers(settings::data, settings::train,
+                                                                          settings::test, this);
+
+    for(const auto& dclassifier: dual_classifiers){
+        register_widget("dual_classifiers", dclassifier->getText(), std::to_string(opt++), dclassifier);
+    }
 
     add_exit_group();
     return false;

@@ -13,7 +13,7 @@ add_library(${FACTORY_TARGET} STATIC ${FACTORY_SRC} ${FACTORY_HDR})
 set_target_properties(${FACTORY_TARGET}  PROPERTIES
         PUBLIC_HEADER "${FACTORY_HDR}")
 
-target_link_libraries(${FACTORY_TARGET} PRIVATE ufjfmltk cppcli)
+target_link_libraries(${FACTORY_TARGET} PRIVATE ufjfmltk::core ufjfmltk::classifier ufjfmltk::visual cppcli)
 
 install(TARGETS ${FACTORY_TARGET}
         EXPORT  ${PROJECT_NAME}
