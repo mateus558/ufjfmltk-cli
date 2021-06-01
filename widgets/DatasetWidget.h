@@ -7,10 +7,14 @@
 
 #include "cppcli/CLWidget.h"
 #include "settings.h"
+#include "ArtificialDataWidget.h"
+
 
 class DatasetWidget: public cppcli::CLWidget {
 public:
     explicit DatasetWidget(cppcli::CLWidget* parent = nullptr);
+
+    virtual ~DatasetWidget();
 
 private:
     bool build() override;
@@ -25,9 +29,14 @@ private:
 
     cppcli::Action::Type show_feats();
 
+private:
+
     cppcli::Action::Type divide_traintest();
 
     cppcli::Action::Type save_traintest();
+
+private:
+    ArtificialDataWidget *m_artificial{nullptr};
 };
 
 

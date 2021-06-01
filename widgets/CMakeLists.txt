@@ -2,6 +2,7 @@ set(WIDGETS_TARGET widgets)
 
 set(WIDGETS_SRC
         DatasetWidget.cpp
+        ArtificialDataWidget.cpp
         DataWidget.cpp
         VisualizationWidget.cpp
         ClassifiersWidget.cpp
@@ -12,6 +13,7 @@ set(WIDGETS_SRC
         MLTKApp.cpp
         )
 set(WIDGETS_HDR
+        ArtificialDataWidget.h
         DatasetWidget.h
         DataWidget.h
         ClassifiersWidget.h
