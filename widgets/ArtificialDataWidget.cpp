@@ -18,7 +18,7 @@ bool ArtificialDataWidget::build() {
 
     register_action("artificial", "Make 2D spirals", "1", make_spirals());
     register_action("artificial", "Make blobs", "2", make_blobs());
-    register_action("artificial", "Make regression", "3", make_regresion());
+    register_action("artificial", "Make regression", "3", make_regression());
 
     add_exit_group();
     return true;
@@ -62,7 +62,7 @@ cppcli::Action::Type ArtificialDataWidget::make_blobs() {
     return blobs;
 }
 
-cppcli::Action::Type ArtificialDataWidget::make_regresion() {
+cppcli::Action::Type ArtificialDataWidget::make_regression() {
     auto reg = [this](){
         size_t n_samples, n_dims;
         double noise, bias;
