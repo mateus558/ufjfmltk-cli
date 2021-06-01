@@ -6,7 +6,7 @@
 #ifndef CPPCLI_UFJFMLTK_SETTINGS_H
 #define CPPCLI_UFJFMLTK_SETTINGS_H
 
-#include "ufjfmltk.hpp"
+#include "ufjfmltk/ufjfmltk.hpp"
 
 namespace settings{
     extern size_t seed;
