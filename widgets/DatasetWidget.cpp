@@ -11,20 +11,21 @@
 using namespace settings;
 
 DatasetWidget::DatasetWidget(cppcli::CLWidget *parent) : cppcli::CLWidget(parent, "Dataset") {
-
+    m_artificial = new ArtificialDataWidget(this);
 }
 
 bool DatasetWidget::build() {
     set_header(this->m_parent->get_header());
     set_cmd("dataset");
 
-    register_group("main", "Select an option:\n", cppcli::GroupType::ACTION);
+    register_group("main", "Select an option:\n", cppcli::GroupType::WIDGET);
 
-    register_action("main", "Load dataset", "1", load_dataset());
-    register_action("main", "Dataset information", "2", show_info());
-    register_action("main", "Features names", "3", show_feats());
-    register_action("main", "Divide dataset in train/test", "4", divide_traintest());
-    register_action("main", "Save train/test datasets", "5", save_traintest());
+    register_action("main", "Load dataset", "2", load_dataset());
+    register_widget("main", "Make artificial dataset", "1", m_artificial);
+    register_action("main", "Dataset information", "3", show_info());
+    register_action("main", "Features names", "4", show_feats());
+    register_action("main", "Divide dataset in train/test", "5", divide_traintest());
+    register_action("main", "Save train/test datasets", "6", save_traintest());
 
     add_exit_group();
     return true;
@@ -286,4 +287,8 @@ cppcli::Action::Type DatasetWidget::save_traintest() {
         return true;
     };
     return save;
+}
+
+DatasetWidget::~DatasetWidget() {
+    delete m_artificial;
 }
