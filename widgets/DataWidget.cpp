@@ -124,7 +124,7 @@ cppcli::Action::Type DataWidget::remove_point() {
             std::cin >> i;
 
             if((i < 0) || (i >= settings::data.size())){
-                push_message("Invalid point index.", cppcli::ERROR);
+                push_message("Invalid point index.", cppcli::LOGERROR);
             }
 
             settings::data.removePoint(i);

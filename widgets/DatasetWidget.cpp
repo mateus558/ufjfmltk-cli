@@ -111,7 +111,7 @@ cppcli::Action::Type DatasetWidget::load_dataset() {
             std::cin >> sid;
 
             if(mltk::utils::stoin(sid) > files.size()){
-                push_message("Invalid dataset number.", cppcli::LogType::ERROR);
+                push_message("Invalid dataset number.", cppcli::LogType::LOGERROR);
                 return false;
             }
 
@@ -119,7 +119,7 @@ cppcli::Action::Type DatasetWidget::load_dataset() {
             std::clock_t begin = std::clock();
             std::cout << "\n" << path << std::endl;
             if(!data.load(path)){
-                push_message("error loading the file " + files[mltk::utils::stoin(sid)], cppcli::LogType::ERROR);
+                push_message("error loading the file " + files[mltk::utils::stoin(sid)], cppcli::LogType::LOGERROR);
                 return false;
             }
             std::clock_t end = std::clock();

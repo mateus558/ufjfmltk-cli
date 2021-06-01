@@ -101,7 +101,7 @@ namespace factory{
         if(this->learner){
             return this->learner;
         }
-        this->parent()->push_message("Classifier not initialized, call the widget show method first.", cppcli::LogType::ERROR);
+        this->parent()->push_message("Classifier not initialized, call the widget show method first.", cppcli::LogType::LOGERROR);
         return nullptr;
     }
 
