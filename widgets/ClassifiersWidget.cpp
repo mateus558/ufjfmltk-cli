@@ -36,3 +36,12 @@ bool ClassifiersWidget::build() {
     add_exit_group();
     return false;
 }
+
+ClassifiersWidget::~ClassifiersWidget() {
+    for(auto& [key, pclassifier]: factory::allocated_primal_classifiers){
+        delete pclassifier;
+    }
+    for(auto& [key, dclassifier]: factory::allocated_dual_classifiers){
+        delete dclassifier;
+    }
+}

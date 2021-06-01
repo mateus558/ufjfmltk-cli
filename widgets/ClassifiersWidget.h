@@ -12,6 +12,7 @@ class ClassifiersWidget : public cppcli::CLWidget {
 public:
     explicit ClassifiersWidget(cppcli::CLWidget *parent = nullptr);
 
+    ~ClassifiersWidget() override;
 private:
     bool build() override;
 };

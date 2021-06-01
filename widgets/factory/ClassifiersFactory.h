@@ -11,10 +11,14 @@
 #include "ufjfmltk/Visualize.hpp"
 
 #include <memory>
+#include <map>
 
 namespace factory {
     enum ClassifierPrimal {PHEAD=-1, PERCEPTRON, FMPP, IMAP, KNN, PTAIL};
     enum ClassifierDual {DHEAD=-1, PERCEPTROND, FMPD, IMADUAL, SMO, DTAIL};
+
+    extern std::map<ClassifierPrimal, cppcli::CLWidget*> allocated_primal_classifiers;
+    extern std::map<ClassifierDual, cppcli::CLWidget*> allocated_dual_classifiers;
 
     class Classifier: public cppcli::CLWidget {
     public:
@@ -41,8 +45,6 @@ namespace factory {
 
 
         virtual bool is_primal() const;
-
-
     protected:
         std::string option_selector() override;
         static mltk::KernelType get_kernel_type(int kernel_type);

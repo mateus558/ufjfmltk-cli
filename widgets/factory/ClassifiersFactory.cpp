@@ -6,6 +6,8 @@
 #include <chrono>
 
 namespace factory{
+    std::map<ClassifierPrimal, cppcli::CLWidget*> allocated_primal_classifiers;
+    std::map<ClassifierDual, cppcli::CLWidget*> allocated_dual_classifiers;
 
     Classifier::Classifier(cppcli::CLWidget *parent) : cppcli::CLWidget(parent) {
 
@@ -64,7 +66,13 @@ namespace factory{
         for(int primal = factory::ClassifierPrimal::PHEAD; primal != factory::ClassifierPrimal::PTAIL; primal++){
             if(primal == factory::ClassifierPrimal::PHEAD) continue;
             auto alg = static_cast<factory::ClassifierPrimal>(primal);
-            auto obj_alg = factory::Classifier::make_primal_classifier(alg, data, train, test, parent);
+            cppcli::CLWidget* obj_alg;
+            if(allocated_primal_classifiers.find(alg) == allocated_primal_classifiers.end()) {
+                obj_alg = factory::Classifier::make_primal_classifier(alg, data, train, test, parent);
+                allocated_primal_classifiers[alg] = obj_alg;
+            }else{
+                obj_alg = allocated_primal_classifiers[alg];
+            }
             primals.push_back(obj_alg);
         }
         return primals;
@@ -77,8 +85,13 @@ namespace factory{
         for(int dual = factory::ClassifierDual::DHEAD; dual != factory::ClassifierDual::DTAIL; dual++){
             if(dual == factory::ClassifierDual::DHEAD) continue;
             auto alg = static_cast<factory::ClassifierDual>(dual);
-            auto obj_alg = factory::Classifier::make_dual_classifier(alg, data, train, test, parent);
-
+            cppcli::CLWidget* obj_alg;
+            if(allocated_dual_classifiers.find(alg) == allocated_dual_classifiers.end()) {
+                obj_alg = factory::Classifier::make_dual_classifier(alg, data, train, test, parent);
+                allocated_dual_classifiers[alg] = obj_alg;
+            }else{
+                obj_alg = allocated_dual_classifiers[alg];
+            }
             duals.push_back(obj_alg);
         }
         return duals;
@@ -221,8 +234,8 @@ namespace factory{
     }
 
 
-    Perceptron::Perceptron(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent) : Classifier(
-            train, test, parent) {
+    Perceptron::Perceptron(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent) :
+    Classifier(train, test, parent) {
         set_text("Perceptron primal");
     }
 
@@ -333,8 +346,8 @@ namespace factory{
         return ret;
     }
 
-    FMP::FMP(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent) : Classifier(train, test,
-                                                                                                         parent) {
+    FMP::FMP(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent) :
+    Classifier(train, test, parent) {
         set_text("Fixed Margin Perceptron (FMP)");
     }
 
@@ -381,9 +394,8 @@ namespace factory{
         return ret;
     }
 
-    FMPDual::FMPDual(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent) : Classifier(train,
-                                                                                                                 test,
-                                                                                                                 parent) {
+    FMPDual::FMPDual(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent) :
+    Classifier(train, test, parent) {
         set_text("Fixed Margin Perceptron dual (FMP Dual)");
     }
 
