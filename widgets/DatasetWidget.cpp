@@ -10,7 +10,7 @@
 
 using namespace settings;
 
-DatasetWidget::DatasetWidget(cppcli::CLWidget *parent) : cppcli::CLWidget(parent, "Dataset widget") {
+DatasetWidget::DatasetWidget(cppcli::CLWidget *parent) : cppcli::CLWidget(parent, "Dataset") {
 
 }
 
@@ -260,7 +260,7 @@ cppcli::Action::Type DatasetWidget::divide_traintest() {
 
                 std::cout << "\nDone!" << std::endl;
                 double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-                std::cout << "Size of the settings::test sample: " << test.size() << std::endl;
+                std::cout << "Size of the test sample: " << test.size() << std::endl;
                 std::cout << std::endl;
                 std::cout << elapsed_secs << " seconds to compute.\n";
             }else push_message("Test sample already divided...");
@@ -275,11 +275,11 @@ cppcli::Action::Type DatasetWidget::save_traintest() {
     cppcli::Action::Type save = [this](){
         if(!data.isEmpty()){
             if(test.isEmpty()){
-                std::cerr << "Divide the settings::train/settings::test settings::datasets first...\n" << std::endl;
+                std::cerr << "Divide the train/test datasets first...\n" << std::endl;
             }else{
                 std::string outfile = data.name()+"_"+mltk::utils::timestamp();
-                train.write(outfile+"_settings::train", "csv");
-                test.write(outfile+"_settings::test", "csv");
+                train.write(outfile+"_train", "csv");
+                test.write(outfile+"_test", "csv");
             }
             wait_action();
         }else push_message("Load a dataset first...");

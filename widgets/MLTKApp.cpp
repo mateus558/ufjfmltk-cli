@@ -15,7 +15,7 @@ mltk::Data<> settings::data;
 mltk::Data<> settings::train;
 mltk::Data<> settings::test;
 
-MLTKApp::MLTKApp(cppcli::CLWidget *parent) : CLWidget(parent) {
+MLTKApp::MLTKApp(cppcli::CLWidget *parent) : CLWidget(parent, "UFJF - Machine Learning Toolkit") {
     m_dataset = new DatasetWidget(this);
     m_data = new DataWidget(this);
     m_visual = new VisualizationWidget(this);

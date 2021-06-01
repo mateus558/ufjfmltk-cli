@@ -5,7 +5,7 @@
 #include "ClassifiersWidget.h"
 #include "factory/ClassifiersFactory.h"
 
-ClassifiersWidget::ClassifiersWidget(cppcli::CLWidget *parent) : CLWidget(parent, "Classifier widget") {
+ClassifiersWidget::ClassifiersWidget(cppcli::CLWidget *parent) : CLWidget(parent, "Classifier") {
 
 }
 
