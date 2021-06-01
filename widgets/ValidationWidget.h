@@ -13,6 +13,10 @@ public:
 
 private:
     bool build() override;
+
+private:
+    size_t qtde{1};
+    size_t folds{5};
 };
 
 
