@@ -18,7 +18,7 @@ private:
 
     cppcli::Action::Type make_blobs();
 
-    cppcli::Action::Type make_regresion();
+    cppcli::Action::Type make_regression();
 };
 
 
