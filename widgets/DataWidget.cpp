@@ -83,7 +83,6 @@ cppcli::Action::Type DataWidget::insert_features() {
             std::cout << "Insert how many features: ";
             std::cin >> totalFeat;
             feats.resize(totalFeat);
-
             for(i = 0; i < totalFeat; i++){
                 std::cout << "Feature " << i + 1 << ": ";
                 std::cin >> f;
@@ -123,12 +122,15 @@ cppcli::Action::Type DataWidget::remove_point() {
             std::cout << "Point to remove index (-1 to cancel): ";
             std::cin >> i;
 
-            if((i < 0) || (i >= settings::data.size())){
+            if((i < 1) || (i > settings::data.size())){
                 push_message("Invalid point index.", cppcli::LOGERROR);
             }
 
-            settings::data.removePoint(i);
-            wait_action();
+            if(!settings::data.removePoint(i)){
+                push_message("The point with ID " + std::to_string(i) + " could not be removed.", cppcli::LOGERROR);
+            }else{
+                push_message("The point with ID " + std::to_string(i) + " was removed succesfully.");
+            }
         }else push_message("Load a dataset first...");
         return true;
     };
@@ -156,11 +158,11 @@ cppcli::Action::Type DataWidget::remove_features() {
                     break;
                 }
             }
-
+            feats.resize(totalFeat);
             for(i = 0; i < totalFeat; i++){
                 std::cout << "Feature " << i + 1 << ": ";
                 std::cin >> f;
-                feats.push_back(f);
+                feats[i] = f;
                 for(flag_feat = 0, j = 0; j < fnamesize; j++){
                     if(feats[i] == fnames[j]){
                         flag_feat = 1;
