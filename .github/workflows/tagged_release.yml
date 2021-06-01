@@ -1,4 +1,4 @@
-name: version_release
+name: VersionRelease
 
 on:
   pull_request:
