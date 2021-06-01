@@ -26,8 +26,16 @@ bool ValidationWidget::build() {
             (*primal)();
             auto learner = primal->get_built_classifier();
             learner->setVerbose(0);
-            auto report = mltk::validation::kkfold(settings::data, *learner, 1, 10, true,
-                                                   settings::seed, (int)settings::verbose);
+            mltk::validation::ValidationReport report;
+            if(qtde > 1) {
+                report = mltk::validation::kkfold(settings::data, *learner, qtde, folds, true,
+                                                  settings::seed, (int) settings::verbose);
+            }else{
+                report = mltk::validation::kfold(settings::data, *learner, folds, true,
+                                                 settings::seed, (int) settings::verbose);
+            }
+            primal->train_learner(true);
+            push_message("algorithm: " + primal->get_text());
             push_message("accuracy: " + std::to_string(report.accuracy));
             push_message("error: " + std::to_string(report.error));
             wait_action();
@@ -51,6 +59,8 @@ bool ValidationWidget::build() {
                 report = mltk::validation::kfold(settings::data, *learner, folds, true,
                                                   settings::seed, (int) settings::verbose);
             }
+            dual->train_learner(true);
+            push_message("algorithm: " + dual->get_text());
             push_message("accuracy: " + std::to_string(report.accuracy));
             push_message("error: " + std::to_string(report.error));
             wait_action();
