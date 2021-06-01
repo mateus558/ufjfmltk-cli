@@ -65,7 +65,7 @@ cppcli::Action::Type ArtificialDataWidget::make_blobs() {
 cppcli::Action::Type ArtificialDataWidget::make_regression() {
     auto reg = [this](){
         size_t n_samples, n_dims;
-        double noise, bias;
+        double noise, bias, stddev;
         std::cout << "Number of samples: ";
         std::cin >> n_samples;
         std::cout << "Number of features: ";
@@ -74,8 +74,10 @@ cppcli::Action::Type ArtificialDataWidget::make_regression() {
         std::cin >> bias;
         std::cout << "Noise: ";
         std::cin >> noise;
+        std::cout << "Standard deviation: ";
+        std::cin >> stddev;
 
-        settings::data = mltk::datasets::make_regression(n_samples, n_dims, bias, noise, 0.01, n_dims,
+        settings::data = mltk::datasets::make_regression(n_samples, n_dims, bias, noise, stddev, n_dims,
                                                          true, settings::seed).dataset;
         push_message("Regression dataset generated with " + std::to_string(n_samples) + " samples and " +
         std::to_string(n_dims) + " features.");
