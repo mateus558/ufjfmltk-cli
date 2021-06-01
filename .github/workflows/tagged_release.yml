@@ -1,4 +1,4 @@
-name: tagged-release
+name: VersionRelease
 
 on:
   pull_request:
