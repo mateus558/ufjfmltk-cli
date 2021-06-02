@@ -127,6 +127,10 @@ namespace factory{
         return this->learner->getFormulationString() == "Primal";
     }
 
+    bool Classifier::build() {
+        return true;
+    }
+
     IMAp::IMAp(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent) :
     Classifier(train, test, parent)
     {
@@ -163,19 +167,10 @@ namespace factory{
         return ret;
     }
 
-    bool IMAp::build() {
-
-        return true;
-    }
-
     IMADual::IMADual(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent) :
     Classifier(train, test, parent)
     {
         set_text("Incremental Margin Algorithm (IMA Dual)");
-    }
-
-    bool IMADual::build() {
-        return true;
     }
 
     bool IMADual::operator()() {
@@ -221,10 +216,6 @@ namespace factory{
         set_text("Perceptron primal");
     }
 
-    bool Perceptron::build() {
-        return false;
-    }
-
     bool Perceptron::operator()() {
         double rate;
         int q, i;
@@ -267,10 +258,6 @@ namespace factory{
     PerceptronDual::PerceptronDual(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent)
             : Classifier(train, test, parent) {
         set_text("Perceptron dual");
-    }
-
-    bool PerceptronDual::build() {
-        return true;
     }
 
     bool PerceptronDual::operator()() {
@@ -335,10 +322,6 @@ namespace factory{
         set_text("Fixed Margin Perceptron (FMP)");
     }
 
-    bool FMP::build() {
-        return false;
-    }
-
     bool FMP::operator()() {
         int q, i;
         double gamma, rate;
@@ -381,10 +364,6 @@ namespace factory{
     FMPDual::FMPDual(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent) :
     Classifier(train, test, parent) {
         set_text("Fixed Margin Perceptron dual (FMP Dual)");
-    }
-
-    bool FMPDual::build() {
-        return false;
     }
 
     bool FMPDual::operator()() {
@@ -448,10 +427,6 @@ namespace factory{
         set_text("K-Nearest Neighbors (KNN)");
     }
 
-    bool KNNClassifier::build() {
-        return false;
-    }
-
     bool KNNClassifier::operator()() {
         size_t k;
         bool ret = true;
@@ -476,10 +451,6 @@ namespace factory{
     SMOClassifier::SMOClassifier(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent)
             : Classifier(train, test, parent) {
         set_text("Sequential Minimal Optimization (SMO)");
-    }
-
-    bool SMOClassifier::build() {
-        return false;
     }
 
     bool SMOClassifier::operator()() {
