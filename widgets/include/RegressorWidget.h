@@ -12,6 +12,8 @@ class RegressorWidget: public cppcli::CLWidget {
 public:
     explicit RegressorWidget(cppcli::CLWidget *parent = nullptr);
 
+    virtual ~RegressorWidget();
+
 private:
     bool build() override;
 };

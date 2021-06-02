@@ -12,6 +12,8 @@ class ClustererWidget: public cppcli::CLWidget {
 public:
     explicit ClustererWidget(cppcli::CLWidget *parent = nullptr);
 
+    virtual ~ClustererWidget();
+
 private:
     bool build() override;
 };

@@ -3,10 +3,14 @@ set(FACTORY_TARGET factory)
 set(FACTORY_SRC
         src/ClassifiersFactory.cpp
         src/ClusterersFactory.cpp
+        src/FeatSelectFactory.cpp
+        src/RegressorsFactory.cpp
         )
 set(FACTORY_HDR
         include/ClassifiersFactory.h
         include/ClusterersFactory.h
+        include/RegressorsFactory.h
+        include/FeatSelectFactory.h
         )
 
 
