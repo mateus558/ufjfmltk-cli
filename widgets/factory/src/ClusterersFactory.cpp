@@ -19,7 +19,7 @@ namespace factory{
     }
 
     bool Clusterer::build() {
-        return false;
+        return true;
     }
 
     Clusterer *Clusterer::make_clusterer(Clusterers clusterer, const mltk::Data<> &data, cppcli::CLWidget* parent) {
