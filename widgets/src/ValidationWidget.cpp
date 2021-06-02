@@ -3,7 +3,7 @@
 //
 
 #include "ValidationWidget.h"
-#include "factory/ClassifiersFactory.h"
+#include "ClassifiersFactory.h"
 #include "settings.h"
 
 ValidationWidget::ValidationWidget(cppcli::CLWidget *parent) : CLWidget(parent, "Classifiers validation") {

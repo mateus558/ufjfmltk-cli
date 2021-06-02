@@ -1,36 +1,40 @@
 set(WIDGETS_TARGET widgets)
 
 set(WIDGETS_SRC
-        DatasetWidget.cpp
-        ArtificialDataWidget.cpp
-        DataWidget.cpp
-        VisualizationWidget.cpp
-        ClassifiersWidget.cpp
-        FeatSelectWidget.cpp
-        RegressorWidget.cpp
-        ClustererWidget.cpp
-        ValidationWidget.cpp
-        MLTKApp.cpp
+        src/DatasetWidget.cpp
+        src/ArtificialDataWidget.cpp
+        src/DataWidget.cpp
+        src/VisualizationWidget.cpp
+        src/ClassifiersWidget.cpp
+        src/FeatSelectWidget.cpp
+        src/RegressorWidget.cpp
+        src/ClustererWidget.cpp
+        src/ValidationWidget.cpp
+        src/MLTKApp.cpp
         )
 set(WIDGETS_HDR
-        ArtificialDataWidget.h
-        DatasetWidget.h
-        DataWidget.h
-        ClassifiersWidget.h
-        RegressorWidget.h
-        FeatSelectWidget.h
-        VisualizationWidget.h
-        ClustererWidget.h
-        ValidationWidget.h
-        MLTKApp.h
-        settings.h
+        include/ArtificialDataWidget.h
+        include/DatasetWidget.h
+        include/DataWidget.h
+        include/ClassifiersWidget.h
+        include/RegressorWidget.h
+        include/FeatSelectWidget.h
+        include/VisualizationWidget.h
+        include/ClustererWidget.h
+        include/ValidationWidget.h
+        include/MLTKApp.h
+        include/settings.h
         )
 
 
-add_library(${WIDGETS_TARGET} STATIC ${WIDGETS_SRC} ${WIDGETS_HDR})
+add_library(${WIDGETS_TARGET} ${WIDGETS_SRC} ${WIDGETS_HDR})
 
 set_target_properties(${WIDGETS_TARGET}  PROPERTIES
         PUBLIC_HEADER "${WIDGETS_HDR}")
+
+target_include_directories(${WIDGETS_TARGET} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+        "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>")
+
 
 add_subdirectory(factory)
 

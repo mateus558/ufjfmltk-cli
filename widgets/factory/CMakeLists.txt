@@ -1,19 +1,22 @@
 set(FACTORY_TARGET factory)
 
 set(FACTORY_SRC
-        ClassifiersFactory.cpp
-        ClusterersFactory.cpp
+        src/ClassifiersFactory.cpp
+        src/ClusterersFactory.cpp
         )
 set(FACTORY_HDR
-        ClassifiersFactory.h
-        ClusterersFactory.h
+        include/ClassifiersFactory.h
+        include/ClusterersFactory.h
         )
 
 
-add_library(${FACTORY_TARGET} STATIC ${FACTORY_SRC} ${FACTORY_HDR})
+add_library(${FACTORY_TARGET} ${FACTORY_SRC} ${FACTORY_HDR})
 
 set_target_properties(${FACTORY_TARGET}  PROPERTIES
         PUBLIC_HEADER "${FACTORY_HDR}")
+
+target_include_directories(${FACTORY_TARGET} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+        "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>")
 
 target_link_libraries(${FACTORY_TARGET} PRIVATE ufjfmltk cppcli)
 

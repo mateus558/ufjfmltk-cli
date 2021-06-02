@@ -1,5 +1,5 @@
 #include <iostream>
-#include "widgets/MLTKApp.h"
+#include "MLTKApp.h"
 
 int main() {
     MLTKApp cli;
