@@ -24,3 +24,9 @@ bool RegressorWidget::build() {
     add_exit_group();
     return true;
 }
+
+RegressorWidget::~RegressorWidget() {
+    for(auto& [key, alg]: factory::allocated_regressors){
+        delete alg;
+    }
+}

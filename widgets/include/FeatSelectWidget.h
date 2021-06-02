@@ -11,6 +11,8 @@ class FeatSelectWidget: public cppcli::CLWidget {
 public:
     explicit FeatSelectWidget(cppcli::CLWidget *parent = nullptr);
 
+    virtual ~FeatSelectWidget();
+
 private:
     bool build() override;
 };

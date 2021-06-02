@@ -24,3 +24,9 @@ bool ClustererWidget::build() {
     add_exit_group();
     return true;
 }
+
+ClustererWidget::~ClustererWidget() {
+    for(auto& [key, alg]: factory::allocated_clusterers){
+        delete alg;
+    }
+}

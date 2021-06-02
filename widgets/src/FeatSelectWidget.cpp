@@ -24,3 +24,9 @@ bool FeatSelectWidget::build() {
     add_exit_group();
     return true;
 }
+
+FeatSelectWidget::~FeatSelectWidget() {
+    for(auto& [key, alg]: factory::allocated_featselects){
+        delete alg;
+    }
+}
