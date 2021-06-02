@@ -3,7 +3,7 @@
 //
 
 #include "ClustererWidget.h"
-#include "factory/ClusterersFactory.h"
+#include "ClusterersFactory.h"
 
 ClustererWidget::ClustererWidget(cppcli::CLWidget *parent) : CLWidget(parent, "Clusterer widget") {
 

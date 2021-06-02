@@ -3,7 +3,7 @@
 //
 
 #include "ClassifiersWidget.h"
-#include "factory/ClassifiersFactory.h"
+#include "ClassifiersFactory.h"
 
 ClassifiersWidget::ClassifiersWidget(cppcli::CLWidget *parent) : CLWidget(parent, "Classifier") {
 
