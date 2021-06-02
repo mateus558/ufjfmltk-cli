@@ -51,6 +51,7 @@ namespace factory {
 
         virtual bool is_primal() const;
     protected:
+        bool build() override;
         std::string option_selector() override;
         static mltk::KernelType get_kernel_type(int kernel_type);
 
@@ -63,66 +64,48 @@ namespace factory {
     class Perceptron: public Classifier {
     public:
         explicit Perceptron(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
-    private:
-        bool build() override;
         bool operator()() override;
     };
 
     class KNNClassifier: public Classifier {
     public:
         explicit KNNClassifier(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
-    private:
-        bool build() override;
         bool operator()() override;
     };
 
     class FMP: public Classifier {
     public:
         explicit FMP(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
-    private:
-        bool build() override;
         bool operator()() override;
     };
 
     class FMPDual: public Classifier {
     public:
         explicit FMPDual(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
-    private:
-        bool build() override;
         bool operator()() override;
     };
 
     class PerceptronDual: public Classifier {
     public:
         explicit PerceptronDual(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
-    private:
-        bool build() override;
         bool operator()() override;
     };
 
     class IMAp: public Classifier {
     public:
         explicit IMAp(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
-    private:
-        bool build() override;
         bool operator()() override;
     };
 
     class IMADual: public Classifier {
     public:
         explicit IMADual(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
-
-    private:
-        bool build() override;
         bool operator()() override;
     };
 
     class SMOClassifier: public Classifier {
     public:
         explicit SMOClassifier(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
-
-    private:
-        bool build() override;
         bool operator()() override;
     };
 }
