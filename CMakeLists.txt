@@ -16,7 +16,7 @@ include(FetchContent)
 FetchContent_Declare(
         cppcli
         # Specify the commit you depend on and update it regularly.
-        URL https://github.com/mateus558/cppcli/archive/refs/tags/v1.1.0.tar.gz
+        URL https://github.com/mateus558/cppcli/archive/refs/tags/v1.1.1.tar.gz
 )
 FetchContent_MakeAvailable(cppcli)
 
