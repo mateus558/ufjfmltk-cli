@@ -22,6 +22,8 @@ namespace factory {
     extern std::map<ClassifierPrimal, Classifier*> allocated_primal_classifiers;
     extern std::map<ClassifierDual, Classifier*> allocated_dual_classifiers;
 
+    using ClassifierPointer = std::shared_ptr<mltk::classifier::Classifier<double>>;
+
     class Classifier: public cppcli::CLWidget {
     public:
         explicit Classifier(cppcli::CLWidget *parent = nullptr);
@@ -47,12 +49,15 @@ namespace factory {
 
         void train_learner(bool train) { this->m_train_learner = train; }
 
-        std::shared_ptr<mltk::classifier::Classifier<double>> get_built_classifier();
-
         virtual bool is_primal() const;
+
+        virtual ClassifierPointer build_learner() = 0;
+
     protected:
         bool build() override;
         std::string option_selector() override;
+        virtual void set_parameters() = 0;
+
         static mltk::KernelType get_kernel_type(int kernel_type);
 
     protected:
@@ -65,48 +70,94 @@ namespace factory {
     public:
         explicit Perceptron(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
+
+        void set_parameters() override;
+        ClassifierPointer build_learner() override;
+    private:
+        double rate{0.5};
+        int q{2};
     };
 
     class KNNClassifier: public Classifier {
     public:
         explicit KNNClassifier(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
+        void set_parameters() override;
+        ClassifierPointer build_learner() override;
+    private:
+        size_t k{3};
     };
 
     class FMP: public Classifier {
     public:
         explicit FMP(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
+        void set_parameters() override;
+        ClassifierPointer build_learner() override;
+
+    private:
+        int q{2};
+        double gamma{0}, rate{0.5};
     };
 
     class FMPDual: public Classifier {
     public:
         explicit FMPDual(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
+        void set_parameters() override;
+        ClassifierPointer build_learner() override;
+
+    private:
+        double gamma{0.0}, rate{0.5}, kernel_param{0.0};
+        mltk::KernelType type{mltk::KernelType::INNER_PRODUCT};
     };
 
     class PerceptronDual: public Classifier {
     public:
         explicit PerceptronDual(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
+        void set_parameters() override;
+        ClassifierPointer build_learner() override;
+
+    private:
+        double rate{0.5}, kernel_param = 0.0;
+        mltk::KernelType type{mltk::KernelType::INNER_PRODUCT};
     };
 
     class IMAp: public Classifier {
     public:
         explicit IMAp(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
+        void set_parameters() override;
+        ClassifierPointer build_learner() override;
+
+    private:
+        int p{2}, q{2}, flex{0};
+        double alpha_aprox{0};
     };
 
     class IMADual: public Classifier {
     public:
         explicit IMADual(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
+        void set_parameters() override;
+        ClassifierPointer build_learner() override;
+
+    private:
+        double rate{0.5}, kernel_param{0.0};
+        mltk::KernelType type{mltk::KernelType::INNER_PRODUCT};
     };
 
     class SMOClassifier: public Classifier {
     public:
         explicit SMOClassifier(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
+        void set_parameters() override;
+        ClassifierPointer build_learner() override;
+
+    private:
+        double rate{0.5}, kernel_param{0.0};
+        mltk::KernelType type{mltk::KernelType::INNER_PRODUCT};
     };
 }
 
