@@ -3,6 +3,7 @@
 //
 
 #include "FeatSelectFactory.h"
+#include "ClassifiersFactory.h"
 
 namespace factory{
     std::map<FeatSelects, FeatSelect*> allocated_featselects;
@@ -18,6 +19,24 @@ namespace factory{
     }
 
     bool FeatSelect::build() {
+        register_group("classifiers", "Select a classifier:\n");
+
+        int opt = 1;
+        auto primal_classifiers = factory::Classifier::get_primal_classifiers(this->m_samples, mltk::Data<>(),
+                                                                              mltk::Data<>(), this);
+
+        for(const auto& pclassifier: primal_classifiers){
+            register_widget("classifiers", pclassifier->get_text(), std::to_string(opt++), pclassifier);
+        }
+
+        auto dual_classifiers = factory::Classifier::get_dual_classifiers(this->m_samples, mltk::Data<>(),
+                                                                          mltk::Data<>(), this);
+
+        for(const auto& dclassifier: dual_classifiers){
+            register_widget("classifiers", dclassifier->get_text(), std::to_string(opt++), dclassifier);
+        }
+
+        add_exit_group();
         return true;
     }
 
@@ -53,17 +72,9 @@ namespace factory{
         return algs;
     }
 
-    std::string FeatSelect::option_selector() {
-        return "";
-    }
 
     Golub::Golub(const mltk::Data<> &data, cppcli::CLWidget *parent) : FeatSelect(data, parent) {
         set_text("Golub");
-    }
-
-    bool Golub::operator()() {
-        wait_action();
-        return true;
     }
 
 
@@ -71,26 +82,14 @@ namespace factory{
         set_text("Fisher");
     }
 
-    bool Fisher::operator()() {
-        wait_action();
-        return true;
-    }
 
     RFEAlg::RFEAlg(const mltk::Data<> &data, cppcli::CLWidget *parent) : FeatSelect(data, parent) {
         set_text("Recursive Feature Elimination (RFE)");
     }
 
-    bool RFEAlg::operator()() {
-        wait_action();
-        return true;
-    }
 
     AOSAlg::AOSAlg(const mltk::Data<> &data, cppcli::CLWidget *parent) : FeatSelect(data, parent) {
         set_text("Admissible Ordered Search (AOS)");
     }
 
-    bool AOSAlg::operator()() {
-        wait_action();
-        return true;
-    }
 }

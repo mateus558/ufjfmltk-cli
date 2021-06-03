@@ -97,13 +97,6 @@ namespace factory{
         return duals;
     }
 
-    std::shared_ptr<mltk::classifier::Classifier<double>> Classifier::get_built_classifier() {
-        if(this->learner){
-            return this->learner;
-        }
-        this->parent()->push_message("Classifier not initialized, call the widget show method first.", cppcli::LogType::LOGERROR);
-        return nullptr;
-    }
 
     std::string Classifier::option_selector() {
         return "";
@@ -138,17 +131,24 @@ namespace factory{
     }
 
     bool IMAp::operator()() {
-        int p, q, flex;
-        double alpha_aprox;
         bool ret = true;
 
+        set_parameters();
+
+        mltk::classifier::IMAp<double> imap(this->m_train, p, flex);
+        imap.setAlphaAprox(alpha_aprox);
+        ret = imap.train();
+        wait_action();
+        return ret;
+    }
+
+    void IMAp::set_parameters() {
         std::cout << "q-norm value: ";
         std::cin >> q;
         std::cout << "Flexibilization value (0 - no flexibilization): ";
         std::cin >> flex;
         std::cout << "Alpha aproximation: ";
         std::cin >> alpha_aprox;
-
         if(q == -1.0){
             p = 1.0;
         }else if(q == 1.0){
@@ -156,15 +156,14 @@ namespace factory{
         }else{
             p = q/(q-1.0);
         }
+    }
 
-        mltk::classifier::IMAp<double> imap(this->m_train, p, flex);
-        if(this->m_train_learner) {
-            imap.setAlphaAprox(alpha_aprox);
-            ret = imap.train();
-            wait_action();
-        }
-        this->learner = std::make_shared<mltk::classifier::IMAp<double>>(imap);
-        return ret;
+    ClassifierPointer IMAp::build_learner() {
+        set_parameters();
+        auto ima = std::make_shared<mltk::classifier::IMAp<double>>(this->m_train, p, flex);
+        ima->setAlphaAprox(alpha_aprox);
+        this->learner = ima;
+        return this->learner;
     }
 
     IMADual::IMADual(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent) :
@@ -174,16 +173,28 @@ namespace factory{
     }
 
     bool IMADual::operator()() {
-        int qtde, fold;
-        double rate, kernel_param = 0.0;
-        int kernel_type;
+        set_parameters();
+        std::clock_t begin = std::clock();
+        mltk::classifier::IMADual<double> ima_dual(this->m_train, type, kernel_param);
 
+        //ima_dual.setMaxTime(max_time);
+        ima_dual.train();
+        //val_sol = runValidation(samples, ima_dual, fold, qtde, verbose, SEED);
+        std::clock_t end = std::clock();
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        std::cout << std::endl;
+        std::cout << elapsed_secs << " seconds to compute.\n";
+        wait_action();
+        return true;
+    }
+
+    void IMADual::set_parameters() {
+        int kernel_type;
         std::cout << "Learning rate: ";
         std::cin >> rate;
         std::cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
         std::cin >> kernel_type;
-
-        mltk::KernelType type = get_kernel_type(kernel_type);
+        type = get_kernel_type(kernel_type);
         if(type != mltk::INNER_PRODUCT){
             if(kernel_type == mltk::POLYNOMIAL){
                 std::cout << "Polynomial degree: ";
@@ -192,22 +203,12 @@ namespace factory{
             }
             std::cin >> kernel_param;
         }
+    }
 
-        std::clock_t begin = std::clock();
-        mltk::classifier::IMADual<double> ima_dual(this->m_train, type, kernel_param);
-        if(this->m_train_learner)
-        {
-            //ima_dual.setMaxTime(max_time);
-            ima_dual.train();
-            //val_sol = runValidation(samples, ima_dual, fold, qtde, verbose, SEED);
-            std::clock_t end = std::clock();
-            double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-            std::cout << std::endl;
-            std::cout << elapsed_secs << " seconds to compute.\n";
-            wait_action();
-        }
-        this->learner = std::make_shared<mltk::classifier::IMADual<double>>(ima_dual);
-        return true;
+    ClassifierPointer IMADual::build_learner() {
+        set_parameters();
+        this->learner = std::make_shared<mltk::classifier::IMADual<double>>(this->m_train, type, kernel_param);
+        return this->learner;
     }
 
 
@@ -217,42 +218,45 @@ namespace factory{
     }
 
     bool Perceptron::operator()() {
-        double rate;
-        int q, i;
         bool ret = true;
+        set_parameters();
+        mltk::classifier::PerceptronPrimal<double> perc(this->m_train, q, rate);
 
+        std::clock_t begin = std::clock();
+        ret = perc.train();
+        auto sol = perc.getSolution();
+
+        std::cout << "Number of steps through data: " << perc.getSteps() << std::endl;
+        std::cout << "Number of updates: " << perc.getUpdates() << std::endl;
+        std::cout << "Weights vector:" << std::endl;
+        std::cout << "[";
+        for(int i = 0; i < sol.w.size(); i++){
+            std::cout << sol.w[i] << ", ";
+        }
+        std::cout << sol.bias <<  "]" << std::endl;
+        std::cout << std::endl;
+
+        std::clock_t end = std::clock();
+
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        std::cout << std::endl;
+        std::cout << elapsed_secs << " seconds to compute.\n";
+        wait_action();
+        return ret;
+    }
+
+    void Perceptron::set_parameters() {
         std::cout << "Value of the learning rate: ";
         std::cin >> rate;
         std::cout << "Value of the q norm: ";
         std::cin >> q;
         std::cout << std::endl;
+    }
 
-        mltk::classifier::PerceptronPrimal<double> perc(this->m_train, q, rate);
-        if(this->m_train_learner)
-        {
-            std::clock_t begin = std::clock();
-            ret = perc.train();
-            auto sol = perc.getSolution();
-
-            std::cout << "Number of steps through data: " << perc.getSteps() << std::endl;
-            std::cout << "Number of updates: " << perc.getUpdates() << std::endl;
-            std::cout << "Weights vector:" << std::endl;
-            std::cout << "[";
-            for(i = 0; i < sol.w.size(); i++){
-                std::cout << sol.w[i] << ", ";
-            }
-            std::cout << sol.bias <<  "]" << std::endl;
-            std::cout << std::endl;
-
-            std::clock_t end = std::clock();
-
-            double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-            std::cout << std::endl;
-            std::cout << elapsed_secs << " seconds to compute.\n";
-            wait_action();
-        }
-        this->learner = std::make_shared<mltk::classifier::PerceptronPrimal<double>>(perc);
-        return ret;
+    ClassifierPointer Perceptron::build_learner() {
+        set_parameters();
+        this->learner = std::make_shared<mltk::classifier::PerceptronPrimal<double>>(this->m_train, q, rate);
+        return this->learner;
     }
 
     PerceptronDual::PerceptronDual(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent)
@@ -261,9 +265,45 @@ namespace factory{
     }
 
     bool PerceptronDual::operator()() {
-        int i, kernel_type;
-        double rate, kernel_param = 0.0;
         bool ret = true;
+        set_parameters();
+        std::clock_t begin = std::clock();
+        mltk::classifier::PerceptronDual<double> perc_dual(this->m_train, type, kernel_param,rate);
+        ret = perc_dual.train();
+
+        auto sol = perc_dual.getSolution();
+
+        std::cout << std::endl;
+        std::cout << "Alpha vector:" << std::endl;
+        std::cout << "[";
+
+        for (int i = 0; i < sol.alpha.size(); i++) {
+            std::cout << sol.alpha[i] << ", ";
+        }
+
+        std::cout << sol.bias << "]" << std::endl;
+        std::cout << std::endl;
+        std::cout << "Weights vector:" << std::endl;
+        std::cout << "[";
+
+        for (int i = 0; i < sol.w.size(); i++) {
+            std::cout << sol.w[i] << ", ";
+        }
+
+        std::cout << sol.bias << "]" << std::endl;
+        std::cout << std::endl;
+
+        std::clock_t end = std::clock();
+
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        std::cout << std::endl;
+        std::cout << elapsed_secs << " seconds to compute.\n";
+        wait_action();
+        return ret;
+    }
+
+    void PerceptronDual::set_parameters() {
+        int kernel_type;
         std::cout << "Learning rate: ";
         std::cin >> rate;
         std::cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
@@ -277,44 +317,13 @@ namespace factory{
             }
             std::cin >> kernel_param;
         }
+        type = get_kernel_type(kernel_type);
+    }
 
-        std::clock_t begin = std::clock();
-        mltk::KernelType type = get_kernel_type(kernel_type);
-        mltk::classifier::PerceptronDual<double> perc_dual(this->m_train, type, kernel_param,rate);
-        if(this->m_train_learner) {
-            ret = perc_dual.train();
-
-            auto sol = perc_dual.getSolution();
-
-            std::cout << std::endl;
-            std::cout << "Alpha vector:" << std::endl;
-            std::cout << "[";
-
-            for (i = 0; i < sol.alpha.size(); i++) {
-                std::cout << sol.alpha[i] << ", ";
-            }
-
-            std::cout << sol.bias << "]" << std::endl;
-            std::cout << std::endl;
-            std::cout << "Weights vector:" << std::endl;
-            std::cout << "[";
-
-            for (i = 0; i < sol.w.size(); i++) {
-                std::cout << sol.w[i] << ", ";
-            }
-
-            std::cout << sol.bias << "]" << std::endl;
-            std::cout << std::endl;
-
-            std::clock_t end = std::clock();
-
-            double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-            std::cout << std::endl;
-            std::cout << elapsed_secs << " seconds to compute.\n";
-            wait_action();
-        }
-        this->learner = std::make_shared<mltk::classifier::PerceptronDual<double>>(perc_dual);
-        return ret;
+    ClassifierPointer PerceptronDual::build_learner() {
+        set_parameters();
+        this->learner = std::make_shared<mltk::classifier::PerceptronDual<double>>(this->m_train, type, kernel_param,rate);
+        return this->learner;
     }
 
     FMP::FMP(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent) :
@@ -323,9 +332,35 @@ namespace factory{
     }
 
     bool FMP::operator()() {
-        int q, i;
-        double gamma, rate;
         bool ret = true;
+
+        set_parameters();
+
+        mltk::classifier::PerceptronFixedMarginPrimal<double> perc(this->m_train, gamma, q, rate);
+        std::clock_t begin = std::clock();
+        ret = perc.train();
+        auto sol = perc.getSolution();
+
+        std::cout << "Number of steps through data: " << perc.getSteps() << std::endl;
+        std::cout << "Number of updates: " << perc.getUpdates() << std::endl;
+        std::cout << "Weights vector:" << std::endl;
+        std::cout << "[";
+        for (int i = 0; i < sol.w.size(); i++) {
+            std::cout << sol.w[i] << ", ";
+        }
+        std::cout << sol.bias << "]" << std::endl;
+        std::cout << std::endl;
+
+        std::clock_t end = std::clock();
+
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        std::cout << std::endl;
+        std::cout << elapsed_secs << " seconds to compute.\n";
+        wait_action();
+        return ret;
+    }
+
+    void FMP::set_parameters() {
         std::cout << "Value of the learning rate: ";
         std::cin >> rate;
         std::cout << "Value of the q norm: ";
@@ -333,32 +368,12 @@ namespace factory{
         std::cout << "Gamma value: ";
         std::cin >> gamma;
         std::cout << std::endl;
+    }
 
-        mltk::classifier::PerceptronFixedMarginPrimal<double> perc(this->m_train, gamma, q, rate);
-        if(this->m_train_learner) {
-            std::clock_t begin = std::clock();
-            ret = perc.train();
-            auto sol = perc.getSolution();
-
-            std::cout << "Number of steps through data: " << perc.getSteps() << std::endl;
-            std::cout << "Number of updates: " << perc.getUpdates() << std::endl;
-            std::cout << "Weights vector:" << std::endl;
-            std::cout << "[";
-            for (i = 0; i < sol.w.size(); i++) {
-                std::cout << sol.w[i] << ", ";
-            }
-            std::cout << sol.bias << "]" << std::endl;
-            std::cout << std::endl;
-
-            std::clock_t end = std::clock();
-
-            double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-            std::cout << std::endl;
-            std::cout << elapsed_secs << " seconds to compute.\n";
-            wait_action();
-        }
-        this->learner = std::make_shared<mltk::classifier::PerceptronFixedMarginPrimal<double>>(perc);
-        return ret;
+    ClassifierPointer FMP::build_learner() {
+        set_parameters();
+        this->learner = std::make_shared<mltk::classifier::PerceptronFixedMarginPrimal<double>>(this->m_train, gamma, q, rate);
+        return this->learner;
     }
 
     FMPDual::FMPDual(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent) :
@@ -367,9 +382,43 @@ namespace factory{
     }
 
     bool FMPDual::operator()() {
-        double gamma, rate, kernel_param=0;
-        int i, kernel_type;
         bool ret = true;
+
+        set_parameters();
+
+        std::clock_t begin = std::clock();
+        mltk::classifier::PerceptronFixedMarginDual<double> perc_fixmargin_dual(this->m_train, type, kernel_param, gamma, rate);
+        perc_fixmargin_dual.train();
+
+        auto sol = perc_fixmargin_dual.getSolution();
+        std::cout << std::endl;
+        std::cout << "Alpha vector:" << std::endl;
+        std::cout << "[";
+        for (int i = 0; i < sol.alpha.size(); i++) {
+            std::cout << sol.alpha[i] << ", ";
+        }
+        std::cout << sol.bias << "]" << std::endl;
+        std::cout << std::endl;
+
+        std::cout << "Weights vector:" << std::endl;
+        std::cout << "[";
+        for (int i = 0; i < sol.w.size(); i++) {
+            std::cout << sol.w[i] << ", ";
+        }
+        std::cout << sol.bias << "]" << std::endl;
+        std::cout << std::endl;
+
+        std::clock_t end = std::clock();
+
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        std::cout << std::endl;
+        std::cout << elapsed_secs << " seconds to compute.\n";
+        wait_action();
+        return ret;
+    }
+
+    void FMPDual::set_parameters() {
+        int kernel_type;
 
         std::cout << "Learning rate: ";
         std::cin >> rate;
@@ -386,40 +435,13 @@ namespace factory{
             }
             std::cin >> kernel_param;
         }
+        type = get_kernel_type(kernel_type);
+    }
 
-        std::clock_t begin = std::clock();
-        mltk::KernelType type = get_kernel_type(kernel_type);
-        mltk::classifier::PerceptronFixedMarginDual<double> perc_fixmargin_dual(this->m_train, type, kernel_param, gamma, rate);
-        if(this->m_train_learner) {
-            perc_fixmargin_dual.train();
-
-            auto sol = perc_fixmargin_dual.getSolution();
-            std::cout << std::endl;
-            std::cout << "Alpha vector:" << std::endl;
-            std::cout << "[";
-            for (i = 0; i < sol.alpha.size(); i++) {
-                std::cout << sol.alpha[i] << ", ";
-            }
-            std::cout << sol.bias << "]" << std::endl;
-            std::cout << std::endl;
-
-            std::cout << "Weights vector:" << std::endl;
-            std::cout << "[";
-            for (i = 0; i < sol.w.size(); i++) {
-                std::cout << sol.w[i] << ", ";
-            }
-            std::cout << sol.bias << "]" << std::endl;
-            std::cout << std::endl;
-
-            std::clock_t end = std::clock();
-
-            double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-            std::cout << std::endl;
-            std::cout << elapsed_secs << " seconds to compute.\n";
-            wait_action();
-        }
-        this->learner = std::make_shared<mltk::classifier::PerceptronFixedMarginDual<double>>(perc_fixmargin_dual);
-        return ret;
+    ClassifierPointer FMPDual::build_learner() {
+        set_parameters();
+        this->learner = std::make_shared<mltk::classifier::PerceptronFixedMarginDual<double>>(this->m_train, type, kernel_param, gamma, rate);
+        return this->learner;
     }
 
     KNNClassifier::KNNClassifier(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent)
@@ -428,24 +450,31 @@ namespace factory{
     }
 
     bool KNNClassifier::operator()() {
-        size_t k;
         bool ret = true;
+
+        set_parameters();
+
+        mltk::classifier::KNNClassifier<double> knn(this->m_train, k);
+        std::vector<std::string> class_names = this->m_train.classesNames();
+        std::vector<int> classes = this->m_train.classes();
+        ret = knn.train();
+        //auto conf_matrix = mltk::validation::generateConfusionMatrix(samples, knn);
+        std::cout << "Confusion Matrix: " << std::endl;
+        //mltk::utils::printConfusionMatrix(classes, .classesNames(), conf_matrix);
+        wait_action();
+        return ret;
+    }
+
+    void KNNClassifier::set_parameters() {
         std::cout << "k value: ";
         std::cin >> k;
         std::cout << std::endl;
+    }
 
-        mltk::classifier::KNNClassifier<double> knn(this->m_train, k);
-        if(this->m_train_learner) {
-            std::vector<std::string> class_names = this->m_train.classesNames();
-            std::vector<int> classes = this->m_train.classes();
-            ret = knn.train();
-            //auto conf_matrix = mltk::validation::generateConfusionMatrix(samples, knn);
-            std::cout << "Confusion Matrix: " << std::endl;
-            //mltk::utils::printConfusionMatrix(classes, .classesNames(), conf_matrix);
-            wait_action();
-        }
-        this->learner = std::make_shared<mltk::classifier::KNNClassifier<double>>(knn);
-        return ret;
+    ClassifierPointer KNNClassifier::build_learner() {
+        set_parameters();
+        this->learner = std::make_shared<mltk::classifier::KNNClassifier<double>>(this->m_train, k);
+        return this->learner;
     }
 
     SMOClassifier::SMOClassifier(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent)
@@ -455,38 +484,46 @@ namespace factory{
 
     bool SMOClassifier::operator()() {
         bool ret = true;
-        int kernel_type, verbose = 1;
-        double kernel_param = 0;
+        int verbose = 1;
 
+        set_parameters();
+
+        std::clock_t begin = std::clock();
+        mltk::classifier::SMO<double> smo(this->m_train, type, kernel_param, verbose);
+        //        smo.setMaxTime(max_time);
+        //        smo.setVerbose(verbose);
+        smo.train();
+        std::clock_t end = std::clock();
+
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        std::cout << std::endl;
+        std::cout << elapsed_secs << " seconds to compute.\n";
+
+        auto sol = smo.getSolution();
+        wait_action();
+        return ret;
+    }
+
+    void SMOClassifier::set_parameters() {
+        int kernel_type;
+        std::cout << "Learning rate: ";
+        std::cin >> rate;
         std::cout << "Kernel [0]Inner Product [1]Polynomial [2]Gaussian: ";
         std::cin >> kernel_type;
-
-        if(kernel_type != 0){
-            if(kernel_type == 1){
+        type = get_kernel_type(kernel_type);
+        if(type != mltk::INNER_PRODUCT){
+            if(kernel_type == mltk::POLYNOMIAL){
                 std::cout << "Polynomial degree: ";
             }else{
                 std::cout << "Gaussian gamma: ";
             }
             std::cin >> kernel_param;
         }
+    }
 
-        mltk::KernelType type = get_kernel_type(kernel_type);
-        std::clock_t begin = std::clock();
-        mltk::classifier::SMO<double> smo(this->m_train, type, kernel_param, verbose);
-        if(this->m_train_learner) {
-            //        smo.setMaxTime(max_time);
-            //        smo.setVerbose(verbose);
-            smo.train();
-            std::clock_t end = std::clock();
-
-            double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-            std::cout << std::endl;
-            std::cout << elapsed_secs << " seconds to compute.\n";
-
-            auto sol = smo.getSolution();
-            wait_action();
-        }
-        this->learner = std::make_shared<mltk::classifier::SMO<double>>(smo);
-        return ret;
+    ClassifierPointer SMOClassifier::build_learner() {
+        set_parameters();
+        this->learner = std::make_shared<mltk::classifier::SMO<double>>(this->m_train, type, kernel_param, 1);
+        return this->learner;
     }
 }

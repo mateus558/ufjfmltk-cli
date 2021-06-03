@@ -27,7 +27,6 @@ namespace factory{
 
         static std::vector<FeatSelect *> get_featselect(const mltk::Data<>& data, cppcli::CLWidget* parent = nullptr);
     protected:
-        std::string option_selector() override;
     protected:
         mltk::Data<> m_samples;
     };
@@ -36,28 +35,24 @@ namespace factory{
     public:
         explicit Golub(const mltk::Data<>& data, cppcli::CLWidget* parent = nullptr);
 
-        bool operator()() override;
     };
 
     class Fisher: public FeatSelect {
     public:
         explicit Fisher(const mltk::Data<>& data, cppcli::CLWidget* parent = nullptr);
 
-        bool operator()() override;
     };
 
     class RFEAlg: public FeatSelect {
     public:
         explicit RFEAlg(const mltk::Data<>& data, cppcli::CLWidget* parent = nullptr);
 
-        bool operator()() override;
     };
 
     class AOSAlg: public FeatSelect {
     public:
         explicit AOSAlg(const mltk::Data<>& data, cppcli::CLWidget* parent = nullptr);
 
-        bool operator()() override;
     };
 
 }

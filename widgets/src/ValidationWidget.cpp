@@ -22,9 +22,7 @@ bool ValidationWidget::build() {
     int opt = 1;
     for(auto& primal: primal_classifiers){
         auto valid = [this, primal](){
-            primal->train_learner(false);
-            (*primal)();
-            auto learner = primal->get_built_classifier();
+            auto learner = primal->build_learner();
             learner->setVerbose(0);
             mltk::validation::ValidationReport report;
             if(qtde > 1) {
@@ -34,7 +32,6 @@ bool ValidationWidget::build() {
                 report = mltk::validation::kfold(settings::data, *learner, folds, true,
                                                  settings::seed, (int) settings::verbose);
             }
-            primal->train_learner(true);
             push_message("algorithm: " + primal->get_text());
             push_message("accuracy: " + std::to_string(report.accuracy));
             push_message("error: " + std::to_string(report.error));
@@ -47,9 +44,7 @@ bool ValidationWidget::build() {
     register_group("valid_dual", "\nDual classifiers:\n", cppcli::GroupType::ACTION);
     for(auto& dual: dual_classifiers){
         auto valid = [this, dual](){
-            dual->train_learner(false);
-            (*dual)();
-            auto learner = dual->get_built_classifier();
+            auto learner = dual->build_learner();
             learner->setVerbose(0);
             mltk::validation::ValidationReport report;
             if(qtde > 1) {
@@ -59,7 +54,6 @@ bool ValidationWidget::build() {
                 report = mltk::validation::kfold(settings::data, *learner, folds, true,
                                                   settings::seed, (int) settings::verbose);
             }
-            dual->train_learner(true);
             push_message("algorithm: " + dual->get_text());
             push_message("accuracy: " + std::to_string(report.accuracy));
             push_message("error: " + std::to_string(report.error));
