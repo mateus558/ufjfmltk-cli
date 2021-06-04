@@ -3,6 +3,7 @@
 //
 
 #include "ClassifiersFactory.h"
+#include "ufjfmltk/Visualize.hpp"
 #include <chrono>
 
 namespace factory{
@@ -13,16 +14,16 @@ namespace factory{
 
     }
 
-    Classifier::Classifier(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent):
+    Classifier::Classifier(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent):
             cppcli::CLWidget(parent),
             m_train(train),
             m_test(test)
     {
     }
 
-    Classifier * Classifier::make_primal_classifier(ClassifierPrimal classifier, const mltk::Data<>& samples,
-                                                   const mltk::Data<>& train,
-                                                   const mltk::Data<>& test, cppcli::CLWidget *parent) {
+    Classifier * Classifier::make_primal_classifier(ClassifierPrimal classifier, mltk::Data<>& samples,
+                                                   mltk::Data<>& train,
+                                                   mltk::Data<>& test, cppcli::CLWidget *parent) {
         auto _train = (train.isEmpty())?samples.copy(): train.copy();
         auto _test = (test.isEmpty())?samples.copy(): test.copy();
         switch (classifier) {
@@ -40,9 +41,9 @@ namespace factory{
         }
     }
 
-    Classifier * Classifier::make_dual_classifier(ClassifierDual classifier, const mltk::Data<>& samples,
-                                                          const mltk::Data<>& train,
-                                                          const mltk::Data<>& test, cppcli::CLWidget *parent) {
+    Classifier * Classifier::make_dual_classifier(ClassifierDual classifier, mltk::Data<>& samples,
+                                                          mltk::Data<>& train,
+                                                          mltk::Data<>& test, cppcli::CLWidget *parent) {
         auto _train = (train.isEmpty())?samples.copy(): train.copy();
         auto _test = (test.isEmpty())?samples.copy(): test.copy();
         switch (classifier) {
@@ -60,8 +61,8 @@ namespace factory{
         }
     }
 
-    std::vector<Classifier *> Classifier::get_primal_classifiers(const mltk::Data<>& data, const mltk::Data<>& train,
-                                                                       const mltk::Data<>& test, cppcli::CLWidget *parent) {
+    std::vector<Classifier *> Classifier::get_primal_classifiers(mltk::Data<>& data, mltk::Data<>& train,
+                                                                       mltk::Data<>& test, cppcli::CLWidget *parent) {
         std::vector<Classifier *> primals;
         for(int primal = factory::ClassifierPrimal::PHEAD; primal != factory::ClassifierPrimal::PTAIL; primal++){
             if(primal == factory::ClassifierPrimal::PHEAD) continue;
@@ -79,7 +80,7 @@ namespace factory{
     }
 
     std::vector<Classifier *>
-    Classifier::get_dual_classifiers(const mltk::Data<> &data, const mltk::Data<> &train, const mltk::Data<> &test,
+    Classifier::get_dual_classifiers(mltk::Data<> &data, mltk::Data<>& train, mltk::Data<>& test,
                                      cppcli::CLWidget *parent) {
         std::vector<Classifier *> duals;
         for(int dual = factory::ClassifierDual::DHEAD; dual != factory::ClassifierDual::DTAIL; dual++){
@@ -124,22 +125,64 @@ namespace factory{
         return true;
     }
 
-    IMAp::IMAp(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent) :
+    void Classifier::set_train(mltk::Data<> &mTrain) {
+        m_train = mTrain;
+    }
+
+    void Classifier::visualize_options(mltk::classifier::Classifier<double> &learner, bool only_decision) {
+        if(!only_decision) {
+            ask_run_action("Visualize results", [this, &learner]() {
+                mltk::visualize::Visualization<double> vis(this->m_train);
+                int x = 0, y = 1, z = 2;
+
+                if (this->m_train.dim() == 2) {
+                    vis.plot2DwithHyperplane(x, y, learner.getSolution());
+                    ask_run_action("Show decision surface", [this, &learner, x, y, &vis]() {
+                        this->m_train.setFeaturesNames({x + 1, y + 1});
+                        vis.plotDecisionSurface2D(learner, x, y);
+                        return true;
+                    });
+                } else if (this->m_train.dim() == 3) {
+                    this->m_train.setFeaturesNames({x + 1, y + 1, z + 1});
+                    vis.plot3DwithHyperplane(x, y, z, learner.getSolution());
+                } else {
+                    std::cout << "Feature on x axis: ";
+                    std::cin >> x;
+                    std::cout << "Feature on y axis: ";
+                    std::cin >> y;
+                    std::cout << "Feature on z axis: ";
+                    std::cin >> z;
+                    vis.plot3DwithHyperplane(x, y, z, learner.getSolution());
+                }
+                return true;
+            });
+        }else{
+            ask_run_action("Show decision surface", [this, &learner]() {
+                mltk::visualize::Visualization<double> vis(this->m_train);
+                int x = 0, y = 1;
+                this->m_train.setFeaturesNames({x + 1, y + 1});
+                vis.plotDecisionSurface2D(learner, x, y);
+                return true;
+            });
+        }
+    }
+
+    IMAp::IMAp(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent) :
     Classifier(train, test, parent)
     {
         set_text("Incremental Margin Algorithm (IMAp)");
     }
 
     bool IMAp::operator()() {
-        bool ret = true;
-
         set_parameters();
 
         mltk::classifier::IMAp<double> imap(this->m_train, p, flex);
         imap.setAlphaAprox(alpha_aprox);
-        ret = imap.train();
+        imap.train();
+
         wait_action();
-        return ret;
+        visualize_options(imap);
+        return true;
     }
 
     void IMAp::set_parameters() {
@@ -166,7 +209,7 @@ namespace factory{
         return this->learner;
     }
 
-    IMADual::IMADual(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent) :
+    IMADual::IMADual(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent) :
     Classifier(train, test, parent)
     {
         set_text("Incremental Margin Algorithm (IMA Dual)");
@@ -182,9 +225,8 @@ namespace factory{
         //val_sol = runValidation(samples, ima_dual, fold, qtde, verbose, SEED);
         std::clock_t end = std::clock();
         double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-        std::cout << std::endl;
-        std::cout << elapsed_secs << " seconds to compute.\n";
         wait_action();
+        visualize_options(ima_dual, true);
         return true;
     }
 
@@ -212,7 +254,7 @@ namespace factory{
     }
 
 
-    Perceptron::Perceptron(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent) :
+    Perceptron::Perceptron(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent) :
     Classifier(train, test, parent) {
         set_text("Perceptron primal");
     }
@@ -242,6 +284,7 @@ namespace factory{
         std::cout << std::endl;
         std::cout << elapsed_secs << " seconds to compute.\n";
         wait_action();
+        visualize_options(perc);
         return ret;
     }
 
@@ -259,7 +302,7 @@ namespace factory{
         return this->learner;
     }
 
-    PerceptronDual::PerceptronDual(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent)
+    PerceptronDual::PerceptronDual(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent)
             : Classifier(train, test, parent) {
         set_text("Perceptron dual");
     }
@@ -299,6 +342,7 @@ namespace factory{
         std::cout << std::endl;
         std::cout << elapsed_secs << " seconds to compute.\n";
         wait_action();
+        visualize_options(perc_dual, true);
         return ret;
     }
 
@@ -326,7 +370,7 @@ namespace factory{
         return this->learner;
     }
 
-    FMP::FMP(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent) :
+    FMP::FMP(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent) :
     Classifier(train, test, parent) {
         set_text("Fixed Margin Perceptron (FMP)");
     }
@@ -357,6 +401,7 @@ namespace factory{
         std::cout << std::endl;
         std::cout << elapsed_secs << " seconds to compute.\n";
         wait_action();
+        visualize_options(perc);
         return ret;
     }
 
@@ -376,7 +421,7 @@ namespace factory{
         return this->learner;
     }
 
-    FMPDual::FMPDual(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent) :
+    FMPDual::FMPDual(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent) :
     Classifier(train, test, parent) {
         set_text("Fixed Margin Perceptron dual (FMP Dual)");
     }
@@ -414,6 +459,7 @@ namespace factory{
         std::cout << std::endl;
         std::cout << elapsed_secs << " seconds to compute.\n";
         wait_action();
+        visualize_options(perc_fixmargin_dual, true);
         return ret;
     }
 
@@ -444,7 +490,7 @@ namespace factory{
         return this->learner;
     }
 
-    KNNClassifier::KNNClassifier(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent)
+    KNNClassifier::KNNClassifier(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent)
             : Classifier(train, test, parent) {
         set_text("K-Nearest Neighbors (KNN)");
     }
@@ -462,6 +508,7 @@ namespace factory{
         std::cout << "Confusion Matrix: " << std::endl;
         //mltk::utils::printConfusionMatrix(classes, .classesNames(), conf_matrix);
         wait_action();
+        visualize_options(knn, true);
         return ret;
     }
 
@@ -477,7 +524,7 @@ namespace factory{
         return this->learner;
     }
 
-    SMOClassifier::SMOClassifier(const mltk::Data<> &train, const mltk::Data<> &test, cppcli::CLWidget *parent)
+    SMOClassifier::SMOClassifier(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent)
             : Classifier(train, test, parent) {
         set_text("Sequential Minimal Optimization (SMO)");
     }
@@ -501,6 +548,7 @@ namespace factory{
 
         auto sol = smo.getSolution();
         wait_action();
+        visualize_options(smo, true);
         return ret;
     }
 

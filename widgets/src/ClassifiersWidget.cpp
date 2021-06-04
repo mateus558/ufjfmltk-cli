@@ -3,7 +3,6 @@
 //
 
 #include "ClassifiersWidget.h"
-#include "ClassifiersFactory.h"
 
 ClassifiersWidget::ClassifiersWidget(cppcli::CLWidget *parent) : CLWidget(parent, "Classifier") {
 
@@ -19,18 +18,26 @@ bool ClassifiersWidget::build() {
 
     auto primal_classifiers = factory::Classifier::get_primal_classifiers(settings::data, settings::train,
                                                                           settings::test, this);
-
-    for(const auto& pclassifier: primal_classifiers){
-        register_widget("primal_classifiers", pclassifier->get_text(), std::to_string(opt++), pclassifier);
+    pclassifiers = primal_classifiers;
+    for(auto& pclassifier: pclassifiers){
+        auto update = [&pclassifier](){
+            pclassifier->set_train(settings::data);
+            return true;
+        };
+        register_widget("primal_classifiers", pclassifier->get_text(), std::to_string(opt++), pclassifier, update);
     }
 
     register_group("dual_classifiers", "\nDual classifiers:\n");
 
     auto dual_classifiers = factory::Classifier::get_dual_classifiers(settings::data, settings::train,
                                                                           settings::test, this);
-
-    for(const auto& dclassifier: dual_classifiers){
-        register_widget("dual_classifiers", dclassifier->get_text(), std::to_string(opt++), dclassifier);
+    dclassifiers = dual_classifiers;
+    for(auto& dclassifier: dclassifiers){
+        auto update = [&dclassifier](){
+            dclassifier->set_train(settings::data);
+            return true;
+        };
+        register_widget("dual_classifiers", dclassifier->get_text(), std::to_string(opt++), dclassifier, update);
     }
 
     add_exit_group();

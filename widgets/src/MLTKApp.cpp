@@ -87,7 +87,7 @@ void MLTKApp::build_configs() {
             return true;
         }, "easter egg");
         return true;
-    }, true);
+    }, nullptr, true);
 }
 
 MLTKApp::~MLTKApp() {

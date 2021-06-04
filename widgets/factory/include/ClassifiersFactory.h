@@ -27,27 +27,29 @@ namespace factory {
     class Classifier: public cppcli::CLWidget {
     public:
         explicit Classifier(cppcli::CLWidget *parent = nullptr);
-        Classifier(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
+        Classifier(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
 
-        static Classifier* make_primal_classifier(ClassifierPrimal classifier, const mltk::Data<>& samples,
-                                                 const mltk::Data<>& train,
-                                                 const mltk::Data<>& test,
+        static Classifier* make_primal_classifier(ClassifierPrimal classifier, mltk::Data<>& samples,
+                                                 mltk::Data<>& train,
+                                                 mltk::Data<>& test,
                                                  cppcli::CLWidget *parent = nullptr);
 
-        static Classifier* make_dual_classifier(ClassifierDual classifier, const mltk::Data<>& samples,
-                                                        const mltk::Data<>& train,
-                                                        const mltk::Data<>& test,
+        static Classifier* make_dual_classifier(ClassifierDual classifier, mltk::Data<>& samples,
+                                                        mltk::Data<>& train,
+                                                        mltk::Data<>& test,
                                                         cppcli::CLWidget *parent = nullptr);
 
-        static std::vector<Classifier*> get_primal_classifiers(const mltk::Data<>& data, const mltk::Data<>& train,
-                                                                     const mltk::Data<>& test,
+        static std::vector<Classifier*> get_primal_classifiers(mltk::Data<>& data, mltk::Data<>& train,
+                                                                     mltk::Data<>& test,
                                                                      cppcli::CLWidget *parent = nullptr);
 
-        static std::vector<Classifier*> get_dual_classifiers(const mltk::Data<>& data, const mltk::Data<>& train,
-                                                                     const mltk::Data<>& test,
+        static std::vector<Classifier*> get_dual_classifiers(mltk::Data<>& data, mltk::Data<>& train,
+                                                                     mltk::Data<>& test,
                                                                      cppcli::CLWidget *parent = nullptr);
 
         void train_learner(bool train) { this->m_train_learner = train; }
+
+        void visualize_options(mltk::classifier::Classifier<double> &learner, bool only_decision=false);
 
         virtual bool is_primal() const;
 
@@ -60,6 +62,9 @@ namespace factory {
 
         static mltk::KernelType get_kernel_type(int kernel_type);
 
+    public:
+        void set_train(mltk::Data<> &mTrain);
+
     protected:
         mltk::Data<> m_train, m_test;
         bool m_train_learner{true};
@@ -68,7 +73,7 @@ namespace factory {
 
     class Perceptron: public Classifier {
     public:
-        explicit Perceptron(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
+        explicit Perceptron(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
 
         void set_parameters() override;
@@ -80,7 +85,7 @@ namespace factory {
 
     class KNNClassifier: public Classifier {
     public:
-        explicit KNNClassifier(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
+        explicit KNNClassifier(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
         void set_parameters() override;
         ClassifierPointer build_learner() override;
@@ -90,7 +95,7 @@ namespace factory {
 
     class FMP: public Classifier {
     public:
-        explicit FMP(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
+        explicit FMP(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
         void set_parameters() override;
         ClassifierPointer build_learner() override;
@@ -102,7 +107,7 @@ namespace factory {
 
     class FMPDual: public Classifier {
     public:
-        explicit FMPDual(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
+        explicit FMPDual(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
         void set_parameters() override;
         ClassifierPointer build_learner() override;
@@ -114,7 +119,7 @@ namespace factory {
 
     class PerceptronDual: public Classifier {
     public:
-        explicit PerceptronDual(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
+        explicit PerceptronDual(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
         void set_parameters() override;
         ClassifierPointer build_learner() override;
@@ -126,7 +131,7 @@ namespace factory {
 
     class IMAp: public Classifier {
     public:
-        explicit IMAp(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
+        explicit IMAp(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
         void set_parameters() override;
         ClassifierPointer build_learner() override;
@@ -138,7 +143,7 @@ namespace factory {
 
     class IMADual: public Classifier {
     public:
-        explicit IMADual(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
+        explicit IMADual(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
         void set_parameters() override;
         ClassifierPointer build_learner() override;
@@ -150,7 +155,7 @@ namespace factory {
 
     class SMOClassifier: public Classifier {
     public:
-        explicit SMOClassifier(const mltk::Data<>& train, const mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
+        explicit SMOClassifier(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);
         bool operator()() override;
         void set_parameters() override;
         ClassifierPointer build_learner() override;
