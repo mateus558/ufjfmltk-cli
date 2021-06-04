@@ -21,8 +21,9 @@ namespace factory{
         register_group("classifiers", "Select a classifier:\n");
 
         int opt = 1;
-        auto primal_classifiers = factory::Classifier::get_primal_classifiers(*this->m_samples, mltk::Data<>(),
-                                                                              mltk::Data<>(), this);
+        auto empty = mltk::Data<>();
+        auto primal_classifiers = factory::Classifier::get_primal_classifiers(*this->m_samples, empty,
+                                                                              empty, this);
 
         for(const auto& pclassifier: primal_classifiers){
             auto fselect_primal = [this, pclassifier](){
@@ -35,8 +36,8 @@ namespace factory{
             register_action("classifiers", pclassifier->get_text(), std::to_string(opt++), fselect_primal);
         }
 
-        auto dual_classifiers = factory::Classifier::get_dual_classifiers(*this->m_samples, mltk::Data<>(),
-                                                                          mltk::Data<>(), this);
+        auto dual_classifiers = factory::Classifier::get_dual_classifiers(*this->m_samples, empty,
+                                                                          empty, this);
 
         for(const auto& dclassifier: dual_classifiers){
             auto fselect_dual = [this, dclassifier](){

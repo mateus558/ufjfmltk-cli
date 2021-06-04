@@ -7,6 +7,8 @@
 
 #include "cppcli/CLWidget.h"
 #include "settings.h"
+#include "ClassifiersFactory.h"
+
 
 class ClassifiersWidget : public cppcli::CLWidget {
 public:
@@ -15,6 +17,10 @@ public:
     ~ClassifiersWidget() override;
 private:
     bool build() override;
+
+private:
+    std::vector<factory::Classifier *> pclassifiers;
+    std::vector<factory::Classifier *> dclassifiers;
 };
 
 

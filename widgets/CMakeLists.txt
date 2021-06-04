@@ -38,8 +38,7 @@ target_include_directories(${WIDGETS_TARGET} PUBLIC "$<BUILD_INTERFACE:${CMAKE_C
 
 add_subdirectory(factory)
 
-target_link_libraries(${WIDGETS_TARGET} PRIVATE factory)
-target_link_libraries(${WIDGETS_TARGET} PUBLIC ufjfmltk cppcli)
+target_link_libraries(${WIDGETS_TARGET} PUBLIC ufjfmltk cppcli factory)
 
 install(TARGETS ${WIDGETS_TARGET}
         EXPORT  ${PROJECT_NAME}
