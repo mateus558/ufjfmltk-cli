@@ -132,7 +132,7 @@ namespace factory{
     void Classifier::visualize_options(mltk::classifier::Classifier<double> &learner, bool only_decision) {
         if(!only_decision) {
             ask_run_action("Visualize results", [this, &learner]() {
-                mltk::visualize::Visualization<double> vis(this->m_train);
+                mltk::visualize::Visualization<double> vis(this->m_train, false);
                 int x = 0, y = 1, z = 2;
 
                 if (this->m_train.dim() == 2) {
@@ -158,7 +158,7 @@ namespace factory{
             });
         }else{
             ask_run_action("Show decision surface", [this, &learner]() {
-                mltk::visualize::Visualization<double> vis(this->m_train);
+                mltk::visualize::Visualization<double> vis(this->m_train, false);
                 int x = 0, y = 1;
                 this->m_train.setFeaturesNames({x + 1, y + 1});
                 vis.plotDecisionSurface2D(learner, x, y);
