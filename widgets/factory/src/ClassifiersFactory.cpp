@@ -162,6 +162,7 @@ namespace factory{
                 int x = 0, y = 1;
                 this->m_train.setFeaturesNames({x + 1, y + 1});
                 vis.plotDecisionSurface2D(learner, x, y);
+                wait_action();
                 return true;
             });
         }
