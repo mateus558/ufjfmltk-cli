@@ -19,6 +19,9 @@ bool RegressorWidget::build() {
     for(auto& reg : regressors){
         auto update_samples = [&reg]() {
             reg->set_samples(settings::data);
+            reg->set_verbose(settings::verbose);
+            reg->set_seed(settings::seed);
+            reg->set_maxtime(settings::max_time);
             return true;
         };
         register_widget("regressor", reg->get_text(), std::to_string(opts++), reg, update_samples);

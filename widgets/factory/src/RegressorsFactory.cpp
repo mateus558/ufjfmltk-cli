@@ -9,12 +9,12 @@ namespace factory {
     std::map<Regressors, Regressor*> allocated_regressors;
 
 
-    Regressor::Regressor(cppcli::CLWidget *parent) : cppcli::CLWidget(parent) {
+    Regressor::Regressor(cppcli::CLWidget *parent) : AlgorithmFactory(parent) {
 
     }
 
     Regressor::Regressor(const mltk::Data<> &data, cppcli::CLWidget *parent):
-            cppcli::CLWidget(parent),
+            AlgorithmFactory(parent),
             m_samples(data){
 
     }
@@ -62,7 +62,9 @@ namespace factory {
         std::cout << "Learning rate: ";
         std::cin >> rate;
 
-        mltk::regressor::LMSPrimal<> lms(this->m_samples, rate, 1);
+        mltk::regressor::LMSPrimal<> lms(this->m_samples, rate, this->m_verbose);
+        lms.setMaxTime(this->m_maxtime);
+        lms.setSeed(this->m_seed);
         lms.train();
 
         auto real = this->m_samples.getLabels();

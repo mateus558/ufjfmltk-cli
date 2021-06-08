@@ -7,12 +7,12 @@
 namespace factory{
     std::map<FeatSelects, FeatSelect*> allocated_featselects;
 
-    FeatSelect::FeatSelect(cppcli::CLWidget *parent) : cppcli::CLWidget(parent) {
+    FeatSelect::FeatSelect(cppcli::CLWidget *parent) : AlgorithmFactory(parent) {
 
     }
 
     FeatSelect::FeatSelect(mltk::Data<> &data, const std::string& title, cppcli::CLWidget *parent) :
-            cppcli::CLWidget(parent, title),
+            AlgorithmFactory(parent, title),
             m_samples(&data){
 
     }
@@ -106,7 +106,11 @@ namespace factory{
 
     FeatSelectPointer Golub::build_learner() {
         set_parameters();
+        this->classifier->setMaxTime(this->m_maxtime);
+        this->classifier->setSeed(this->m_seed);
+        this->classifier->setVerbose(0);
         this->learner = std::make_shared<mltk::featselect::Golub<double>>(*this->m_samples, this->classifier.get(), final_dim);
+        this->learner->setVerbose(this->m_verbose);
         return this->learner;
     }
 
@@ -122,7 +126,11 @@ namespace factory{
 
     FeatSelectPointer Fisher::build_learner() {
         set_parameters();
+        this->classifier->setMaxTime(this->m_maxtime);
+        this->classifier->setSeed(this->m_seed);
+        this->classifier->setVerbose(0);
         this->learner = std::make_shared<mltk::featselect::Fisher<double>>(*this->m_samples, this->classifier.get(), final_dim);
+        this->learner->setVerbose(this->m_verbose);
         return this->learner;
     }
 
@@ -141,8 +149,12 @@ namespace factory{
 
     FeatSelectPointer RFEAlg::build_learner() {
         set_parameters();
+        this->classifier->setMaxTime(this->m_maxtime);
+        this->classifier->setSeed(this->m_seed);
+        this->classifier->setVerbose(0);
         this->learner = std::make_shared<mltk::featselect::RFE<double>>(*this->m_samples, this->classifier.get(),
                 final_dim, nullptr, 1, jump);
+        this->learner->setVerbose(this->m_verbose);
         return this->learner;
     }
 
@@ -169,9 +181,13 @@ namespace factory{
 
     FeatSelectPointer AOSAlg::build_learner() {
         set_parameters();
+        this->classifier->setMaxTime(this->m_maxtime);
+        this->classifier->setSeed(this->m_seed);
+        this->classifier->setVerbose(0);
         this->learner = std::make_shared<mltk::featselect::AOS<double>>(*this->m_samples, this->classifier.get(),
                                                                         final_dim, nullptr, branching, branch_form,
                                                                         choice_form, prof_look_ahead, cut);
+        this->learner->setVerbose(this->m_verbose);
         return this->learner;
     }
 

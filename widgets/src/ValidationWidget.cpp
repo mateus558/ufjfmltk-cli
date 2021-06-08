@@ -21,6 +21,9 @@ bool ValidationWidget::build() {
                                                                           settings::test, this);
     int opt = 1;
     for(auto& primal: primal_classifiers){
+        primal->set_maxtime(settings::max_time);
+        primal->set_verbose(0);
+        primal->set_seed(settings::seed);
         auto valid = [this, primal](){
             auto learner = primal->build_learner();
             learner->setVerbose(0);
@@ -43,6 +46,9 @@ bool ValidationWidget::build() {
 
     register_group("valid_dual", "\nDual classifiers:\n", cppcli::GroupType::ACTION);
     for(auto& dual: dual_classifiers){
+        dual->set_maxtime(settings::max_time);
+        dual->set_verbose(0);
+        dual->set_seed(settings::seed);
         auto valid = [this, dual](){
             auto learner = dual->build_learner();
             learner->setVerbose(0);

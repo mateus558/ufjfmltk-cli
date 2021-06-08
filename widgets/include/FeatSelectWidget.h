@@ -6,6 +6,7 @@
 #define CPPCLI_UFJFMLTK_FEATSELECTWIDGET_H
 
 #include "cppcli/CLWidget.h"
+#include "FeatSelectFactory.h"
 
 class FeatSelectWidget: public cppcli::CLWidget {
 public:
@@ -15,6 +16,9 @@ public:
 
 private:
     bool build() override;
+
+private:
+    std::vector<factory::FeatSelect *> algorithms;
 };
 
 

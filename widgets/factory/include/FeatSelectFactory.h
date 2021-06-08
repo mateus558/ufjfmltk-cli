@@ -5,7 +5,7 @@
 #ifndef UFJFMLTK_CLI_FEATSELECTFACTORY_H
 #define UFJFMLTK_CLI_FEATSELECTFACTORY_H
 
-#include "cppcli/CLWidget.h"
+#include "AlgorithmFactory.h"
 #include "ufjfmltk/Core.hpp"
 #include "ufjfmltk/FeatureSelection.hpp"
 #include "ClassifiersFactory.h"
@@ -19,7 +19,7 @@ namespace factory{
 
     using FeatSelectPointer = std::shared_ptr<mltk::featselect::FeatureSelection<double>>;
 
-    class FeatSelect : public cppcli::CLWidget {
+    class FeatSelect : public AlgorithmFactory {
     public:
         explicit FeatSelect(cppcli::CLWidget* parent = nullptr);
         FeatSelect(mltk::Data<>& data, const std::string& title, cppcli::CLWidget* parent = nullptr);
@@ -31,6 +31,8 @@ namespace factory{
         static std::vector<FeatSelect *> get_featselect(mltk::Data<>& data, cppcli::CLWidget* parent = nullptr);
 
         virtual FeatSelectPointer build_learner() = 0;
+
+        void set_samples(mltk::Data<>& samples){ this->m_samples = &samples; }
 
     protected:
         virtual void set_parameters() = 0;

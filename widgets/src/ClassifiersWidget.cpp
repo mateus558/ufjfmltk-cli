@@ -21,6 +21,9 @@ bool ClassifiersWidget::build() {
     for(auto& pclassifier: pclassifiers){
         auto update = [&pclassifier](){
             pclassifier->set_train(settings::data);
+            pclassifier->set_seed(settings::seed);
+            pclassifier->set_maxtime(settings::max_time);
+            pclassifier->set_verbose(settings::verbose);
             return true;
         };
         register_widget("primal_classifiers", pclassifier->get_text(), std::to_string(opt++), pclassifier, update);
@@ -33,6 +36,9 @@ bool ClassifiersWidget::build() {
     for(auto& dclassifier: dclassifiers){
         auto update = [&dclassifier](){
             dclassifier->set_train(settings::data);
+            dclassifier->set_seed(settings::seed);
+            dclassifier->set_maxtime(settings::max_time);
+            dclassifier->set_verbose(settings::verbose);
             return true;
         };
         register_widget("dual_classifiers", dclassifier->get_text(), std::to_string(opt++), dclassifier, update);

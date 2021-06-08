@@ -8,12 +8,12 @@ namespace factory{
     std::map<Clusterers, Clusterer*> allocated_clusterers;
 
 
-    Clusterer::Clusterer(cppcli::CLWidget *parent) : cppcli::CLWidget(parent) {
+    Clusterer::Clusterer(cppcli::CLWidget *parent) : AlgorithmFactory(parent) {
 
     }
 
     Clusterer::Clusterer(const mltk::Data<> &data, cppcli::CLWidget *parent) :
-    cppcli::CLWidget(parent),
+            AlgorithmFactory(parent),
     m_samples(data){
 
     }
@@ -64,8 +64,8 @@ namespace factory{
         std::cin >> init;
 
         initialization = (init == 0)?"random":"kmeanspp";
-        mltk::clusterer::KMeans kmeans(this->m_samples, clusters, initialization, 42, 3);
-
+        mltk::clusterer::KMeans kmeans(this->m_samples, clusters, initialization, this->m_seed, this->m_verbose);
+        kmeans.setMaxTime(this->m_maxtime);
         kmeans.train();
         wait_action();
         return true;

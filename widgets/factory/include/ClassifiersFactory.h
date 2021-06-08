@@ -5,7 +5,7 @@
 #ifndef UFJFMLTK_CLI_CLASSIFIERSFACTORY_H
 #define UFJFMLTK_CLI_CLASSIFIERSFACTORY_H
 
-#include "cppcli/CLWidget.h"
+#include "AlgorithmFactory.h"
 #include "ufjfmltk/Core.hpp"
 #include "ufjfmltk/Classifier.hpp"
 #include "ufjfmltk/Visualize.hpp"
@@ -24,7 +24,7 @@ namespace factory {
 
     using ClassifierPointer = std::shared_ptr<mltk::classifier::Classifier<double>>;
 
-    class Classifier: public cppcli::CLWidget {
+    class Classifier: public AlgorithmFactory {
     public:
         explicit Classifier(cppcli::CLWidget *parent = nullptr);
         Classifier(mltk::Data<>& train, mltk::Data<>& test, cppcli::CLWidget *parent = nullptr);

@@ -3,7 +3,6 @@
 //
 
 #include "ClustererWidget.h"
-#include "ClusterersFactory.h"
 
 ClustererWidget::ClustererWidget(cppcli::CLWidget *parent) : CLWidget(parent, "Clusterer widget") {
 
@@ -15,10 +14,17 @@ bool ClustererWidget::build() {
 
     register_group("clusterer", "Select an option:\n");
 
-    auto clusterers = factory::Clusterer::get_clusterers(settings::data, this);
+    clusterers = factory::Clusterer::get_clusterers(settings::data, this);
     int opts = 1;
-    for(const auto& clusterer: clusterers){
-        register_widget("clusterer", clusterer->get_text(), std::to_string(opts++), clusterer);
+    for(auto& clusterer: clusterers){
+        auto update = [&clusterer](){
+            clusterer->set_samples(settings::data);
+            clusterer->set_seed(settings::seed);
+            clusterer->set_maxtime(settings::max_time);
+            clusterer->set_verbose(settings::verbose);
+            return true;
+        };
+        register_widget("clusterer", clusterer->get_text(), std::to_string(opts++), clusterer, update);
     }
 
     add_exit_group();

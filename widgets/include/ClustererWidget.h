@@ -5,7 +5,7 @@
 #ifndef CPPCLI_UFJFMLTK_CLUSTERERWIDGET_H
 #define CPPCLI_UFJFMLTK_CLUSTERERWIDGET_H
 
-#include "cppcli/CLWidget.h"
+#include "ClusterersFactory.h"
 #include "settings.h"
 
 class ClustererWidget: public cppcli::CLWidget {
@@ -16,6 +16,9 @@ public:
 
 private:
     bool build() override;
+
+private:
+    std::vector<factory::Clusterer *> clusterers;
 };
 
 

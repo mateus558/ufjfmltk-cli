@@ -5,7 +5,7 @@
 #ifndef UFJFMLTK_CLI_REGRESSORSFACTORY_H
 #define UFJFMLTK_CLI_REGRESSORSFACTORY_H
 
-#include "cppcli/CLWidget.h"
+#include "AlgorithmFactory.h"
 #include "ufjfmltk/Core.hpp"
 #include "ufjfmltk/Regressor.hpp"
 
@@ -16,7 +16,7 @@ namespace factory{
 
     extern std::map<Regressors, Regressor*> allocated_regressors;
 
-    class Regressor : public cppcli::CLWidget {
+    class Regressor : public AlgorithmFactory {
     public:
         explicit Regressor(cppcli::CLWidget* parent = nullptr);
         explicit Regressor(const mltk::Data<>& data, cppcli::CLWidget* parent = nullptr);

@@ -5,7 +5,7 @@
 #ifndef UFJFMLTK_CLI_CLUSTERERSFACTORY_H
 #define UFJFMLTK_CLI_CLUSTERERSFACTORY_H
 
-#include "cppcli/CLWidget.h"
+#include "AlgorithmFactory.h"
 #include "ufjfmltk/Core.hpp"
 #include "ufjfmltk/Clusterer.hpp"
 
@@ -16,7 +16,7 @@ namespace factory {
 
     extern std::map<Clusterers, Clusterer*> allocated_clusterers;
 
-    class Clusterer: public cppcli::CLWidget {
+    class Clusterer: public AlgorithmFactory {
     public:
         explicit Clusterer(cppcli::CLWidget* parent = nullptr);
         explicit Clusterer(const mltk::Data<>& data, cppcli::CLWidget* parent = nullptr);
@@ -27,6 +27,7 @@ namespace factory {
 
         static std::vector<Clusterer *> get_clusterers(const mltk::Data<>& data, cppcli::CLWidget* parent = nullptr);
 
+        void set_samples(const mltk::Data<> data) { this->m_samples = data; }
     protected:
         std::string option_selector() override;
     protected:
