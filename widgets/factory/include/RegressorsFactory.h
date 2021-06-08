@@ -26,6 +26,8 @@ namespace factory{
         static Regressor* make_regressor(Regressors regressor, const mltk::Data<>& data, cppcli::CLWidget* parent = nullptr);
 
         static std::vector<Regressor *> get_regressors(const mltk::Data<>& data, cppcli::CLWidget* parent = nullptr);
+        
+        void set_samples(const mltk::Data<double>& samples){ this->m_samples = samples; }
 
     protected:
         std::string option_selector() override;

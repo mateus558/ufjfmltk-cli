@@ -5,7 +5,7 @@
 #include "VisualizationWidget.h"
 
 VisualizationWidget::VisualizationWidget(cppcli::CLWidget *parent): cppcli::CLWidget(parent,
-                                                                                     "Visualization widget") {
+                                                                                     "Visualization") {
     m_plot = std::make_unique<mltk::visualize::Visualization<double>>(false);
 };
 

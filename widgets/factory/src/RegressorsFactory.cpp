@@ -3,6 +3,7 @@
 //
 
 #include "RegressorsFactory.h"
+#include "ufjfmltk/Visualize.hpp"
 
 namespace factory {
     std::map<Regressors, Regressor*> allocated_regressors;
@@ -64,7 +65,28 @@ namespace factory {
         mltk::regressor::LMSPrimal<> lms(this->m_samples, rate, 1);
         lms.train();
 
+        auto real = this->m_samples.getLabels();
+        mltk::Point<double> predicted(this->m_samples.size());
+        std::for_each(this->m_samples.begin(), this->m_samples.end(), [&lms](const auto& point) {
+            return lms.evaluate(*point);
+            });
+        double mse = mltk::metrics::MSE(real, predicted);
+        std::cout << "\nMSE: " << mse << std::endl;
         wait_action();
+        ask_run_action("Visualize results", [this, &lms]() {
+            mltk::visualize::Visualization<double> vis(this->m_samples, false);
+            int x = 0, y = 1;
+
+            if (this->m_samples.dim() == 1) {
+                vis.plot1DRegresionHyperplane(x, lms.getSolution());
+            }
+            else if (this->m_samples.dim() == 2) {
+                this->m_samples.setFeaturesNames({ x + 1, y + 1});
+                vis.plot2DRegresionHyperplane(x, y, lms.getSolution());
+            }
+            
+            return true;
+            });
         return true;
     }
 }

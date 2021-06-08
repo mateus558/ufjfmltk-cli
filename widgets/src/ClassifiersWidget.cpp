@@ -16,9 +16,8 @@ bool ClassifiersWidget::build() {
 
     register_group("primal_classifiers", "Primal classifiers:\n");
 
-    auto primal_classifiers = factory::Classifier::get_primal_classifiers(settings::data, settings::train,
+    pclassifiers = factory::Classifier::get_primal_classifiers(settings::data, settings::train,
                                                                           settings::test, this);
-    pclassifiers = primal_classifiers;
     for(auto& pclassifier: pclassifiers){
         auto update = [&pclassifier](){
             pclassifier->set_train(settings::data);
@@ -29,9 +28,8 @@ bool ClassifiersWidget::build() {
 
     register_group("dual_classifiers", "\nDual classifiers:\n");
 
-    auto dual_classifiers = factory::Classifier::get_dual_classifiers(settings::data, settings::train,
+    dclassifiers = factory::Classifier::get_dual_classifiers(settings::data, settings::train,
                                                                           settings::test, this);
-    dclassifiers = dual_classifiers;
     for(auto& dclassifier: dclassifiers){
         auto update = [&dclassifier](){
             dclassifier->set_train(settings::data);
