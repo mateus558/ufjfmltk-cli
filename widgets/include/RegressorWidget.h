@@ -7,6 +7,8 @@
 
 #include "cppcli/CLWidget.h"
 #include "settings.h"
+#include "RegressorsFactory.h"
+
 
 class RegressorWidget: public cppcli::CLWidget {
 public:
@@ -16,6 +18,9 @@ public:
 
 private:
     bool build() override;
+
+private:
+    std::vector<factory::Regressor*> regressors;
 };
 
 
