@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Marim\source\repos\ufjfmltk-cli\build\CMakeFiles\b6a2824fbdae5aac5a51b135541016aa\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{0E747347-A2B2-3E16-9B7F-E8E7D5A2B344}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

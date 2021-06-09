@@ -1,0 +1,3 @@
+repository='external project URL'
+module='https://github.com/mateus558/UFJF-Machine-Learning-Toolkit/archive/refs/tags/v0.51.1-beta.7.tar.gz'
+tag=''

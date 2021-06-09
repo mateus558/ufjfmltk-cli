@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps\ufjfmltk-src\subprojects\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps\ufjfmltk-build\subprojects\ufjfmltk-core\core.dir\$(Configuration)\Utils.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps\ufjfmltk-build\subprojects\ufjfmltk-core\core.dir\$(Configuration)\Datasets.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps\ufjfmltk-build\subprojects\ufjfmltk-classifier\classifier.dir\$(Configuration)\int_dll.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+    <Object Include="C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps\ufjfmltk-build\subprojects\ufjfmltk-visual\visual.dir\$(Configuration)\gnuplot_i.obj">
+      <Filter>Object Libraries</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Object Libraries">
+      <UniqueIdentifier>{5D46EAC2-0ED9-3815-8B4D-9F1DE74FC6D0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

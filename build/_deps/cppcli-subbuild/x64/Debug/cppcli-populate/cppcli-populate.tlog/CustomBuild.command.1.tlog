@@ -1,0 +1,164 @@
+^C:\USERS\MARIM\SOURCE\REPOS\UFJFMLTK-CLI\BUILD\_DEPS\CPPCLI-SUBBUILD\CMAKEFILES\217CF7C87FA42558A0E93A5EAABCE43B\CPPCLI-POPULATE-MKDIR.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-src
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-build
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/tmp
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/src/cppcli-populate-stamp/Debug
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/src
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/src/cppcli-populate-stamp
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/src/cppcli-populate-stamp/Debug/cppcli-populate-mkdir
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\MARIM\SOURCE\REPOS\UFJFMLTK-CLI\BUILD\_DEPS\CPPCLI-SUBBUILD\CMAKEFILES\217CF7C87FA42558A0E93A5EAABCE43B\CPPCLI-POPULATE-DOWNLOAD.RULE
+setlocal
+cd C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -P C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/src/cppcli-populate-stamp/download-cppcli-populate.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -P C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/src/cppcli-populate-stamp/verify-cppcli-populate.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -P C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/src/cppcli-populate-stamp/extract-cppcli-populate.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/src/cppcli-populate-stamp/Debug/cppcli-populate-download
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\MARIM\SOURCE\REPOS\UFJFMLTK-CLI\BUILD\_DEPS\CPPCLI-SUBBUILD\CMAKEFILES\217CF7C87FA42558A0E93A5EAABCE43B\CPPCLI-POPULATE-UPDATE.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/src/cppcli-populate-stamp/Debug/cppcli-populate-update
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\MARIM\SOURCE\REPOS\UFJFMLTK-CLI\BUILD\_DEPS\CPPCLI-SUBBUILD\CMAKEFILES\217CF7C87FA42558A0E93A5EAABCE43B\CPPCLI-POPULATE-PATCH.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/src/cppcli-populate-stamp/Debug/cppcli-populate-patch
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\MARIM\SOURCE\REPOS\UFJFMLTK-CLI\BUILD\_DEPS\CPPCLI-SUBBUILD\CMAKEFILES\217CF7C87FA42558A0E93A5EAABCE43B\CPPCLI-POPULATE-CONFIGURE.RULE
+setlocal
+cd C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps\cppcli-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/src/cppcli-populate-stamp/Debug/cppcli-populate-configure
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\MARIM\SOURCE\REPOS\UFJFMLTK-CLI\BUILD\_DEPS\CPPCLI-SUBBUILD\CMAKEFILES\217CF7C87FA42558A0E93A5EAABCE43B\CPPCLI-POPULATE-BUILD.RULE
+setlocal
+cd C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps\cppcli-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/src/cppcli-populate-stamp/Debug/cppcli-populate-build
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\MARIM\SOURCE\REPOS\UFJFMLTK-CLI\BUILD\_DEPS\CPPCLI-SUBBUILD\CMAKEFILES\217CF7C87FA42558A0E93A5EAABCE43B\CPPCLI-POPULATE-INSTALL.RULE
+setlocal
+cd C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps\cppcli-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/src/cppcli-populate-stamp/Debug/cppcli-populate-install
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\MARIM\SOURCE\REPOS\UFJFMLTK-CLI\BUILD\_DEPS\CPPCLI-SUBBUILD\CMAKEFILES\217CF7C87FA42558A0E93A5EAABCE43B\CPPCLI-POPULATE-TEST.RULE
+setlocal
+cd C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps\cppcli-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/src/cppcli-populate-stamp/Debug/cppcli-populate-test
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\MARIM\SOURCE\REPOS\UFJFMLTK-CLI\BUILD\_DEPS\CPPCLI-SUBBUILD\CMAKEFILES\67E6DE2ECFD0F7D0DB1381EDA12676E6\CPPCLI-POPULATE-COMPLETE.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/CMakeFiles/Debug
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/CMakeFiles/Debug/cppcli-populate-complete
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/cppcli-populate-prefix/src/cppcli-populate-stamp/Debug/cppcli-populate-done
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\MARIM\SOURCE\REPOS\UFJFMLTK-CLI\BUILD\_DEPS\CPPCLI-SUBBUILD\CMAKEFILES\E861D72DDCF54D1D025E00673A8B688D\CPPCLI-POPULATE.RULE
+setlocal
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\MARIM\SOURCE\REPOS\UFJFMLTK-CLI\BUILD\_DEPS\CPPCLI-SUBBUILD\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild -BC:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild --check-stamp-file C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps\cppcli-subbuild\CMakeFiles\e861d72ddcf54d1d025e00673a8b688d\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{70C2BC23-6E24-3FDF-AAA3-0F50426C734F}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

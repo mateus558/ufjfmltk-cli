@@ -1,0 +1,4 @@
+C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/ufjfmltk-build/subprojects/ufjfmltk-core/core.dir/RelWithDebInfo/Utils.obj
+C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/ufjfmltk-build/subprojects/ufjfmltk-core/core.dir/RelWithDebInfo/Datasets.obj
+C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/ufjfmltk-build/subprojects/ufjfmltk-classifier/classifier.dir/RelWithDebInfo/int_dll.obj
+C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/ufjfmltk-build/subprojects/ufjfmltk-visual/visual.dir/RelWithDebInfo/gnuplot_i.obj

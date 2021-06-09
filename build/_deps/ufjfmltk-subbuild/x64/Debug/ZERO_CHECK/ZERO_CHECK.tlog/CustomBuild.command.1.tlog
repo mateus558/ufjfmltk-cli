@@ -1,0 +1,10 @@
+^C:\USERS\MARIM\SOURCE\REPOS\UFJFMLTK-CLI\BUILD\_DEPS\UFJFMLTK-SUBBUILD\CMAKEFILES\0FC5E3788D066936C117626A49DC9EEC\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/ufjfmltk-subbuild -BC:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/ufjfmltk-subbuild --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/ufjfmltk-subbuild/ufjfmltk-populate.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

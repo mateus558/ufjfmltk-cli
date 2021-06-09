@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps\ufjfmltk-src\subprojects\ufjfmltk-visual\src\gnuplot_i.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps\ufjfmltk-src\subprojects\ufjfmltk-visual\include\ufjfmltk\visual\gnuplot_i.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps\ufjfmltk-src\subprojects\ufjfmltk-visual\include\ufjfmltk\visual\Visualization.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps\ufjfmltk-src\subprojects\ufjfmltk-visual\include\ufjfmltk\Visualize.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Marim\source\repos\ufjfmltk-cli\build\_deps\ufjfmltk-src\subprojects\ufjfmltk-visual\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{F2BA4E5E-DE98-39BA-8DB9-FD6441E160AE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{824B0007-FE43-30FC-B7D8-2BA4B6533EA9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

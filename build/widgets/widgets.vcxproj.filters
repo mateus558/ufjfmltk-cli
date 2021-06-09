@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\src\DatasetWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\src\ArtificialDataWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\src\DataWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\src\VisualizationWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\src\ClassifiersWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\src\FeatSelectWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\src\RegressorWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\src\ClustererWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\src\ValidationWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\src\MLTKApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\include\ArtificialDataWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\include\DatasetWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\include\DataWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\include\ClassifiersWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\include\RegressorWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\include\FeatSelectWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\include\VisualizationWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\include\ClustererWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\include\ValidationWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\include\MLTKApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\include\settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Marim\source\repos\ufjfmltk-cli\widgets\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{F2BA4E5E-DE98-39BA-8DB9-FD6441E160AE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{824B0007-FE43-30FC-B7D8-2BA4B6533EA9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

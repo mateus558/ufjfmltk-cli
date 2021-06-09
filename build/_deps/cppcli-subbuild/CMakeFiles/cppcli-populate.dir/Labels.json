@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/CMakeFiles/cppcli-populate"
+		},
+		{
+			"file" : "C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/CMakeFiles/e861d72ddcf54d1d025e00673a8b688d/cppcli-populate.rule"
+		},
+		{
+			"file" : "C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/CMakeFiles/67e6de2ecfd0f7d0db1381eda12676e6/cppcli-populate-complete.rule"
+		},
+		{
+			"file" : "C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/CMakeFiles/217cf7c87fa42558a0e93a5eaabce43b/cppcli-populate-build.rule"
+		},
+		{
+			"file" : "C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/CMakeFiles/217cf7c87fa42558a0e93a5eaabce43b/cppcli-populate-configure.rule"
+		},
+		{
+			"file" : "C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/CMakeFiles/217cf7c87fa42558a0e93a5eaabce43b/cppcli-populate-download.rule"
+		},
+		{
+			"file" : "C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/CMakeFiles/217cf7c87fa42558a0e93a5eaabce43b/cppcli-populate-install.rule"
+		},
+		{
+			"file" : "C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/CMakeFiles/217cf7c87fa42558a0e93a5eaabce43b/cppcli-populate-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/CMakeFiles/217cf7c87fa42558a0e93a5eaabce43b/cppcli-populate-patch.rule"
+		},
+		{
+			"file" : "C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/CMakeFiles/217cf7c87fa42558a0e93a5eaabce43b/cppcli-populate-test.rule"
+		},
+		{
+			"file" : "C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/cppcli-subbuild/CMakeFiles/217cf7c87fa42558a0e93a5eaabce43b/cppcli-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"cppcli-populate"
+		],
+		"name" : "cppcli-populate"
+	}
+}

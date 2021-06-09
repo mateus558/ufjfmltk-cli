@@ -1,0 +1,3 @@
+C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/ufjfmltk-subbuild/CMakeFiles/ufjfmltk-populate.dir
+C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/ufjfmltk-subbuild/CMakeFiles/ALL_BUILD.dir
+C:/Users/Marim/source/repos/ufjfmltk-cli/build/_deps/ufjfmltk-subbuild/CMakeFiles/ZERO_CHECK.dir
