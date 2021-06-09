@@ -11,7 +11,5 @@ cmake --build build
 
 **Requirements:**
 
-All requirements besides meson are installed on ``meson build`` command.
-- meson or cmake
-- gnuplot
-- ufjfmltk 
+- cmake
+- gnuplot (for visualization)
