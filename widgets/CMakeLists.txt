@@ -1,17 +1,3 @@
-FetchContent_Declare(
-        ufjfmltk
-        # Specify the commit you depend on and update it regularly.
-        URL https://github.com/mateus558/UFJF-Machine-Learning-Toolkit/archive/refs/tags/v0.51.1-beta.7.tar.gz
-)
-FetchContent_MakeAvailable(ufjfmltk)
-
-FetchContent_Declare(
-        cppcli
-        # Specify the commit you depend on and update it regularly.
-        URL https://github.com/mateus558/cppcli/archive/refs/tags/v1.2.1.tar.gz
-)
-FetchContent_MakeAvailable(cppcli)
-
 set(WIDGETS_TARGET widgets)
 
 set(WIDGETS_SRC
