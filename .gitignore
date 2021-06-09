@@ -2,3 +2,4 @@ cmake-*
 .idea
 out
 .vs
+build
