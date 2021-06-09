@@ -11,6 +11,5 @@ cmake --build build
 
 **Requirements:**
 
-All requirements besides meson are installed on ``meson build`` command.
 - cmake
-- gnuplot
+- gnuplot (for visualization)
