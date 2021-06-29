@@ -79,8 +79,9 @@ std::vector<std::string> DatasetWidget::list_datasets(bool list) {
 #elif _WIN32
     HANDLE hFind;
     WIN32_FIND_DATA data1;
-    std::string path = settings::data_folder + "\\*.*";
-
+    auto data_folder = settings::data_folder;
+    data_folder.pop_back();
+    std::string path = ".\\" + data_folder + "\\*.*";
     hFind = FindFirstFile(path.c_str(), &data1);
     if (hFind != INVALID_HANDLE_VALUE) {
         do {

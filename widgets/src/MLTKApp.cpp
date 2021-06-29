@@ -10,7 +10,11 @@
 size_t settings::seed = 0;
 size_t settings::verbose = 1;
 size_t settings::max_time = 100;
+#ifdef __unix__
 std::string settings::data_folder = "datasets/";
+#elif _WIN32
+std::string settings::data_folder = "DB/";
+#endif
 mltk::Data<> settings::data;
 mltk::Data<> settings::train;
 mltk::Data<> settings::test;
