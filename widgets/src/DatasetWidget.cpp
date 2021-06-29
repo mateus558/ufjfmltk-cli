@@ -79,7 +79,7 @@ std::vector<std::string> DatasetWidget::list_datasets(bool list) {
 #elif _WIN32
     HANDLE hFind;
     WIN32_FIND_DATA data1;
-    std::string path = "..\\DB\\*.*";
+    std::string path = settings::data_folder + "\\*.*";
 
     hFind = FindFirstFile(path.c_str(), &data1);
     if (hFind != INVALID_HANDLE_VALUE) {
@@ -278,7 +278,10 @@ cppcli::Action::Type DatasetWidget::save_traintest() {
             if(test.isEmpty()){
                 std::cerr << "Divide the train/test datasets first...\n" << std::endl;
             }else{
-                std::string outfile = data.name()+"_"+mltk::utils::timestamp();
+                auto timestamp = mltk::utils::timestamp();
+                timestamp.erase(std::remove(timestamp.begin(), timestamp.end(), ':'), timestamp.end());
+                std::string outfile = data.name()+"_"+timestamp;
+
                 train.write(outfile+"_train", "csv");
                 test.write(outfile+"_test", "csv");
             }
