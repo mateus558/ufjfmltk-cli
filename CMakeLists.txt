@@ -10,7 +10,7 @@ include(FetchContent)
 FetchContent_Declare(
         ufjfmltk
         # Specify the commit you depend on and update it regularly.
-        URL https://github.com/mateus558/UFJF-Machine-Learning-Toolkit/archive/refs/tags/v0.51.1-beta.7.tar.gz
+        URL https://github.com/mateus558/UFJF-Machine-Learning-Toolkit/archive/refs/tags/v0.51.1-beta.8.tar.gz
 )
 FetchContent_MakeAvailable(ufjfmltk)
 
