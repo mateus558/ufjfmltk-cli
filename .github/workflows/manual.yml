@@ -27,6 +27,7 @@ jobs:
        run: git submodule update --force --recursive --init --remote
      
      - name: Install packaging dependencies
+       shell: bash
        run:   |
          if [ "$RUNNER_OS" == "Linux" ]; then
               echo "teste"
