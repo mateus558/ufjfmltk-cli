@@ -68,6 +68,7 @@ namespace factory{
         mltk::clusterer::KMeans kmeans(this->m_samples, clusters, initialization, this->m_seed, this->m_verbose);
         kmeans.setMaxTime(this->m_maxtime);
         kmeans.train();
+        wait_action();
         ask_run_action("Show clusters", [this, &kmeans]() {
             int x = 0, y = 1, z = 2;
             mltk::Data result = kmeans.batchEvaluate(this->m_samples);
