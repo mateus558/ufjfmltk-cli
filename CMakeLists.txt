@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(ufjfmltk-cli
         LANGUAGES CXX C
-        VERSION 1.0.1)
+        VERSION 1.0.3)
 
 set(CMAKE_CXX_STANDARD 17)
 set(BUILD_SHARED_LIBS OFF)
@@ -10,7 +10,7 @@ include(FetchContent)
 FetchContent_Declare(
         ufjfmltk
         # Specify the commit you depend on and update it regularly.
-        URL https://github.com/mateus558/UFJF-Machine-Learning-Toolkit/archive/refs/tags/v0.51.1-beta.8.tar.gz
+        URL https://github.com/mateus558/UFJF-Machine-Learning-Toolkit/archive/refs/tags/v0.51.3-beta.tar.gz
 )
 FetchContent_MakeAvailable(ufjfmltk)
 

@@ -2,6 +2,7 @@
 // Created by mateus on 01/06/2021.
 //
 
+#include <ufjfmltk/visual/Visualization.hpp>
 #include "ClusterersFactory.h"
 
 namespace factory{
@@ -67,6 +68,19 @@ namespace factory{
         mltk::clusterer::KMeans kmeans(this->m_samples, clusters, initialization, this->m_seed, this->m_verbose);
         kmeans.setMaxTime(this->m_maxtime);
         kmeans.train();
+        ask_run_action("Show clusters", [this, &kmeans]() {
+            int x = 0, y = 1, z = 2;
+            mltk::Data result = kmeans.batchEvaluate(this->m_samples);
+            mltk::visualize::Visualization<double> vis(result, false);
+            if(result.dim() < 3) {
+                result.setFeaturesNames({x + 1, y + 1});
+                vis.plot2D(x, y);
+            }else{
+                result.setFeaturesNames({x + 1, y + 1, z + 1});
+                vis.plot3D(x, y, z);
+            }
+            return true;
+        });
         wait_action();
         return true;
     }
