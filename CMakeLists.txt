@@ -21,8 +21,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(cppcli)
 
-#add_subdirectory(ufjfmltk)
-#add_subdirectory(cppcli)
 add_subdirectory(widgets)
 
 add_executable(${PROJECT_NAME} main.cpp)
