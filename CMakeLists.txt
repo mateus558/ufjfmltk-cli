@@ -3,6 +3,8 @@ project(ufjfmltk-cli
         LANGUAGES CXX C
         VERSION 1.0.3)
 
+cmake_policy(SET CMP0077 OLD)
+
 set(CMAKE_CXX_STANDARD 17)
 set(BUILD_SHARED_LIBS OFF)
 
