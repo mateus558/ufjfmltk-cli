@@ -71,7 +71,11 @@ namespace factory{
         wait_action();
         ask_run_action("Show clusters", [this, &kmeans]() {
             int x = 0, y = 1, z = 2;
-            mltk::Data result = kmeans.batchEvaluate(this->m_samples);
+            auto preds = kmeans.batchEvaluate(this->m_samples);
+            mltk::Data result = this->m_samples.copy();
+            for(int i = 0; i < result.size(); i++){
+                result[i]->Y() = preds[i];
+            }
             mltk::visualize::Visualization<double> vis(result, false);
             if(result.dim() < 3) {
                 result.setFeaturesNames({x + 1, y + 1});

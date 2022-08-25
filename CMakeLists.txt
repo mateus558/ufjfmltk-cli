@@ -3,7 +3,6 @@ project(ufjfmltk-cli
         LANGUAGES CXX C
         VERSION 1.0.3)
 
-cmake_policy(SET CMP0077 OLD)
 
 set(CMAKE_CXX_STANDARD 17)
 set(BUILD_SHARED_LIBS OFF)
@@ -12,7 +11,7 @@ include(FetchContent)
 FetchContent_Declare(
         ufjfmltk
         # Specify the commit you depend on and update it regularly.
-        URL https://github.com/mateus558/UFJF-Machine-Learning-Toolkit/archive/refs/tags/v0.51.8-beta.tar.gz
+        URL URL https://github.com/mateus558/UFJF-Machine-Learning-Toolkit/archive/refs/tags/V0.53-beta.tar.gz
 )
 FetchContent_MakeAvailable(ufjfmltk)
 
